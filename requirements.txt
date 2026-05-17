@@ -8,7 +8,7 @@ whitenoise==6.8.2
 # ─── DB / config ─────────────────────────────────────────────────────
 dj-database-url==2.3.0
 # Postgres driver — uncomment for production with RDS / managed Postgres:
-# psycopg[binary]==3.2.3
+psycopg[binary]==3.2.3
 
 # ─── Object storage for media (PDFs, package images) ─────────────────
 # Used when MEDIA_STORAGE_BACKEND env var is set to s3 / r2 / b2 / do.
