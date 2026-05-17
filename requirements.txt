@@ -1,0 +1,28 @@
+# ─── Core ────────────────────────────────────────────────────────────
+# Django 5.2 is the current LTS (supported until 2028) and fixes a
+# super().__copy__() incompatibility that crashed Django 5.1 on Python 3.14.
+Django>=5.2.7,<5.3
+gunicorn==23.0.0
+whitenoise==6.8.2
+
+# ─── DB / config ─────────────────────────────────────────────────────
+dj-database-url==2.3.0
+# Postgres driver — uncomment for production with RDS / managed Postgres:
+# psycopg[binary]==3.2.3
+
+# ─── Object storage for media (PDFs, package images) ─────────────────
+# Used when MEDIA_STORAGE_BACKEND env var is set to s3 / r2 / b2 / do.
+# Includes boto3 which talks to any S3-compatible service.
+django-storages[s3]==1.14.4
+boto3>=1.35.0
+
+# ─── Image handling ──────────────────────────────────────────────────
+# 11.3+ ships prebuilt Windows wheels for Python 3.13 and 3.14, so
+# `pip install` doesn't try to compile from source.
+Pillow>=11.3.0
+
+# ─── HTTP for optional webhooks (Notion / Airtable / Telegram) ───────
+requests>=2.32.3
+
+# ─── Email (optional — for AWS SES via Anymail) ──────────────────────
+# django-anymail[amazon-ses]==12.0

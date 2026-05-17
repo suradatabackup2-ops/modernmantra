@@ -1,0 +1,196 @@
+/* ═══════════════════════════════════════════
+   MODERN MANTRA — ENHANCEMENTS
+   Additive only. All existing styles untouched.
+   ═══════════════════════════════════════════ */
+
+/* ── Smooth scroll for anchor links ─────────────────────────────── */
+html { scroll-behavior: smooth; }
+
+/* ── Respect users who prefer reduced motion ────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .mm-reveal,
+  .mm-tilt,
+  .mm-fade-img { transition: none !important; animation: none !important; }
+  .mm-reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* ── Improved scroll-reveal (more performant than the legacy one) ── */
+.mm-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
+  will-change: opacity, transform;
+}
+.mm-reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.mm-reveal-left  { transform: translateX(-32px); }
+.mm-reveal-left.is-in  { transform: translateX(0); }
+.mm-reveal-right { transform: translateX(32px); }
+.mm-reveal-right.is-in { transform: translateX(0); }
+.mm-reveal-scale { transform: scale(.94); }
+.mm-reveal-scale.is-in { transform: scale(1); }
+
+/* Stagger children */
+.mm-stagger > * { transition-delay: 0ms; }
+.mm-stagger.is-in > *:nth-child(1) { transition-delay: 40ms; }
+.mm-stagger.is-in > *:nth-child(2) { transition-delay: 100ms; }
+.mm-stagger.is-in > *:nth-child(3) { transition-delay: 160ms; }
+.mm-stagger.is-in > *:nth-child(4) { transition-delay: 220ms; }
+.mm-stagger.is-in > *:nth-child(5) { transition-delay: 280ms; }
+.mm-stagger.is-in > *:nth-child(6) { transition-delay: 340ms; }
+
+/* ── Image fade-in on load ──────────────────────────────────────── */
+img.mm-fade-img {
+  opacity: 0;
+  transition: opacity .55s ease;
+}
+img.mm-fade-img.is-loaded {
+  opacity: 1;
+}
+
+/* ── Card tilt — applied to .testi-card / .pkg-card on hover ────── */
+.mm-tilt {
+  transition: transform .25s cubic-bezier(.2,.8,.2,1),
+              box-shadow .25s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.mm-tilt:hover {
+  transform: translateY(-4px) perspective(900px) rotateX(2deg) rotateY(-2deg);
+  box-shadow: 0 16px 40px rgba(0,0,0,.14);
+}
+
+/* ── Back-to-top button ─────────────────────────────────────────── */
+.mm-to-top {
+  position: fixed;
+  right: 28px;
+  bottom: 100px;            /* sits above the WhatsApp float */
+  width: 46px;
+  height: 46px;
+  background: var(--pine, #1B3A2D);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px);
+  transition: opacity .3s ease, transform .3s ease, background .2s ease;
+  z-index: 99;
+  box-shadow: 0 6px 20px rgba(0,0,0,.18);
+  border: none;
+  font-size: 1.15rem;
+}
+.mm-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.mm-to-top:hover {
+  background: var(--forest, #4A7C59);
+}
+
+@media (max-width: 720px) {
+  .mm-to-top { right: 18px; bottom: 86px; width: 42px; height: 42px; }
+}
+
+/* ── Page-load fade-in ──────────────────────────────────────────── */
+body.mm-loading {
+  opacity: 0;
+}
+body.mm-loaded {
+  opacity: 1;
+  transition: opacity .4s ease;
+}
+
+/* ── Newsletter inline form (footer / hero) ────────────────────── */
+.mm-newsletter {
+  display: flex;
+  gap: 8px;
+  max-width: 420px;
+  margin-top: 12px;
+}
+.mm-newsletter input[type=email] {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.05);
+  color: #fff;
+  font-size: .9rem;
+  outline: none;
+  transition: border-color .2s;
+}
+.mm-newsletter input[type=email]:focus {
+  border-color: var(--gold, #d4a017);
+}
+.mm-newsletter input[type=email]::placeholder { color: rgba(255,255,255,.4); }
+.mm-newsletter button {
+  padding: 12px 20px;
+  background: var(--gold, #d4a017);
+  color: #1B3A2D;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: .85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s, transform .15s;
+}
+.mm-newsletter button:hover {
+  background: #e6b423;
+  transform: translateY(-1px);
+}
+.mm-newsletter button:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+  transform: none;
+}
+.mm-newsletter-success {
+  margin-top: 10px;
+  font-size: .85rem;
+  color: var(--gold, #d4a017);
+}
+
+/* ── Subtle hover lift for any package card ─────────────────────── */
+.pkg-card,
+.testi-card,
+.card,
+.feature-card {
+  transition: transform .3s cubic-bezier(.2,.8,.2,1),
+              box-shadow .3s ease;
+}
+.pkg-card:hover,
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,.13);
+}
+
+/* ── Number counter for stats — already animated, just keep smooth ─ */
+.stat-num {
+  transition: color .3s;
+}
+
+/* ── Highlight focus rings for accessibility ────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--gold, #d4a017);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Skeleton loader (used while review carousel loads) ─────────── */
+.mm-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e4e4e4 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: mm-skeleton-shimmer 1.4s ease infinite;
+  border-radius: 6px;
+}
+@keyframes mm-skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

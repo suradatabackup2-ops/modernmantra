@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Us – Modern Mantra | Trip Captains, Story, Vision{% endblock %}
+{% block meta_description %}Modern Mantra is a travel collective curating thoughtful, immersive experiences. Meet our trip captains, learn our story, and discover why travelers trust us with their adventures.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages.css' %}"/>
+<style>
+    .about-page-hero-bg { background-image: url('{% static 'images/hero-village.jpg' %}'); }
+    /* Story Section */
+    .story-section { background: var(--cream); padding: 90px 0; }
+    .story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .story-img-container { position: relative; height: 560px; }
+    .story-img-main { position: absolute; top: 0; left: 0; width: 72%; height: 78%; object-fit: cover; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.18); }
+    .story-img-float { position: absolute; bottom: 0; right: 0; width: 54%; height: 52%; object-fit: cover; border-radius: 8px; box-shadow: 0 16px 40px rgba(0,0,0,.15); border: 5px solid var(--cream); }
+    .story-badge { position: absolute; bottom: 68px; left: 0; background: var(--gold); color: #fff; padding: 16px 22px; border-radius: 4px; font-size: .82rem; font-weight: 600; z-index: 2; }
+    .story-text p { color: #555; line-height: 1.85; margin-bottom: 18px; }
+    /* Values */
+    .values-section { background: var(--pine); padding: 90px 0; }
+    .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 56px; }
+    .value-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 10px; padding: 36px 28px; transition: background .3s; }
+    .value-card:hover { background: rgba(255,255,255,.1); }
+    .value-num { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; color: var(--gold); font-weight: 300; line-height: 1; margin-bottom: 16px; }
+    .value-title { font-size: 1.1rem; font-weight: 600; color: var(--cream); margin-bottom: 10px; }
+    .value-desc { font-size: .88rem; color: rgba(255,255,255,.65); line-height: 1.65; }
+    /* Numbers */
+    .numbers-section { background: var(--snow); padding: 90px 0; }
+    .numbers-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 56px; }
+    .number-card { text-align: center; padding: 40px 24px; background: #fff; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.05); }
+    .number-big { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; color: var(--pine); font-weight: 600; line-height: 1; }
+    .number-label { font-size: .8rem; color: var(--moss); text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; }
+    /* Base Camp */
+    .basecamp-section { background: var(--cream); padding: 90px 0; }
+    .basecamp-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: center; }
+    .basecamp-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .basecamp-imgs img { border-radius: 6px; object-fit: cover; width: 100%; height: 200px; }
+    .basecamp-imgs img:first-child { grid-column: span 2; height: 260px; }
+    .basecamp-text p { color: #555; line-height: 1.8; margin-bottom: 16px; }
+    /* Team */
+    .team-section { background: var(--snow); padding: 90px 0; }
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 56px; }
+    .team-card { text-align: center; background: #fff; border-radius: 12px; padding: 40px 24px; box-shadow: 0 4px 24px rgba(0,0,0,.06); transition: transform .3s; }
+    .team-card:hover { transform: translateY(-4px); }
+    .team-avatar { width: 90px; height: 90px; border-radius: 50%; background: var(--mist); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2.4rem; border: 3px solid var(--cream); }
+    .team-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--pine); margin-bottom: 4px; }
+    .team-role { font-size: .78rem; color: var(--moss); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .team-bio { font-size: .88rem; color: #666; line-height: 1.6; }
+    @media (max-width: 900px) {
+      .story-grid, .basecamp-grid { grid-template-columns: 1fr; }
+      .story-img-container { height: 320px; order: -1; }
+      .values-grid { grid-template-columns: 1fr 1fr; }
+      .numbers-grid { grid-template-columns: repeat(2, 1fr); }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .values-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr; }
+      .story-img-container { height: 260px; }
+      .story-img-float { display: none; }
+    }
+  </style>
+
+{% endblock %}
+
+{% block content %}
+<!-- NAV -->
+
+
+<!-- PAGE HERO -->
+<div class="page-hero about-page-hero-bg">
+  <div class="container">
+    <div class="page-hero-content">
+      <div class="section-label">Our Story</div>
+      <h1>Travel Together.<br>Feel Deeper.</h1>
+    </div>
+  </div>
+</div>
+
+<!-- STORY -->
+<section class="story-section">
+  <div class="container">
+    <div class="story-grid">
+      <div class="story-img-container reveal-left">
+        <img src="{% static 'images/hero-base.jpg' %}" alt="Modern Mantra Base Camp" class="story-img-main"/>
+        <img src="{% static 'images/rainbow-girl.jpg' %}" alt="At the Modern Mantra base" class="story-img-float"/>
+        <div class="story-badge">Est. 2018 · Manali, Himachal Pradesh</div>
+      </div>
+      <div class="story-text reveal-right">
+        <div class="section-label">How It Began</div>
+        <h2 class="section-title">From a Hilltop Homestay<br>to a Travel Movement</h2>
+        <p>ModernMantra started with a small wooden house perched in the hills above Manali — decorated with prayer flags, dreamcatchers, and a basketball hoop. It was a place where solo travellers, groups of friends, and curious strangers would arrive and leave as family.</p>
+        <p>What began as a farmstay experience grew into something bigger. People kept asking — "Can you take us to Spiti? To Ladakh? To Rajasthan?" And we kept saying yes. Today, we run curated trips across India and abroad, with the same spirit as that little wooden house: real, slow, meaningful, and unforgettable.</p>
+        <p>Our tagline — <strong>Focus · Flow · Frequency</strong> — captures how we approach every journey. Stay focused on the experience. Let the journey flow. Find your frequency with the mountains, the people, and yourself.</p>
+        <br>
+        <a href="{% url 'pages:packages' %}" class="btn-dark">Explore Our Trips →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values-section">
+  <div class="container">
+    <div style="max-width: 600px;">
+      <div class="section-label" style="color:var(--sage)">What We Believe In</div>
+      <h2 class="section-title" style="color:var(--cream) ">Our Core Values</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card reveal">
+        <div class="value-num">01</div>
+        <div class="value-title">Travel is Better When It's Real</div>
+        <p class="value-desc">No staged photo ops. No rushed itineraries. We go to places that most tours skip — and we take the time to actually feel them.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-num">02</div>
+        <div class="value-title">Small Groups, Big Experiences</div>
+        <p class="value-desc">We keep groups intimate. Because the best conversations happen around a campfire, not in a crowd of 50.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-num">03</div>
+        <div class="value-title">Safety Is Not Negotiable</div>
+        <p class="value-desc">Medical backup, oxygen on high-altitude trips, inner line permits handled, experienced captains on every journey. We plan for every situation.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-num">04</div>
+        <div class="value-title">Strangers Arrive, Friends Leave</div>
+        <p class="value-desc">The best part of every ModernMantra trip isn't the destination — it's the people you meet along the way.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-num">05</div>
+        <div class="value-title">Respect for Nature & Locals</div>
+        <p class="value-desc">We travel responsibly. We support local homestays, minimize waste, and leave every place better than we found it.</p>
+      </div>
+      <div class="value-card reveal">
+        <div class="value-num">06</div>
+        <div class="value-title">Transparent Pricing Always</div>
+        <p class="value-desc">What you see is what you pay. No hidden charges, no surprise bills. Full itinerary and inclusions before you commit a single rupee.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section class="numbers-section">
+  <div class="container">
+    <div style="text-align:center; max-width:500px; margin:0 auto 0;">
+      <div class="section-label reveal">By the Numbers</div>
+      <h2 class="section-title reveal" style="text-align:center">7 Years on the Road</h2>
+    </div>
+    <div class="numbers-grid">
+      <div class="number-card reveal">
+        <div class="number-big">2000+</div>
+        <div class="number-label">Happy Travellers</div>
+      </div>
+      <div class="number-card reveal">
+        <div class="number-big">50+</div>
+        <div class="number-label">Destinations Covered</div>
+      </div>
+      <div class="number-card reveal">
+        <div class="number-big">12+</div>
+        <div class="number-label">Active Packages</div>
+      </div>
+      <div class="number-card reveal">
+        <div class="number-big">4.9★</div>
+        <div class="number-label">Average Rating</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARALLAX -->
+<div class="parallax-divider" style="background-image:url('{% static 'images/campfire-snow.jpg' %}')">
+  <div class="parallax-content">
+    <h3>"Strangers arrive.<br>Stories form.<br>You return with memories that stay."</h3>
+    <p>— Modern Mantra Experiences</p>
+    <a href="{% url 'pages:contact' %}" class="btn-primary">Start Your Journey →</a>
+  </div>
+</div>
+
+<!-- BASE CAMP -->
+<section class="basecamp-section">
+  <div class="container">
+    <div class="basecamp-grid">
+      <div class="reveal-left">
+        <div class="basecamp-imgs">
+          <img src="{% static 'images/hammock-view.jpg' %}" alt="Hammock view"/>
+          <img src="{% static 'images/base-night.jpg' %}" alt="Base at night"/>
+          <img src="{% static 'images/igloo.jpg' %}" alt="Snow igloo"/>
+        </div>
+      </div>
+      <div class="basecamp-text reveal-right">
+        <div class="section-label">Our Home in the Hills</div>
+        <h2 class="section-title">The Modern Mantra Base Camp</h2>
+        <p>Nestled in the forest above Manali, our base camp is where every trip begins. It's a hand-built wooden house decorated with colourful prayer flags, wall murals, a hammock overlooking the valley, and the kind of view that makes you forget your phone exists.</p>
+        <p>Guests can stay at the base as part of their trip or just stop by on their way to bigger adventures. There's always good music, chai, and someone interesting to talk to.</p>
+        <p>It's more than accommodation — it's the spirit of ModernMantra made physical.</p>
+        <br>
+        <a href="https://wa.me/917736855515?text=I'd like to know more about the base camp stay." target="_blank" class="btn-dark">Ask About Base Camp Stay →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team-section">
+  <div class="container">
+    <div style="text-align:center; max-width:500px; margin:0 auto 0;">
+      <div class="section-label reveal">The People Behind It</div>
+      <h2 class="section-title reveal" style="text-align:center">Meet the Team</h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <div class="team-avatar">🏔️</div>
+        <div class="team-name">Arjun</div>
+        <div class="team-role">Founder & Lead Captain</div>
+        <p class="team-bio">Built the base camp with his own hands. Has trekked every route we offer. Your safety and experience are his personal responsibility.</p>
+        <br>
+        <a href="https://wa.me/917736855515" target="_blank" style="color:var(--forest); font-size:.85rem; font-weight:600;">📞 +91 77368 55515</a>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-avatar">🗺️</div>
+        <div class="team-name">Trip Captains</div>
+        <div class="team-role">On Every Journey</div>
+        <p class="team-bio">Every group trip has a dedicated captain — experienced, first-aid trained, and deeply familiar with the route. They're your guide, your safety net, and your campfire companion.</p>
+      </div>
+      <div class="team-card reveal">
+        <div class="team-avatar">✉️</div>
+        <div class="team-name">Planning Team</div>
+        <div class="team-role">Custom Trips & Enquiries</div>
+        <p class="team-bio">Behind every amazing trip is careful planning. Our team handles enquiries, custom itineraries, permits, and logistics so you can just show up and travel.</p>
+        <br>
+        <a href="tel:+916238053483" style="color:var(--forest); font-size:.85rem; font-weight:600;">📞 +91 62380 53483</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:linear-gradient(135deg, var(--pine), var(--forest)); padding: 80px 0;">
+  <div class="container" style="text-align:center;">
+    <div class="section-label" style="color:var(--sage)">Ready to Go?</div>
+    <h2 class="section-title" style="color:var(--cream); text-align:center; max-width:600px; margin:0 auto 20px">Your Next Mountain Adventure Is One Message Away</h2>
+    <p style="color:rgba(255,255,255,.75); max-width:480px; margin:0 auto 36px; line-height:1.7">Whether you know exactly where you want to go, or just know you need to get away — we've got you. Let's talk.</p>
+    <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <a href="{% url 'pages:packages' %}" class="btn-primary">Browse Packages</a>
+      <a href="{% url 'pages:contact' %}" class="btn-outline">Talk to Us →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+
+<a href="https://wa.me/917736855515?text=Hi! I want to book a trip with ModernMantra." target="_blank" class="float-wa" title="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+<div class="toast" id="toast"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

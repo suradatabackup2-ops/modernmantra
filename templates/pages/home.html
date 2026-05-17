@@ -1,0 +1,758 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Modern Mantra – Himalayan Treks, Road Trips & Curated Travel Experiences{% endblock %}
+{% block meta_description %}Curated solo & group travel experiences across India and beyond. Himalayan treks, road trips, weekend escapes, international holidays. Spiti, Ladakh, Zanskar, Manali, Rajasthan, Mauritius. Book your next adventure.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}"/>
+
+{% endblock %}
+
+{% block content %}
+<!-- ═══ NAVIGATION ═══ -->
+
+
+<!-- ═══ HERO SLIDESHOW ═══ -->
+<section id="hero">
+  <div class="hero-slides">
+    <div class="hero-slide hero-slide-1 active"></div>
+    <div class="hero-slide hero-slide-2"></div>
+    <div class="hero-slide hero-slide-3"></div>
+    <div class="hero-slide hero-slide-4"></div>
+    <div class="hero-slide hero-slide-5"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">🏔 Himalayas · Ladakh · Rajasthan · & Beyond</div>
+    <h1 class="hero-title">Find Your <em>Wild</em><br>Mantra in the<br>Mountains</h1>
+    <p class="hero-sub">Curated solo & group adventures across India's most breathtaking landscapes. Every trail tells a story. Every trip changes you.</p>
+    <div class="hero-btns">
+      <a href="{% url 'pages:packages' %}" class="btn-primary">Explore Packages</a>
+      <a href="{% url 'pages:contact' %}" class="btn-outline">Plan Custom Trip</a>
+    </div>
+  </div>
+  <div class="hero-dots" id="heroDots">
+    <button class="hero-dot active"></button>
+    <button class="hero-dot"></button>
+    <button class="hero-dot"></button>
+    <button class="hero-dot"></button>
+    <button class="hero-dot"></button>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ═══ STATS ═══ -->
+<section id="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item reveal">
+        <div class="stat-num" data-target="2000+">2000+</div>
+        <div class="stat-label">Travellers Served</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-num" data-target="50+">50+</div>
+        <div class="stat-label">Destinations</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-num" data-target="7+">7+</div>
+        <div class="stat-label">Years of Experience</div>
+      </div>
+      <div class="stat-item reveal">
+        <div class="stat-num" data-target="4.9★">4.9★</div>
+        <div class="stat-label">Average Rating</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT SNIPPET ═══ -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-imgs reveal-left">
+        <img src="{% static 'images/hero-base.jpg' %}" alt="Modern Mantra base camp" class="about-img1"/>
+        <img src="{% static 'images/campfire-waterfall.jpg' %}" alt="Campfire by a waterfall" class="about-img2"/>
+        <div class="about-tag">Est. 2018 · Manali</div>
+      </div>
+      <div class="about-text reveal-right">
+        <div class="section-label">Who We Are</div>
+        <h2 class="section-title">Slow Travel.<br>Real Stories.<br>Deep Connections.</h2>
+        <p>ModernMantra began as a small farmstay tucked in the hills above Manali — a place where strangers arrived and left as friends. Today, we curate slow, meaningful journeys across India and beyond with small groups, offbeat places, and experiences that bring people closer to nature and to each other.</p>
+        <p>From snowy Himalayan passes to sun-soaked beaches, from ancient monasteries to vibrant city streets — we design every trip to be lived, not just toured.</p>
+        <div class="about-features">
+          <div class="feat-item">
+            <div class="feat-icon">🏕️</div>
+            <div class="feat-text"><strong>Small Group Trips</strong>Intimate, curated groups for a richer experience</div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-icon">🗺️</div>
+            <div class="feat-text"><strong>Offbeat Routes</strong>Go beyond the tourist trail</div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-icon">🏔️</div>
+            <div class="feat-text"><strong>Expert Captains</strong>Experienced guides on every journey</div>
+          </div>
+          <div class="feat-item">
+            <div class="feat-icon">💡</div>
+            <div class="feat-text"><strong>All-Inclusive</strong>Stays, meals, transport & permits</div>
+          </div>
+        </div>
+        <br>
+        <a href="{% url 'pages:about' %}" class="btn-dark">Our Story →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DESTINATIONS ═══ -->
+<section id="destinations">
+  <div class="container">
+    <div class="dest-header">
+      <div>
+        <div class="section-label reveal">Where We Go</div>
+        <h2 class="section-title reveal">Curated Destinations</h2>
+      </div>
+      <a href="{% url 'pages:packages' %}" class="btn-dark reveal">All Packages →</a>
+    </div>
+    <div class="dest-grid">
+      <a href="packages.html?cat=himalaya" class="dest-card reveal">
+        <img src="{% static 'images/hero-village.jpg' %}" alt="Himachal Pradesh"/>
+        <div class="dest-overlay">
+          <div class="dest-label">Himachal Pradesh</div>
+          <div class="dest-title">Manali & Spiti Valley</div>
+          <div class="dest-desc">Snow passes, ancient monasteries, and Himalayan villages that feel untouched by time.</div>
+          <div class="dest-arrow">→</div>
+        </div>
+      </a>
+      <a href="packages.html?cat=ladakh" class="dest-card reveal">
+        <img src="{% static 'images/snow-lake.jpg' %}" alt="Ladakh"/>
+        <div class="dest-overlay">
+          <div class="dest-label">Jammu & Kashmir</div>
+          <div class="dest-title">Ladakh & Nubra Valley</div>
+          <div class="dest-desc">The roof of the world — Pangong Tso, Nubra, Khardung-La and starry skies like nowhere else.</div>
+          <div class="dest-arrow">→</div>
+        </div>
+      </a>
+      <a href="packages.html?cat=trekking" class="dest-card reveal">
+        <img src="{% static 'images/igloo.jpg' %}" alt="Himalayan Treks"/>
+        <div class="dest-overlay">
+          <div class="dest-label">🥾 Himalayan Treks</div>
+          <div class="dest-title">Kedarkantha · Hampta Pass · Chandrakhani</div>
+          <div class="dest-desc">Snow-capped passes, alpine meadows and Chandratal moon-lake. Treks from ₹4,499.</div>
+          <div class="dest-arrow">→</div>
+        </div>
+      </a>
+      <a href="packages.html?cat=south" class="dest-card reveal">
+        <img src="{% static 'images/waterfall2.jpg' %}" alt="South India"/>
+        <div class="dest-overlay">
+          <div class="dest-label">South India</div>
+          <div class="dest-title">Munnar & Kerala Hills</div>
+          <div class="dest-desc">Mist-covered tea gardens, tribal villages, jungle safaris and off-road jeep trails.</div>
+          <div class="dest-arrow">→</div>
+        </div>
+      </a>
+      <a href="packages.html?cat=rajasthan" class="dest-card reveal">
+        <img src="{% static 'images/rajasthan-1.jpg' %}" alt="Rajasthan"/>
+        <div class="dest-overlay">
+          <div class="dest-label">Rajasthan</div>
+          <div class="dest-title">Desert Forts & Palaces</div>
+          <div class="dest-desc">Jaipur to Udaipur via Jaisalmer — a royal journey through India's most colourful state.</div>
+          <div class="dest-arrow">→</div>
+        </div>
+      </a>
+      <a href="packages.html?cat=international" class="dest-card reveal">
+        <img src="{% static 'images/mauritius-main.jpg' %}" alt="International"/>
+        <div class="dest-overlay">
+          <div class="dest-label">International</div>
+          <div class="dest-title">Mauritius & Sri Lanka</div>
+          <div class="dest-desc">Indian Ocean islands, coral reefs, ancient temples and pristine beaches await.</div>
+          <div class="dest-arrow">→</div>
+        </div>
+      </a>
+      <a href="packages.html?cat=spiritual" class="dest-card reveal">
+        <img src="{% static 'images/varanasi-2.jpg' %}" alt="Varanasi"/>
+        <div class="dest-overlay">
+          <div class="dest-label">And More</div>
+          <div class="dest-title">Varanasi, Sikkim,<br>Hyderabad & Beyond</div>
+          <div class="dest-desc">From spiritual Varanasi to tropical Goa — we keep adding new destinations.</div>
+          <div class="dest-arrow">→</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PARALLAX ═══ -->
+<div class="parallax-divider" style="background-image:url('{% static 'images/sheep-mountains.jpg' %}')">
+  <div class="parallax-content">
+    <h3>Every Journey Begins<br>With a Single Step</h3>
+    <p>Join thousands of travellers who've found their mantra in the mountains, the deserts, and the sea.</p>
+    <a href="{% url 'pages:packages' %}" class="btn-primary">Start Your Journey</a>
+  </div>
+</div>
+
+<!-- ═══ PACKAGES PREVIEW ═══ -->
+<section id="packages-preview">
+  <div class="container">
+    <div class="dest-header">
+      <div>
+        <div class="section-label reveal">Handcrafted Journeys</div>
+        <h2 class="section-title reveal">Popular Packages</h2>
+      </div>
+      <a href="{% url 'pages:packages' %}" class="btn-dark reveal">View All →</a>
+    </div>
+    <div class="pkg-grid">
+
+      <!-- Spiti Valley -->
+      <div class="pkg-card reveal" data-cat="himalaya">
+        <div class="pkg-img">
+          <img src="{% static 'images/snow-lake.jpg' %}" alt="Spiti Valley"/>
+          <div class="pkg-badge">Most Popular</div>
+          <button class="pkg-fav" aria-label="Save">♡</button>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-meta"><span>📅 10 Days</span><span>👥 Group Trip</span><span>🏔️ 15,000 ft+</span></div>
+          <div class="pkg-name">Spiti Valley Summer Escape</div>
+          <p class="pkg-desc">Delhi → Shimla → Chitkul → Kalpa → Tabo → Kaza → Chandrataal → Manali. A complete high-altitude road trip.</p>
+          <div class="pkg-tags"><span class="pkg-tag">High Altitude</span><span class="pkg-tag">Monasteries</span><span class="pkg-tag">Stargazing</span></div>
+          <div class="pkg-footer">
+            <div class="pkg-price"><span class="from">Starting from</span><span class="amount">₹19,500</span><span class="per">/person</span></div>
+            <button class="btn-book" onclick="openModal('Spiti Valley Summer Escape','₹19,500')">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zanskar -->
+      <div class="pkg-card reveal" data-cat="himalaya">
+        <div class="pkg-img">
+          <img src="{% static 'images/igloo.jpg' %}" alt="Zanskar Valley"/>
+          <div class="pkg-badge hot">Adventure</div>
+          <button class="pkg-fav" aria-label="Save">♡</button>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-meta"><span>📅 7 Days</span><span>👥 Group Trip</span><span>🚙 4x4 Road Trip</span></div>
+          <div class="pkg-name">Zanskar Valley Road Trip</div>
+          <p class="pkg-desc">Delhi → Manali → Shinku La → Phuktal Monastery → Padum → Drang Drung Glacier → Jispa → Delhi.</p>
+          <div class="pkg-tags"><span class="pkg-tag">Phuktal Trek</span><span class="pkg-tag">Remote</span><span class="pkg-tag">Expedition</span></div>
+          <div class="pkg-footer">
+            <div class="pkg-price"><span class="from">Starting from</span><span class="amount">₹34,500</span><span class="per">/person</span></div>
+            <button class="btn-book" onclick="openModal('Zanskar Valley Road Trip','₹34,500')">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ladakh -->
+      <div class="pkg-card reveal" data-cat="ladakh">
+        <div class="pkg-img">
+          <img src="{% static 'images/group-mountains.jpg' %}" alt="Ladakh"/>
+          <div class="pkg-badge">Bestseller</div>
+          <button class="pkg-fav" aria-label="Save">♡</button>
+        </div>
+        <div class="pkg-body">
+          <div class="pkg-meta"><span>📅 5 Days</span><span>✈️ Fly In/Out</span><span>🐪 Nubra Camel</span></div>
+          <div class="pkg-name">Ladakh Escape – Nubra & Pangong</div>
+          <p class="pkg-desc">Leh arrival → Sham Valley → Nubra via Khardung-La → Pangong Tso → Chang-La → Departure.</p>
+          <div class="pkg-tags"><span class="pkg-tag">Pangong Lake</span><span class="pkg-tag">Khardung-La</span><span class="pkg-tag">Nubra</span></div>
+          <div class="pkg-footer">
+            <div class="pkg-price"><span class="from">Starting from</span><span class="amount">₹22,000</span><span class="per">/person</span></div>
+            <button class="btn-book" onclick="openModal('Ladakh Escape','₹22,000')">Book Now</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="pkg-see-all reveal">
+      <a href="{% url 'pages:packages' %}" class="btn-primary">See All 12+ Packages →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ INSTAGRAM STRIP ═══ -->
+<section id="insta-strip">
+  <div class="container">
+    <div class="insta-header">
+      <div class="section-label">Follow Our Journey</div>
+      <h2 class="section-title">Life on the Trail</h2>
+      <a href="https://www.instagram.com/modernmantra_" target="_blank" class="insta-handle">
+        📸 @modernmantra_
+      </a>
+    </div>
+  </div>
+  <div class="insta-scroll-track">
+    <div class="insta-scroll" id="instaScroll">
+      <!-- First set -->
+      <div class="insta-card"><img src="{% static 'images/hero-village.jpg' %}" alt="Village"/><div class="insta-card-overlay"><div class="insta-card-tag">Himachal</div><div class="insta-card-label">Village from above</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/campfire-snow.jpg' %}" alt="Campfire"/><div class="insta-card-overlay"><div class="insta-card-tag">Manali</div><div class="insta-card-label">Night campfire</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/rainbow-girl.jpg' %}" alt="Rainbow"/><div class="insta-card-overlay"><div class="insta-card-tag">Modern Mantra Base</div><div class="insta-card-label">Rainbow morning</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/waterfall1.jpg' %}" alt="Waterfall"/><div class="insta-card-overlay"><div class="insta-card-tag">Trekking</div><div class="insta-card-label">Hidden waterfall</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/campfire-waterfall.jpg' %}" alt="Campfire"/><div class="insta-card-overlay"><div class="insta-card-tag">Group</div><div class="insta-card-label">Bonfire evenings</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/snow-lake.jpg' %}" alt="Snow"/><div class="insta-card-overlay"><div class="insta-card-tag">Spiti</div><div class="insta-card-label">Frozen lake trail</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/group-mountains.jpg' %}" alt="Mountains"/><div class="insta-card-overlay"><div class="insta-card-tag">Manali</div><div class="insta-card-label">Alpine meadows</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/base-night.jpg' %}" alt="Night"/><div class="insta-card-overlay"><div class="insta-card-tag">Base Camp</div><div class="insta-card-label">Lights in the dark</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/hammock-view.jpg' %}" alt="Hammock"/><div class="insta-card-overlay"><div class="insta-card-tag">Chill Vibes</div><div class="insta-card-label">Hammock mornings</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/valley-night.jpg' %}" alt="Valley"/><div class="insta-card-overlay"><div class="insta-card-tag">Views</div><div class="insta-card-label">Valley at dusk</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/igloo.jpg' %}" alt="Igloo"/><div class="insta-card-overlay"><div class="insta-card-tag">Winter</div><div class="insta-card-label">Snow igloo life</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/sheep-mountains.jpg' %}" alt="Sheep"/><div class="insta-card-overlay"><div class="insta-card-tag">Himachal</div><div class="insta-card-label">Road encounters</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/waterfall2.jpg' %}" alt="Waterfall"/><div class="insta-card-overlay"><div class="insta-card-tag">Trekking</div><div class="insta-card-label">At the falls</div></div></div>
+      <!-- Duplicate for infinite scroll -->
+      <div class="insta-card"><img src="{% static 'images/hero-village.jpg' %}" alt="Village"/><div class="insta-card-overlay"><div class="insta-card-tag">Himachal</div><div class="insta-card-label">Village from above</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/campfire-snow.jpg' %}" alt="Campfire"/><div class="insta-card-overlay"><div class="insta-card-tag">Manali</div><div class="insta-card-label">Night campfire</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/rainbow-girl.jpg' %}" alt="Rainbow"/><div class="insta-card-overlay"><div class="insta-card-tag">Modern Mantra Base</div><div class="insta-card-label">Rainbow morning</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/waterfall1.jpg' %}" alt="Waterfall"/><div class="insta-card-overlay"><div class="insta-card-tag">Trekking</div><div class="insta-card-label">Hidden waterfall</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/campfire-waterfall.jpg' %}" alt="Campfire"/><div class="insta-card-overlay"><div class="insta-card-tag">Group</div><div class="insta-card-label">Bonfire evenings</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/snow-lake.jpg' %}" alt="Snow"/><div class="insta-card-overlay"><div class="insta-card-tag">Spiti</div><div class="insta-card-label">Frozen lake trail</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/group-mountains.jpg' %}" alt="Mountains"/><div class="insta-card-overlay"><div class="insta-card-tag">Manali</div><div class="insta-card-label">Alpine meadows</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/base-night.jpg' %}" alt="Night"/><div class="insta-card-overlay"><div class="insta-card-tag">Base Camp</div><div class="insta-card-label">Lights in the dark</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/hammock-view.jpg' %}" alt="Hammock"/><div class="insta-card-overlay"><div class="insta-card-tag">Chill Vibes</div><div class="insta-card-label">Hammock mornings</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/valley-night.jpg' %}" alt="Valley"/><div class="insta-card-overlay"><div class="insta-card-tag">Views</div><div class="insta-card-label">Valley at dusk</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/igloo.jpg' %}" alt="Igloo"/><div class="insta-card-overlay"><div class="insta-card-tag">Winter</div><div class="insta-card-label">Snow igloo life</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/sheep-mountains.jpg' %}" alt="Sheep"/><div class="insta-card-overlay"><div class="insta-card-tag">Himachal</div><div class="insta-card-label">Road encounters</div></div></div>
+      <div class="insta-card"><img src="{% static 'images/waterfall2.jpg' %}" alt="Waterfall"/><div class="insta-card-overlay"><div class="insta-card-tag">Trekking</div><div class="insta-card-label">At the falls</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WHY US ═══ -->
+<section id="why-us">
+  <div class="container">
+    <div style="text-align:center; max-width:600px; margin:0 auto 0;">
+      <div class="section-label reveal">Why Travel With Us</div>
+      <h2 class="section-title reveal" style="margin:0 auto">What Makes ModernMantra Different</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-icon">🧭</div>
+        <div class="why-title">Experienced Captains</div>
+        <p class="why-desc">Every trip is led by a trained trip captain who knows the terrain, the people, and the stories.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon">🏕️</div>
+        <div class="why-title">Handpicked Stays</div>
+        <p class="why-desc">From Swiss tents at Chandrataal to heritage homestays in Tabo — comfort meets authenticity.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon">👥</div>
+        <div class="why-title">Small Groups</div>
+        <p class="why-desc">We keep group sizes small so every traveller gets attention, flexibility and a personal experience.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon">🩺</div>
+        <div class="why-title">Safety First</div>
+        <p class="why-desc">Medical backup, oxygen cylinders for high-altitude trips, inner line permits handled — travel stress-free.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section id="testimonials">
+  <div class="container">
+    <div style="text-align:center">
+      <div class="section-label reveal">Traveller Stories</div>
+      <h2 class="section-title reveal" style="text-align:center">What Our Explorers Say</h2>
+    </div>
+    <div class="testi-grid" id="testiGrid">
+      <div class="testi-track">
+        {% if approved_reviews %}
+          {% for r in approved_reviews|slice:":6" %}
+        <div class="testi-card">
+          <div class="stars">{% for _ in "12345" %}{% if forloop.counter <= r.rating %}★{% else %}☆{% endif %}{% endfor %}</div>
+          <p class="testi-text">"{{ r.body }}"</p>
+          <div class="testi-person">
+            <div class="testi-avatar">{{ r.name|slice:":1"|upper }}</div>
+            <div>
+              <div class="testi-name">{{ r.name }}</div>
+              <div class="testi-loc">{% if r.city %}{{ r.city }}{% if r.package %} · {% endif %}{% endif %}{{ r.package }}</div>
+            </div>
+          </div>
+        </div>
+          {% endfor %}
+        {% else %}
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text">"The Spiti trip was life-changing. Our trip captain Arjun made sure we never missed a single moment — from 4AM stargazing at Chandrataal to the magic of Key Monastery."</p>
+          <div class="testi-person">
+            <div class="testi-avatar">R</div>
+            <div><div class="testi-name">Rahul Sharma</div><div class="testi-loc">Mumbai · Spiti Valley Trip</div></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text">"I was travelling solo and worried about safety. ModernMantra made me feel like I was part of a family from day one. The Zanskar road trip was beyond words."</p>
+          <div class="testi-person">
+            <div class="testi-avatar">P</div>
+            <div><div class="testi-name">Priya Nair</div><div class="testi-loc">Bengaluru · Zanskar Road Trip</div></div>
+          </div>
+        </div>
+        <div class="testi-card">
+          <div class="stars">★★★★★</div>
+          <p class="testi-text">"The campfire nights, the Himalayan views from the hammock, the base camp with prayer flags — this is what travel memories are made of. Already booked my second trip!"</p>
+          <div class="testi-person">
+            <div class="testi-avatar">A</div>
+            <div><div class="testi-name">Aditya Patel</div><div class="testi-loc">Delhi · Manali Experience</div></div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="testi-dots">
+      <button class="testi-dot active" aria-label="Review 1"></button>
+      <button class="testi-dot" aria-label="Review 2"></button>
+      <button class="testi-dot" aria-label="Review 3"></button>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ── WRITE A REVIEW CTA ── -->
+<section style="background:var(--pine);padding:64px 0;text-align:center;">
+  <div class="container">
+    <div class="section-label reveal" style="color:var(--sage);">Share Your Story</div>
+    <h2 class="section-title reveal" style="color:var(--cream);text-align:center;margin-bottom:14px;">Been on a Trip With Us?</h2>
+    <p class="reveal" style="color:rgba(255,255,255,.65);max-width:520px;margin:0 auto 32px;line-height:1.75;font-size:.95rem;">Your honest review helps the next adventurer decide. It takes just a minute — and it means everything to our team.</p>
+    <button class="btn-primary reveal" onclick="openReviewModal()" style="padding:15px 40px;font-size:.92rem;">⭐ Write a Review</button>
+  </div>
+</section>
+
+<!-- ═══ TRIP FINDER QUIZ ═══ -->
+<section class="quiz-wrap" id="trip-quiz">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:36px;">
+      <div class="section-label" style="color:var(--sage);">Find Your Perfect Trip</div>
+      <h2 class="section-title" style="color:var(--cream);text-align:center;">Not Sure Where to Go?</h2>
+      <p style="color:rgba(255,255,255,.65);max-width:480px;margin:12px auto 0;font-size:.92rem;line-height:1.7;">Answer 4 quick questions and we'll match you to the right adventure.</p>
+    </div>
+    <div class="quiz-card" id="quizCard">
+      <div class="quiz-step" id="quizStep">Question 1 of 4</div>
+      <div class="quiz-progress"><div class="quiz-bar" id="quizBar" style="width:25%"></div></div>
+      <div class="quiz-q" id="quizQ">What's your travel budget per person?</div>
+      <div class="quiz-opts" id="quizOpts">
+        <button class="quiz-opt" onclick="quizPick(this,'budget','budget')">💰 Under ₹15,000</button>
+        <button class="quiz-opt" onclick="quizPick(this,'budget','mid')">💰💰 ₹15k – ₹25k</button>
+        <button class="quiz-opt" onclick="quizPick(this,'budget','premium')">💰💰💰 ₹25k – ₹40k</button>
+        <button class="quiz-opt" onclick="quizPick(this,'budget','luxury')">💎 No limit</button>
+      </div>
+      <button class="btn-dark" id="quizNext" style="width:100%;margin-top:8px;display:none;" onclick="quizNext()">Next →</button>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ═══ ENQUIRY SECTION ═══ -->
+<section id="enquiry">
+  <div class="container">
+    <div class="enquiry-grid">
+      <div class="enquiry-info reveal-left">
+        <div class="section-label">Get In Touch</div>
+        <h2 class="section-title" style="color:var(--cream)">Plan Your<br>Dream Trip</h2>
+        <p>Tell us where you want to go, when, and with how many people. We'll craft the perfect itinerary for you — whether you're a solo traveller or a group of 20.</p>
+        <div class="contact-items">
+          <div class="contact-item">
+            <div class="c-icon">📞</div>
+            <div><div class="c-label">Phone & WhatsApp</div><div class="c-val">+91 77368 55515<br>+91 62380 53483</div></div>
+          </div>
+          <div class="contact-item">
+            <div class="c-icon">📧</div>
+            <div><div class="c-label">Email</div><div class="c-val">ziyaziu17@gmail.com</div></div>
+          </div>
+          <div class="contact-item">
+            <div class="c-icon">📸</div>
+            <div><div class="c-label">Instagram</div><div class="c-val"><a href="https://instagram.com/modernmantra_" target="_blank" style="color:var(--sage)">@modernmantra_</a></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="enquiry-form-box">
+          <form id="enquiryForm" novalidate>
+            <div class="form-row">
+              <div class="form-group"><label>Your Name *</label><input type="text" name="Name" placeholder="Full name" required/></div>
+              <div class="form-group"><label>Phone *</label><input type="tel" name="Phone" placeholder="+91 XXXXX XXXXX" required/></div>
+            </div>
+            <div class="form-group"><label>Email</label><input type="email" name="Email" placeholder="your@email.com"/></div>
+            <div class="form-row">
+              <div class="form-group"><label>Destination *</label>
+                <select name="Destination">
+                  <option value="">— Choose destination —</option>
+                  <option>Spiti Valley</option>
+                  <option>Manali</option>
+                  <option>Zanskar Valley</option>
+                  <option>Ladakh</option>
+                  <option>Rajasthan</option>
+                  <option>Munnar / Kerala</option>
+                  <option>Goa</option>
+                  <option>Mauritius</option>
+                  <option>Sri Lanka</option>
+                  <option>Sikkim / Darjeeling</option>
+                  <option>Varanasi</option>
+                  <option>Custom / Other</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Group Size</label>
+                <select name="GroupSize">
+                  <option>Solo</option><option>2 people</option><option>3–5 people</option><option>6–10 people</option><option>10+ people</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group"><label>Preferred Month</label>
+              <select name="Month">
+                <option>Flexible</option>
+                <option>June 2025</option><option>July 2025</option><option>August 2025</option>
+                <option>September 2025</option><option>October 2025</option><option>November 2025</option>
+                <option>December 2025</option><option>January 2026</option><option>February 2026</option>
+                <option>March 2026</option><option>April 2026</option><option>May 2026</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Message / Anything specific?</label>
+              <textarea name="Message" rows="3" placeholder="Tell us about your travel style, preferences or questions…"></textarea>
+            </div>
+            <button type="submit" class="btn-submit" id="enquiryBtn">Send Enquiry →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/917736855515?text=Hi! I'm interested in booking a trip with ModernMantra." target="_blank" class="float-wa" title="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<!-- Booking Modal -->
+<div class="modal-overlay" id="bookModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>Book Your Trip</h3>
+    <div id="modalPackageBadge" style="display:none;background:var(--mist);color:var(--pine);font-size:.8rem;font-weight:600;padding:7px 14px;border-radius:4px;margin-bottom:16px;letter-spacing:.3px;"></div>
+    <p style="color:#888;font-size:.85rem;margin-bottom:20px;">Fill in your details and we'll confirm within 2 hours.</p>
+    <form id="bookingForm" novalidate>
+      <input type="hidden" name="Package" id="modalPackageName"/>
+      <input type="hidden" name="Price" id="modalPackagePrice"/>
+      <div class="form-group"><label>Full Name *</label><input type="text" name="Name" placeholder="Your full name" required/></div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone *</label><input type="tel" name="Phone" placeholder="+91 XXXXX XXXXX" required/></div>
+        <div class="form-group"><label>Persons</label>
+          <select name="Persons"><option>1</option><option>2</option><option>3–5</option><option>6–10</option><option>10+</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" name="Email" placeholder="your@email.com"/></div>
+      <div class="form-group"><label>Preferred Date</label><input type="text" name="Date" placeholder="e.g. June 15, 2025"/></div>
+      <button type="submit" class="btn-submit" id="bookingBtn">Confirm Booking →</button>
+    </form>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ── PUBLIC REVIEW MODAL ── -->
+<div class="modal-overlay" id="reviewModal" onclick="if(event.target===this)closeReviewModal()">
+  <div class="modal" id="reviewModalInner" style="max-width:520px;">
+    <button class="modal-close" onclick="closeReviewModal()">✕</button>
+    <h3>Share Your Experience</h3>
+    <p>Your review helps other travellers discover their next adventure.</p>
+    <form id="reviewForm" novalidate>
+      <input type="hidden" name="_subject" value="⭐ New Review – ModernMantra"/>
+      <input type="hidden" name="FormType" value="Review"/>
+      <div class="form-row">
+        <div class="form-group"><label>Your Name *</label><input type="text" name="Name" placeholder="Full name" required/></div>
+        <div class="form-group"><label>Your City</label><input type="text" name="City" placeholder="e.g. Mumbai"/></div>
+      </div>
+      <div class="form-group">
+        <label>Which Trip Did You Take?</label>
+        <select name="Trip">
+          <option value="">— Select your trip —</option>
+          <option>Spiti Valley – Summer Escape</option><option>Zanskar Valley Road Trip</option>
+          <option>Manali Weekend Escape</option><option>Manali–Kasol–Manikaran 6D</option>
+          <option>Ladakh – Nubra &amp; Pangong 5D</option><option>Rajasthan Grand Tour 9D</option>
+          <option>Munnar Getaway 3D</option><option>Goa Holiday 5D</option>
+          <option>Mauritius 6D Escape</option><option>Sri Lanka Heritage Tour 5D</option>
+          <option>Varanasi Spiritual Tour 3D</option><option>Sikkim–Darjeeling 6D</option>
+          <option>Hyderabad Heritage Tour 5D</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Your Rating</label>
+        <div style="display:flex;gap:4px;padding:6px 0 2px;">
+          <span class="pub-star lit" onclick="setPubRating(1)">★</span>
+          <span class="pub-star lit" onclick="setPubRating(2)">★</span>
+          <span class="pub-star lit" onclick="setPubRating(3)">★</span>
+          <span class="pub-star lit" onclick="setPubRating(4)">★</span>
+          <span class="pub-star lit" onclick="setPubRating(5)">★</span>
+        </div>
+        <input type="hidden" name="Rating" id="pubRatingVal" value="5"/>
+      </div>
+      <div class="form-group">
+        <label>Your Review *</label>
+        <textarea name="Review" rows="4" placeholder="Tell us about your trip — the highlights, the moments, and what you'd say to someone considering it…" required style="resize:vertical;width:100%;padding:12px 14px;border:1.5px solid #e8e8e8;border-radius:8px;font-family:'Outfit',sans-serif;font-size:.88rem;line-height:1.65;outline:none;transition:border .2s;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#e8e8e8'"></textarea>
+      </div>
+      <button type="submit" class="btn-submit" id="reviewSubmitBtn" style="width:100%;padding:14px;">Submit Review →</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/main.js' %}"></script>
+<script>
+// ── Dynamic reviews from admin ──
+(function loadAdminReviews(){
+  try{
+    const reviews=JSON.parse(localStorage.getItem('mm_reviews')||'null');
+    if(!reviews||!reviews.length)return;
+    const active=reviews.filter(r=>r.active);
+    if(!active.length)return;
+    function esc(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML;}
+    const grid=document.getElementById('testiGrid');
+    if(!grid)return;
+    const cards=active.slice(0,6).map(r=>{
+      const init=(r.name||'?').trim().split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      const stars='★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
+      const loc=[r.location,r.trip?r.trip.split(/[–-]/)[0].trim():''].filter(Boolean).join(' · ');
+      return `<div class="testi-card">
+        <div class="stars">${stars}</div>
+        <p class="testi-text">"${esc(r.text)}"</p>
+        <div class="testi-person">
+          <div class="testi-avatar">${esc(init)}</div>
+          <div><div class="testi-name">${esc(r.name)}</div><div class="testi-loc">${esc(loc)}</div></div>
+        </div>
+      </div>`;
+    });
+    grid.innerHTML='<div class="testi-track">'+cards.join('')+'</div>';
+    const dotsWrap=grid.closest('section').querySelector('.testi-dots');
+    if(dotsWrap){
+      dotsWrap.innerHTML=cards.map((_,i)=>`<button class="testi-dot${i===0?' active':''}" aria-label="Review ${i+1}"></button>`).join('');
+      let cur2=0,timer2;
+      const track=grid.querySelector('.testi-track');
+      const cds=Array.from(track.querySelectorAll('.testi-card'));
+      const dts=Array.from(dotsWrap.querySelectorAll('.testi-dot'));
+      function goTo2(n){cur2=(n+cds.length)%cds.length;track.style.transform=`translateX(-${cur2*100}%)`;dts.forEach((d,i)=>d.classList.toggle('active',i===cur2));}
+      dts.forEach((d,i)=>d.addEventListener('click',()=>{clearInterval(timer2);goTo2(i);timer2=setInterval(()=>goTo2(cur2+1),5000);}));
+      timer2=setInterval(()=>goTo2(cur2+1),5000);
+    }
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  const Qs=[
+    {step:'Question 1 of 4',pct:25,q:"What's your travel budget per person?",key:'budget',opts:[
+      {l:'💰 Under ₹15,000',v:'budget'},{l:'💰💰 ₹15k – ₹25k',v:'mid'},
+      {l:'💰💰💰 ₹25k – ₹40k',v:'premium'},{l:'💎 No limit',v:'luxury'}]},
+    {step:'Question 2 of 4',pct:50,q:'How many days can you travel?',key:'days',opts:[
+      {l:'🏃 2–3 days (weekend)',v:'short'},{l:'🗓 4–6 days',v:'mid'},
+      {l:'📅 7–10 days',v:'long'},{l:'🌍 Flexible',v:'flex'}]},
+    {step:'Question 3 of 4',pct:75,q:'What kind of experience are you seeking?',key:'vibe',opts:[
+      {l:'⛰ Mountain adventure',v:'mountain'},{l:'🏜 Desert & culture',v:'desert'},
+      {l:'🌴 Beach & relaxation',v:'beach'},{l:'🕉 Spiritual journey',v:'spiritual'}]},
+    {step:'Question 4 of 4',pct:100,q:'Who are you travelling with?',key:'group',opts:[
+      {l:'🧍 Solo',v:'solo'},{l:'👫 Couple',v:'couple'},
+      {l:'👨‍👩‍👧 Family',v:'family'},{l:'👯 Group of friends',v:'group'}]}
+  ];
+  const trips=[
+    {name:'Spiti Valley – Summer Escape',price:'₹19,500',emoji:'🏔',match:function(a){return (a.budget==='mid'||a.budget==='budget'||a.budget==='premium')&&a.vibe==='mountain';},why:'High-altitude Himalayan magic, ancient monasteries, star-filled nights.'},
+    {name:'Manali Weekend Escape',price:'₹8,500',emoji:'🌲',match:function(a){return a.days==='short'||a.budget==='budget';},why:'Best for a quick mountain refresh — 3 days, great value, no experience needed.'},
+    {name:'Ladakh – Nubra & Pangong 5D',price:'₹22,000',emoji:'🐪',match:function(a){return (a.budget==='premium'||a.budget==='luxury')&&(a.vibe==='mountain'||a.vibe==='desert');},why:'World-class landscapes, double-humped camels, and the iconic blue Pangong Lake.'},
+    {name:'Rajasthan Grand Tour 9D',price:'₹30,400',emoji:'🏰',match:function(a){return a.vibe==='desert'||a.vibe==='spiritual';},why:'Royal palaces, camel safaris, and the colours of Rajasthan in one epic journey.'},
+    {name:'Goa Holiday 5D',price:'₹8,640',emoji:'🌴',match:function(a){return a.vibe==='beach'||(a.group==='couple'||a.group==='group');},why:'Sun, sea, and the perfect blend of chill and nightlife.'},
+    {name:'Zanskar Valley Road Trip',price:'₹34,500',emoji:'🛣',match:function(a){return (a.budget==='premium'||a.budget==='luxury')&&a.days!=='short';},why:'An epic off-road adventure through one of India\'s most remote valleys.'},
+    {name:'Manali–Kasol–Manikaran 6D',price:'₹11,500',emoji:'🌊',match:function(a){return a.days==='mid'&&(a.vibe==='mountain'||a.vibe==='spiritual');},why:'Three incredible destinations in one trip — rivers, forests, and hot springs.'},
+    {name:'Varanasi Spiritual Tour 3D',price:'₹12,000',emoji:'🕉',match:function(a){return a.vibe==='spiritual';},why:'The most spiritually powerful city in India — ghats, aarti, and ancient temples.'},
+    {name:'Munnar Getaway 3D',price:'₹9,500',emoji:'🍃',match:function(a){return a.vibe==='beach'||(a.days==='short'&&a.vibe!=='mountain');},why:'Rolling tea estates, cool mist, and absolute tranquillity in Kerala\'s highlands.'}
+  ];
+  let answers={},qIdx=0,picked=null;
+  window.quizPick=function(el,key,val){
+    document.querySelectorAll('#quizOpts .quiz-opt').forEach(b=>b.classList.remove('selected'));
+    el.classList.add('selected');
+    picked={key,val};
+    document.getElementById('quizNext').style.display='block';
+  };
+  window.quizNext=function(){
+    if(!picked)return;
+    answers[picked.key]=picked.val;
+    picked=null;
+    qIdx++;
+    if(qIdx>=Qs.length){showResult();return;}
+    const q=Qs[qIdx];
+    document.getElementById('quizStep').textContent=q.step;
+    document.getElementById('quizBar').style.width=q.pct+'%';
+    document.getElementById('quizQ').textContent=q.q;
+    document.getElementById('quizOpts').innerHTML=q.opts.map(o=>`<button class="quiz-opt" onclick="quizPick(this,'${q.key}','${o.v}')">${o.l}</button>`).join('');
+    document.getElementById('quizNext').style.display='none';
+  };
+  function showResult(){
+    const matches=trips.filter(t=>t.match(answers));
+    const top=matches.length?matches.slice(0,3):[trips[0],trips[2],trips[4]];
+    document.getElementById('quizCard').innerHTML=`
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="font-size:2.2rem;margin-bottom:8px;">🎯</div>
+        <div class="quiz-q" style="margin-bottom:4px;">Your Perfect Trips</div>
+        <p style="font-size:.82rem;color:#999;">Based on your answers, we recommend:</p>
+      </div>
+      <div class="quiz-result-grid">
+        ${top.map(t=>`<div class="quiz-result-card">
+          <div class="quiz-result-icon">${t.emoji}</div>
+          <div style="flex:1;">
+            <div class="quiz-result-name">${t.name}</div>
+            <div class="quiz-result-why">${t.why}</div>
+            <div class="quiz-result-price">${t.price} / person</div>
+          </div>
+          <a href="{% url 'pages:packages' %}" style="flex-shrink:0;background:var(--pine);color:#fff;padding:8px 14px;border-radius:8px;font-size:.75rem;font-weight:600;text-decoration:none;white-space:nowrap;">View →</a>
+        </div>`).join('')}
+      </div>
+      <button class="btn-dark" onclick="resetQuiz()" style="width:100%;margin-top:18px;">↺ Retake Quiz</button>`;
+  }
+  window.resetQuiz=function(){
+    answers={};qIdx=0;picked=null;
+    const q=Qs[0];
+    document.getElementById('quizCard').innerHTML=`
+      <div class="quiz-step" id="quizStep">${q.step}</div>
+      <div class="quiz-progress"><div class="quiz-bar" id="quizBar" style="width:${q.pct}%"></div></div>
+      <div class="quiz-q" id="quizQ">${q.q}</div>
+      <div class="quiz-opts" id="quizOpts">${q.opts.map(o=>`<button class="quiz-opt" onclick="quizPick(this,'${q.key}','${o.v}')">${o.l}</button>`).join('')}</div>
+      <button class="btn-dark" id="quizNext" style="width:100%;margin-top:8px;display:none;" onclick="quizNext()">Next →</button>`;
+  };
+})();
+</script>
+<script>
+  // Hero Slideshow
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.hero-dot');
+  function goToSlide(idx) { slides[currentSlide].classList.remove('active'); dots[currentSlide].classList.remove('active'); currentSlide=idx; slides[currentSlide].classList.add('active'); dots[currentSlide].classList.add('active'); }
+  dots.forEach((d,i)=>d.addEventListener('click',()=>goToSlide(i)));
+  setInterval(()=>goToSlide((currentSlide+1)%slides.length),5500);
+
+  // Review modal
+  var _pubRating=5;
+  function openReviewModal(){ document.getElementById('reviewModal').classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeReviewModal(){ document.getElementById('reviewModal').classList.remove('open'); document.body.style.overflow=''; }
+  function setPubRating(n){
+    _pubRating=n; document.getElementById('pubRatingVal').value=n;
+    document.querySelectorAll('.pub-star').forEach(function(s,i){s.classList.toggle('lit',i<n);});
+  }
+  document.querySelectorAll('.pub-star').forEach(function(s,i){
+    s.addEventListener('mouseenter',function(){document.querySelectorAll('.pub-star').forEach(function(x,j){x.classList.toggle('lit',j<=i);});});
+    s.addEventListener('mouseleave',function(){document.querySelectorAll('.pub-star').forEach(function(x,j){x.classList.toggle('lit',j<_pubRating);});});
+  });
+  document.getElementById('reviewForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    var btn=document.getElementById('reviewSubmitBtn');
+    btn.textContent='Sending…'; btn.disabled=true;
+    try{
+      var res=await fetch(window.MM_ENDPOINTS.review,{method:'POST',body:new FormData(this),credentials:'same-origin',headers:{Accept:'application/json','X-CSRFToken':window.MM_CSRF_TOKEN}});
+      if(res.ok){
+        document.getElementById('reviewModalInner').innerHTML='<div style="text-align:center;padding:28px 0;"><div style="font-size:3.5rem;margin-bottom:16px;">🙏</div><h3 style="color:var(--pine);font-family:\'Cormorant Garamond\',serif;font-size:2.2rem;margin-bottom:10px;">Thank You!</h3><p style="color:#888;line-height:1.75;max-width:340px;margin:0 auto 28px;">Your review has been received. We\'ll verify and publish it on the site soon. It means the world to us!</p><button class="btn-primary" onclick="closeReviewModal()">Close</button></div>';
+      } else { btn.textContent='Submit Review →'; btn.disabled=false; showToast('⚠️ Something went wrong. Try again.'); }
+    }catch(err){ btn.textContent='Submit Review →'; btn.disabled=false; showToast('⚠️ Network error. Try again.'); }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,119 @@
+/* ═══════════════════════════════════════════
+   MODERN MANTRA — PACKAGES & INNER PAGES
+   ═══════════════════════════════════════════ */
+
+/* ── PACKAGES PAGE ── */
+.pkg-page-hero { background-image: url('../images/hero-village.jpg'); }
+
+.filter-bar { background: #fff; border-bottom: 1px solid #eee; padding: 20px 0; position: sticky; top: var(--nav-h); z-index: 10; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+.filter-bar .container { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.filter-label { font-size: .8rem; color: #888; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-right: 8px; }
+.filter-btn { padding: 8px 20px; border-radius: 100px; font-size: .82rem; font-weight: 500; cursor: pointer; border: 1.5px solid var(--mist); background: transparent; color: #777; transition: all .2s; }
+.filter-btn.active, .filter-btn:hover { background: var(--pine); color: #fff; border-color: var(--pine); }
+
+.packages-main { padding: 60px 0; background: var(--snow); }
+.packages-full-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+
+/* Big featured package */
+.pkg-featured { background: linear-gradient(135deg, var(--pine), var(--forest)); border-radius: 12px; padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-bottom: 50px; color: #fff; }
+.pkg-featured h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; margin-bottom: 8px; }
+.pkg-featured .subtitle { color: var(--sage); font-size: .85rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+.pkg-featured p { color: rgba(255,255,255,.78); line-height: 1.7; margin-bottom: 24px; }
+.pkg-featured-price { display: flex; align-items: baseline; gap: 8px; margin-bottom: 28px; }
+.pkg-featured-price .from { font-size: .85rem; color: var(--sage); }
+.pkg-featured-price .amount { font-family: 'Cormorant Garamond', serif; font-size: 3rem; color: var(--gold); font-weight: 600; line-height: 1; }
+.pkg-featured-price .per { font-size: .85rem; color: rgba(255,255,255,.6); }
+.day-timeline { display: flex; flex-direction: column; gap: 0; }
+.day-item { display: flex; gap: 16px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,.1); align-items: flex-start; }
+.day-item:last-child { border-bottom: none; }
+.day-num { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--gold); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 700; flex-shrink: 0; }
+.day-info strong { display: block; font-size: .88rem; color: var(--sage); }
+.day-info span { font-size: .8rem; color: rgba(255,255,255,.6); }
+
+/* Package detail modal override */
+.pkg-detail-tabs { display: flex; gap: 0; border-bottom: 2px solid #eee; margin-bottom: 24px; }
+.pkg-tab { padding: 10px 20px; font-size: .85rem; cursor: pointer; border: none; background: none; font-weight: 500; color: #888; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; }
+.pkg-tab.active { color: var(--pine); border-bottom-color: var(--pine); }
+.pkg-tab-content { display: none; }
+.pkg-tab-content.active { display: block; }
+.incl-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.incl-list li { display: flex; gap: 10px; align-items: flex-start; font-size: .88rem; color: #555; }
+.incl-list li::before { content: '✓'; color: var(--forest); font-weight: 700; flex-shrink: 0; }
+.excl-list li::before { content: '✗'; color: var(--ember); font-weight: 700; }
+
+/* ── GALLERY PAGE ── */
+.gallery-page-hero { background-image: url('../images/valley-night.jpg'); }
+.gallery-main { padding: 60px 0; background: var(--pine); }
+.gallery-main .section-label { color: var(--sage); }
+.gallery-main .section-title { color: var(--cream); }
+
+.gallery-masonry { columns: 4; column-gap: 12px; margin-top: 48px; }
+.gal-item { break-inside: avoid; margin-bottom: 12px; border-radius: 6px; overflow: hidden; position: relative; cursor: pointer; }
+.gal-item img { width: 100%; display: block; transition: transform .5s; }
+.gal-item:hover img { transform: scale(1.05); }
+.gal-item-overlay { position: absolute; inset: 0; background: rgba(27,58,45,0); transition: background .3s; display: flex; align-items: center; justify-content: center; }
+.gal-item:hover .gal-item-overlay { background: rgba(27,58,45,.4); }
+.gal-zoom { opacity: 0; width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,.9); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: opacity .3s; }
+.gal-item:hover .gal-zoom { opacity: 1; }
+.gallery-placeholder { border-radius: 6px; overflow: hidden; background: rgba(255,255,255,.06); border: 2px dashed rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; min-height: 160px; margin-bottom: 12px; }
+.gallery-placeholder span { color: rgba(255,255,255,.3); font-size: .82rem; text-align: center; padding: 20px; }
+
+/* Lightbox */
+.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.92); z-index: 999; display: none; align-items: center; justify-content: center; }
+.lightbox.open { display: flex; }
+.lightbox img { max-width: 90vw; max-height: 88vh; border-radius: 4px; object-fit: contain; }
+.lb-close { position: absolute; top: 20px; right: 24px; font-size: 2rem; color: rgba(255,255,255,.7); cursor: pointer; line-height: 1; border: none; background: none; }
+.lb-close:hover { color: #fff; }
+.lb-prev, .lb-next { position: absolute; top: 50%; transform: translateY(-50%); font-size: 2rem; color: rgba(255,255,255,.6); cursor: pointer; background: rgba(255,255,255,.08); border: none; padding: 12px 16px; border-radius: 4px; transition: all .2s; }
+.lb-prev { left: 20px; }
+.lb-next { right: 20px; }
+.lb-prev:hover, .lb-next:hover { background: rgba(255,255,255,.2); color: #fff; }
+
+/* ── CONTACT PAGE ── */
+.contact-page-hero { background-image: url('../images/group-mountains.jpg'); }
+.contact-main { padding: 80px 0; background: var(--snow); }
+.contact-page-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 80px; align-items: start; }
+.contact-info-cards { display: flex; flex-direction: column; gap: 24px; margin-top: 32px; }
+.c-card { background: #fff; border-radius: 8px; padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,.06); display: flex; gap: 16px; align-items: flex-start; }
+.c-card-icon { width: 48px; height: 48px; background: var(--mist); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+.c-card-info h4 { font-weight: 600; color: var(--pine); margin-bottom: 4px; }
+.c-card-info p { font-size: .88rem; color: #666; line-height: 1.6; }
+.c-card-info a { color: var(--forest); transition: color .2s; }
+.c-card-info a:hover { color: var(--gold); }
+.contact-form-box { background: linear-gradient(160deg, var(--pine) 0%, var(--forest) 100%); border-radius: 12px; padding: 48px; }
+.contact-form-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--cream); margin-bottom: 8px; }
+.contact-form-box p { color: rgba(255,255,255,.7); margin-bottom: 32px; font-size: .9rem; }
+.map-embed { border-radius: 10px; overflow: hidden; margin-top: 50px; box-shadow: 0 8px 32px rgba(0,0,0,.1); }
+.map-embed iframe { width: 100%; height: 320px; border: none; display: block; }
+
+/* ── ABOUT PAGE ── */
+.about-page-hero { background-image: url('../images/rainbow-girl.jpg'); }
+.about-story { background: var(--cream); padding: 80px 0; }
+.story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.story-imgs { position: relative; height: 500px; }
+.story-img-main { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.story-img-float { position: absolute; bottom: -24px; right: -24px; width: 48%; border-radius: 6px; border: 5px solid var(--cream); box-shadow: 0 12px 40px rgba(0,0,0,.15); }
+.story-text p { color: #555; line-height: 1.8; margin-bottom: 16px; }
+.team-section { padding: 80px 0; background: var(--snow); }
+.team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 48px; }
+.team-card { text-align: center; }
+.team-avatar { width: 100px; height: 100px; border-radius: 50%; background: var(--mist); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; }
+.team-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--pine); margin-bottom: 4px; }
+.team-role { font-size: .82rem; color: var(--moss); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+.team-bio { font-size: .88rem; color: #666; line-height: 1.6; }
+
+/* ── RESPONSIVE INNER ── */
+@media (max-width: 900px) {
+  .packages-full-grid { grid-template-columns: 1fr 1fr; }
+  .pkg-featured { grid-template-columns: 1fr; padding: 32px; }
+  .contact-page-grid, .story-grid { grid-template-columns: 1fr; }
+  .gallery-masonry { columns: 3; }
+  .team-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .packages-full-grid { grid-template-columns: 1fr; }
+  .gallery-masonry { columns: 2; }
+  .team-grid { grid-template-columns: 1fr; }
+  .story-imgs { height: 280px; }
+  .story-img-float { display: none; }
+}

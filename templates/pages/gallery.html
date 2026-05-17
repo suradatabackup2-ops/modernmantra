@@ -1,0 +1,484 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Gallery – Modern Mantra | Real Photos from Our Trips{% endblock %}
+{% block meta_description %}Real photos from our Himalayan treks, road trips, and adventures. See what your next Modern Mantra trip could look like — base camps, sunrises, prayer flags, and more.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages.css' %}"/>
+<style>
+    .gallery-filter-bar { background: var(--pine); padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,.1); position: sticky; top: var(--nav-h); z-index: 10; }
+    .gallery-filter-bar .container { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .gal-filter { padding: 7px 18px; border-radius: 100px; font-size: .8rem; font-weight: 500; cursor: pointer; border: 1px solid rgba(255,255,255,.25); background: transparent; color: rgba(255,255,255,.7); transition: all .2s; }
+    .gal-filter.active, .gal-filter:hover { background: var(--gold); border-color: var(--gold); color: #fff; }
+    .gallery-hero-bg { background-image: url('{% static 'images/valley-night.jpg' %}'); }
+    .gallery-section { background: var(--pine); padding: 60px 0 80px; }
+    .gallery-masonry { columns: 4; column-gap: 10px; margin-top: 48px; }
+    .gal-item { break-inside: avoid; margin-bottom: 10px; border-radius: 6px; overflow: hidden; position: relative; cursor: pointer; display: block; }
+    .gal-item img { width: 100%; display: block; transition: transform .5s; }
+    .gal-item:hover img { transform: scale(1.05); }
+    .gal-overlay { position: absolute; inset: 0; background: rgba(27,58,45,0); transition: background .3s; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; }
+    .gal-item:hover .gal-overlay { background: rgba(27,58,45,.5); }
+    .gal-zoom { opacity: 0; color: #fff; font-size: 1.8rem; transition: opacity .3s; }
+    .gal-item:hover .gal-zoom { opacity: 1; }
+    .gal-caption { opacity: 0; color: var(--sage); font-size: .75rem; letter-spacing: 1px; text-transform: uppercase; transition: opacity .3s; }
+    .gal-item:hover .gal-caption { opacity: 1; }
+
+    /* Admin delete button (only shows for logged-in admin) */
+    .gal-admin-del { position: absolute; top: 8px; right: 8px; z-index: 5; background: rgba(192,57,43,.92); color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 1rem; line-height: 1; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,.35); transition: transform .15s, background .15s; }
+    .gal-admin-del:hover { background: #c0392b; transform: scale(1.15); }
+    body.is-admin .gal-admin-del { display: flex; }
+    .admin-strip { display: none; background: linear-gradient(90deg, rgba(192,57,43,.95), rgba(231,76,60,.95)); color: #fff; padding: 10px 18px; font-size: .82rem; text-align: center; position: sticky; top: var(--nav-h); z-index: 11; }
+    body.is-admin .admin-strip { display: block; }
+    .admin-strip button { background: rgba(255,255,255,.2); border: 1px solid rgba(255,255,255,.4); color: #fff; padding: 4px 12px; border-radius: 4px; font-size: .76rem; cursor: pointer; margin-left: 10px; font-family: 'Outfit', sans-serif; }
+    .admin-strip button:hover { background: rgba(255,255,255,.3); }
+    /* Lightbox */
+    .lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.95); z-index: 999; display: none; align-items: center; justify-content: center; }
+    .lightbox.open { display: flex; }
+    .lb-img-wrap { max-width: 90vw; max-height: 88vh; position: relative; }
+    .lb-img-wrap img { max-width: 90vw; max-height: 86vh; object-fit: contain; border-radius: 4px; display: block; }
+    .lb-close { position: absolute; top: -44px; right: 0; font-size: 1.8rem; color: rgba(255,255,255,.7); cursor: pointer; border: none; background: none; line-height: 1; }
+    .lb-close:hover { color: #fff; }
+    .lb-nav { position: fixed; top: 50%; transform: translateY(-50%); font-size: 2rem; color: rgba(255,255,255,.5); cursor: pointer; background: rgba(255,255,255,.08); border: none; padding: 16px 18px; border-radius: 4px; transition: all .2s; z-index: 10; }
+    .lb-prev { left: 16px; }
+    .lb-next { right: 16px; }
+    .lb-nav:hover { background: rgba(255,255,255,.2); color: #fff; }
+    .lb-counter { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.5); font-size: .85rem; }
+    /* Add more photos CTA */
+    .gallery-cta { text-align: center; padding: 50px 0 0; }
+    .gallery-cta p { color: rgba(255,255,255,.6); max-width: 500px; margin: 0 auto 24px; line-height: 1.7; }
+    @media (max-width: 900px) { .gallery-masonry { columns: 3; } }
+    @media (max-width: 600px) { .gallery-masonry { columns: 2; } }
+  </style>
+
+{% endblock %}
+
+{% block content %}
+<!-- NAV -->
+
+
+<!-- Admin strip - shown only when admin is logged in -->
+<div class="admin-strip">
+  🔒 Admin Mode — click the red ✕ on any photo to delete it permanently.
+  <button onclick="window.location.href='admin.html'">⚙️ Admin Panel</button>
+  <button onclick="adminLogoutGallery()">Sign Out</button>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero gallery-hero-bg">
+  <div class="container">
+    <div class="page-hero-content">
+      <div class="section-label">Our Visual Story</div>
+      <h1>Real Moments.<br>Real Mountains.</h1>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="gallery-filter-bar">
+  <div class="container">
+    <button class="gal-filter active" onclick="filterGal('all', this)">All Photos</button>
+    <button class="gal-filter" onclick="filterGal('base', this)">Modern Mantra Base</button>
+    <button class="gal-filter" onclick="filterGal('nature', this)">Nature & Landscape</button>
+    <button class="gal-filter" onclick="filterGal('group', this)">Group Moments</button>
+    <button class="gal-filter" onclick="filterGal('winter', this)">Winter & Snow</button>
+    <button class="gal-filter" onclick="filterGal('water', this)">Waterfalls</button>
+  </div>
+</div>
+
+<!-- GALLERY GRID -->
+<section class="gallery-section">
+  <div class="container">
+    <div class="section-label" style="color:var(--sage)">Photo Gallery</div>
+    <h2 class="section-title" style="color:var(--cream)">Every Frame, A Memory</h2>
+    <p style="color:rgba(255,255,255,.6); max-width:560px; line-height:1.7">All photos are real, unfiltered moments captured on our trips. These are your future memories.</p>
+
+    <div class="gallery-masonry" id="galleryGrid">
+
+      <div class="gal-item" data-cat="nature" onclick="openLightbox(0)">
+        <img src="{% static 'images/hero-village.jpg' %}" alt="Himalayan village from above" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Himalayan Village</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="base" onclick="openLightbox(1)">
+        <img src="{% static 'images/hero-base.jpg' %}" alt="Modern Mantra Base Camp" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Modern Mantra Base</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="winter" onclick="openLightbox(2)">
+        <img src="{% static 'images/campfire-snow.jpg' %}" alt="Campfire in snow" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Winter Campfire</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="base" onclick="openLightbox(3)">
+        <img src="{% static 'images/rainbow-girl.jpg' %}" alt="Rainbow at base camp" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Rainbow Morning</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="water group" onclick="openLightbox(4)">
+        <img src="{% static 'images/campfire-waterfall.jpg' %}" alt="Group campfire at waterfall" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Bonfire by the Falls</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="winter nature" onclick="openLightbox(5)">
+        <img src="{% static 'images/snow-lake.jpg' %}" alt="Snow lake reflection" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Frozen Lake Reflection</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="group nature" onclick="openLightbox(6)">
+        <img src="{% static 'images/group-mountains.jpg' %}" alt="Group relaxing in mountains" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Alpine Meadow Chill</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="base winter" onclick="openLightbox(7)">
+        <img src="{% static 'images/base-night.jpg' %}" alt="Base camp at night" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Starry Night at Base</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="water" onclick="openLightbox(8)">
+        <img src="{% static 'images/waterfall1.jpg' %}" alt="Waterfall hike" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Hidden Waterfall</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="base" onclick="openLightbox(9)">
+        <img src="{% static 'images/hammock-view.jpg' %}" alt="Hammock with mountain view" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Hammock Morning Views</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="nature" onclick="openLightbox(10)">
+        <img src="{% static 'images/valley-night.jpg' %}" alt="Valley at night" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Valley at Dusk</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="winter base" onclick="openLightbox(11)">
+        <img src="{% static 'images/igloo.jpg' %}" alt="Snow igloo at base camp" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Snow Igloo Life</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="nature" onclick="openLightbox(12)">
+        <img src="{% static 'images/sheep-mountains.jpg' %}" alt="Sheep on mountain highway" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Mountain Road Encounters</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="water" onclick="openLightbox(13)">
+        <img src="{% static 'images/waterfall2.jpg' %}" alt="Waterfall closeup" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">At the Base of the Falls</div></div>
+      </div>
+
+      <!-- ── NEW PHOTOS ── -->
+      <div class="gal-item" data-cat="winter base" onclick="openLightbox(14)">
+        <img src="{% static 'images/new-snow-base-1.jpg' %}" alt="Modern Mantra in Deep Snow" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Base in Deep Snow</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="winter base" onclick="openLightbox(15)">
+        <img src="{% static 'images/new-snow-base-2.jpg' %}" alt="Prayer Flags in Winter" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Prayer Flags in Winter</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="winter base" onclick="openLightbox(16)">
+        <img src="{% static 'images/new-snow-base-3.jpg' %}" alt="Modern Mantra Signboard in Snow" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Modern Mantra Signboard</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="winter group" onclick="openLightbox(17)">
+        <img src="{% static 'images/new-snow-walk.jpg' %}" alt="Walking in Snowfall" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Walking in Snowfall</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="base nature" onclick="openLightbox(18)">
+        <img src="{% static 'images/new-swing-house.jpg' %}" alt="Swing at the Old Wooden House" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Swing with a View</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="base" onclick="openLightbox(19)">
+        <img src="{% static 'images/new-mural-art.jpg' %}" alt="Artist painting Krishna mural inside base" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Art at the Base</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="nature group" onclick="openLightbox(20)">
+        <img src="{% static 'images/new-child-flowers-1.jpg' %}" alt="Child with pinwheel in mustard fields" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Mustard Fields in Spring</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="nature group" onclick="openLightbox(21)">
+        <img src="{% static 'images/new-child-flowers-2.jpg' %}" alt="Joy in the mustard fields" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Spring Blooms and Joy</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="nature" onclick="openLightbox(22)">
+        <img src="{% static 'images/new-village-aerial-1.jpg' %}" alt="Aerial view of Himalayan village" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Village from Above</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="nature group" onclick="openLightbox(23)">
+        <img src="{% static 'images/new-child-flowers-3.jpg' %}" alt="Waving hello in the fields" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Hello from the Hills</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="winter base" onclick="openLightbox(24)">
+        <img src="{% static 'images/new-snow-base-4.jpg' %}" alt="Modern Mantra under blue sky in snow" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Blue Sky After Snowfall</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="winter group" onclick="openLightbox(25)">
+        <img src="{% static 'images/new-snow-dog.jpg' %}" alt="Snow moments with a mountain dog" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Mountain Dog Friends</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="nature" onclick="openLightbox(26)">
+        <img src="{% static 'images/new-village-aerial-2.jpg' %}" alt="Terraced village aerial view" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Terraced Mountain Village</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="water group" onclick="openLightbox(27)">
+        <img src="{% static 'images/new-campfire-falls.jpg' %}" alt="Campfire by a waterfall at dusk" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Campfire by the Falls</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="base nature" onclick="openLightbox(28)">
+        <img src="{% static 'images/new-base-drone.jpg' %}" alt="Modern Mantra drone shot in summer" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Modern Mantra from the Sky</div></div>
+      </div>
+
+      <div class="gal-item" data-cat="winter base" onclick="openLightbox(29)">
+        <img src="{% static 'images/new-igloo-lantern.jpg' %}" alt="Snow igloo with lantern" loading="lazy"/>
+        <div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">Igloo and Lantern Night</div></div>
+      </div>
+
+    </div>
+
+    <!-- More photos CTA -->
+    <div class="gallery-cta">
+      <div class="section-label" style="color:var(--sage)">Follow For More</div>
+      <h3 class="section-title" style="color:var(--cream); font-size:1.8rem">More Photos Coming Soon</h3>
+      <p>Follow us on Instagram for daily stories from the trail. Tag us in your ModernMantra moments!</p>
+      <a href="https://www.instagram.com/modernmantra_" target="_blank" class="btn-primary">
+        📸 @modernmantra_
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+
+<a href="https://wa.me/917736855515" target="_blank" class="float-wa" title="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <button class="lb-nav lb-prev" onclick="event.stopPropagation(); lbNav(-1)">‹</button>
+  <div class="lb-img-wrap" onclick="event.stopPropagation()">
+    <img id="lbImg" src="" alt="Gallery photo"/>
+  </div>
+  <button class="lb-nav lb-next" onclick="event.stopPropagation(); lbNav(1)">›</button>
+  <div class="lb-counter" id="lbCounter"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/main.js' %}"></script>
+<script>
+  // Gallery images array
+  const galleryImages = [
+    { src: 'images/hero-village.jpg', cap: 'Himalayan Village from Above' },
+    { src: 'images/hero-base.jpg', cap: 'Modern Mantra Base Camp' },
+    { src: 'images/campfire-snow.jpg', cap: 'Winter Campfire Under Stars' },
+    { src: 'images/rainbow-girl.jpg', cap: 'Rainbow Morning at the Base' },
+    { src: 'images/campfire-waterfall.jpg', cap: 'Bonfire by the Waterfall' },
+    { src: 'images/snow-lake.jpg', cap: 'Frozen Lake Reflection' },
+    { src: 'images/group-mountains.jpg', cap: 'Group Picnic in Alpine Meadow' },
+    { src: 'images/base-night.jpg', cap: 'Base Camp at Night' },
+    { src: 'images/waterfall1.jpg', cap: 'Hidden Himalayan Waterfall' },
+    { src: 'images/hammock-view.jpg', cap: 'Hammock Mornings with Mountain Views' },
+    { src: 'images/valley-night.jpg', cap: 'Valley of Lights at Dusk' },
+    { src: 'images/igloo.jpg', cap: 'Snow Igloo Winter Experience' },
+    { src: 'images/sheep-mountains.jpg', cap: 'Mountain Road Encounters' },
+    { src: 'images/waterfall2.jpg', cap: 'Standing at the Falls' },
+    { src: 'images/new-snow-base-1.jpg', cap: 'Base in Deep Snow' },
+    { src: 'images/new-snow-base-2.jpg', cap: 'Prayer Flags in Winter' },
+    { src: 'images/new-snow-base-3.jpg', cap: 'Modern Mantra Signboard' },
+    { src: 'images/new-snow-walk.jpg', cap: 'Walking in Snowfall' },
+    { src: 'images/new-swing-house.jpg', cap: 'Swing with a View' },
+    { src: 'images/new-mural-art.jpg', cap: 'Art at the Base' },
+    { src: 'images/new-child-flowers-1.jpg', cap: 'Mustard Fields in Spring' },
+    { src: 'images/new-child-flowers-2.jpg', cap: 'Spring Blooms and Joy' },
+    { src: 'images/new-village-aerial-1.jpg', cap: 'Village from Above' },
+    { src: 'images/new-child-flowers-3.jpg', cap: 'Hello from the Hills' },
+    { src: 'images/new-snow-base-4.jpg', cap: 'Blue Sky After Snowfall' },
+    { src: 'images/new-snow-dog.jpg', cap: 'Mountain Dog Friends' },
+    { src: 'images/new-village-aerial-2.jpg', cap: 'Terraced Mountain Village' },
+    { src: 'images/new-campfire-falls.jpg', cap: 'Campfire by the Falls' },
+    { src: 'images/new-base-drone.jpg', cap: 'Modern Mantra from the Sky' },
+    { src: 'images/new-igloo-lantern.jpg', cap: 'Igloo and Lantern Night' }
+  ];
+
+  let lbCurrent = 0;
+
+  function openLightbox(idx) {
+    lbCurrent = idx;
+    updateLightbox();
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function lbNav(dir) {
+    lbCurrent = (lbCurrent + dir + galleryImages.length) % galleryImages.length;
+    updateLightbox();
+  }
+
+  function updateLightbox() {
+    const img = galleryImages[lbCurrent];
+    document.getElementById('lbImg').src = img.src;
+    document.getElementById('lbImg').alt = img.cap;
+    document.getElementById('lbCounter').textContent = `${lbCurrent + 1} / ${galleryImages.length} · ${img.cap}`;
+  }
+
+  // Keyboard navigation
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('lightbox').classList.contains('open')) return;
+    if (e.key === 'ArrowRight') lbNav(1);
+    if (e.key === 'ArrowLeft') lbNav(-1);
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // Gallery filter
+  function filterGal(cat, btn) {
+    document.querySelectorAll('.gal-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.gal-item').forEach(item => {
+      const cats = item.dataset.cat || '';
+      const tripCat = item.dataset.tripcat || '';
+      const match = cat === 'all' || cats.includes(cat) || tripCat === cat;
+      item.style.display = match ? 'block' : 'none';
+    });
+  }
+
+  // ── Detect admin mode ──
+  const IS_ADMIN = sessionStorage.getItem('mm_admin') === '1';
+  if (IS_ADMIN) document.body.classList.add('is-admin');
+
+  function adminLogoutGallery(){
+    sessionStorage.removeItem('mm_admin');
+    document.body.classList.remove('is-admin');
+    alert('Signed out of admin mode.');
+    location.reload();
+  }
+
+  // ── Delete photo from gallery (admin only) ──
+  async function deleteGalPhoto(id, itemEl){
+    if(!IS_ADMIN){ alert('Sign in via admin.html first.'); return; }
+    if(!confirm('Delete this photo permanently?\n\nThis cannot be undone.')) return;
+    try{
+      // Delete from IndexedDB
+      const db = await new Promise((res,rej)=>{
+        const r = indexedDB.open('mm_gallery_db', 1);
+        r.onupgradeneeded = e => e.target.result.createObjectStore('photos');
+        r.onsuccess = e => res(e.target.result);
+        r.onerror = rej;
+      });
+      await new Promise((res,rej)=>{
+        const tx = db.transaction('photos','readwrite');
+        tx.objectStore('photos').delete(id);
+        tx.oncomplete = res; tx.onerror = rej;
+      });
+      // Remove from localStorage metadata
+      const meta = JSON.parse(localStorage.getItem('mm_gallery') || '[]');
+      const updated = meta.filter(p => p.id !== id);
+      localStorage.setItem('mm_gallery', JSON.stringify(updated));
+      // Remove from DOM with fade-out
+      itemEl.style.transition = 'opacity .3s, transform .3s';
+      itemEl.style.opacity = '0';
+      itemEl.style.transform = 'scale(.85)';
+      setTimeout(()=>itemEl.remove(), 300);
+      // Brief toast
+      showGalToast('✓ Photo deleted');
+    }catch(e){
+      alert('Could not delete photo: ' + e.message);
+    }
+  }
+
+  function showGalToast(msg){
+    let t = document.getElementById('galToast');
+    if(!t){
+      t = document.createElement('div');
+      t.id = 'galToast';
+      t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:#1B3A2D;color:#fff;padding:12px 22px;border-radius:8px;font-size:.86rem;z-index:1000;opacity:0;transition:all .35s;pointer-events:none;font-family:Outfit,sans-serif;';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    t.style.transform = 'translateX(-50%) translateY(0)';
+    setTimeout(()=>{ t.style.opacity = '0'; t.style.transform = 'translateX(-50%) translateY(80px)'; }, 2500);
+  }
+
+  // ── Load admin-uploaded trip photos ──
+  (async function loadAdminGallery(){
+    try{
+      const meta = JSON.parse(localStorage.getItem('mm_gallery') || 'null');
+      if(!meta || !meta.length) return;
+
+      // Open IndexedDB
+      const db = await new Promise((res,rej)=>{
+        const r = indexedDB.open('mm_gallery_db', 1);
+        r.onupgradeneeded = e => e.target.result.createObjectStore('photos');
+        r.onsuccess = e => res(e.target.result);
+        r.onerror = rej;
+      });
+      async function getBuf(k){ return new Promise((res,rej)=>{ const req=db.transaction('photos','readonly').objectStore('photos').get(k); req.onsuccess=e=>res(e.target.result); req.onerror=rej; }); }
+
+      // Group by trip
+      const byTrip = {};
+      meta.forEach(p => { if(!byTrip[p.trip]) byTrip[p.trip]=[]; byTrip[p.trip].push(p); });
+      if(!Object.keys(byTrip).length) return;
+
+      const grid = document.getElementById('galleryGrid');
+      const filterBar = document.querySelector('.gallery-filter-bar .container');
+
+      // Add trip filter buttons
+      Object.keys(byTrip).forEach(trip => {
+        const slug = 'trip-' + trip.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-+$/,'');
+        const short = trip.split(/[–\-]/)[0].trim();
+        const btn = document.createElement('button');
+        btn.className = 'gal-filter';
+        btn.dataset.slug = slug;
+        btn.textContent = short + ' (' + byTrip[trip].length + ')';
+        btn.onclick = () => filterGal(slug, btn);
+        filterBar.appendChild(btn);
+      });
+
+      // Inject photos into grid
+      for(const trip of Object.keys(byTrip)){
+        const slug = 'trip-' + trip.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-+$/,'');
+        for(const p of byTrip[trip]){
+          try{
+            const buf = await getBuf(p.id);
+            if(!buf) continue;
+            const url = URL.createObjectURL(new Blob([buf], {type: p.mimeType||'image/jpeg'}));
+            const idx = galleryImages.length;
+            galleryImages.push({src: url, cap: p.caption || trip.split(/[–-]/)[0].trim()});
+            const item = document.createElement('div');
+            item.className = 'gal-item';
+            item.dataset.cat = '';
+            item.dataset.tripcat = slug;
+            item.onclick = () => openLightbox(idx);
+            item.innerHTML = `<img src="${url}" alt="${(p.caption||'').replace(/"/g,'&quot;')}" loading="lazy"/><div class="gal-overlay"><div class="gal-zoom">⊕</div><div class="gal-caption">${(p.caption||'').replace(/</g,'&lt;')}</div></div><button class="gal-admin-del" title="Delete photo (admin)" onclick="event.stopPropagation(); deleteGalPhoto('${p.id}', this.parentElement)">✕</button>`;
+            grid.appendChild(item);
+          }catch(e){}
+        }
+      }
+    }catch(e){}
+  })();
+</script>
+{% endblock %}

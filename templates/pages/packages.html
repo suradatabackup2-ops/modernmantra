@@ -1,0 +1,1300 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Travel Packages – Modern Mantra | 16 Curated Trips{% endblock %}
+{% block meta_description %}Browse 16 carefully curated trips: Himalayan treks (Spiti, Ladakh, Hampta Pass), road trips (Zanskar, Rajasthan), weekend escapes (Manali, Goa, Munnar), international (Mauritius, Sri Lanka). Pricing from ₹4,499.{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ── NAV (from main.css) ── */
+    .pkg-page-hero { height:360px; background-image:url('{% static 'images/hero-village.jpg' %}'); background-size:cover; background-position:center; position:relative; display:flex; align-items:flex-end; padding-bottom:56px; margin-top:72px; overflow:hidden; }
+    .pkg-page-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(to top,rgba(27,58,45,.9),rgba(27,58,45,.25)); }
+    .pkg-page-hero .container { position:relative; z-index:2; }
+    .page-hero-content .section-label { color:var(--sage); animation:fadeSlideUp .6s .1s both; }
+    .page-hero-content h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.4rem,5vw,4rem); color:#fff; font-weight:300; animation:fadeSlideUp .7s .25s both; }
+    @keyframes fadeSlideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    /* Animated orbs in hero */
+    .hero-orb { position:absolute; border-radius:50%; pointer-events:none; z-index:1; }
+    .hero-orb-1 { width:220px; height:220px; background:radial-gradient(circle,rgba(201,146,43,.18),transparent 70%); top:-40px; right:10%; animation:orbFloat 6s ease-in-out infinite; }
+    .hero-orb-2 { width:160px; height:160px; background:radial-gradient(circle,rgba(74,124,89,.2),transparent 70%); bottom:20px; right:30%; animation:orbFloat 8s ease-in-out infinite reverse; }
+    .hero-orb-3 { width:100px; height:100px; background:radial-gradient(circle,rgba(200,221,209,.15),transparent 70%); top:30%; left:5%; animation:orbFloat 7s ease-in-out infinite 2s; }
+    @keyframes orbFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-18px) scale(1.08)} }
+
+    /* ── Filter ── */
+    .filter-bar { background:#fff; border-bottom:1px solid #eee; padding:16px 0; position:sticky; top:72px; z-index:10; box-shadow:0 2px 16px rgba(0,0,0,.06); }
+    .filter-bar .container { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .filter-label { font-size:.72rem; color:#bbb; font-weight:600; letter-spacing:2px; text-transform:uppercase; }
+    .filter-btn { padding:7px 18px; border-radius:100px; font-size:.8rem; font-weight:500; cursor:pointer; border:1.5px solid #e0e0e0; background:transparent; color:#888; transition:all .2s; }
+    .filter-btn.active,.filter-btn:hover { background:var(--pine); color:#fff; border-color:var(--pine); }
+
+    /* ── Main ── */
+    .packages-main { padding:60px 0 80px; background:#f2f4f2; }
+
+    /* ── Page background ── */
+    .packages-main {
+      padding:60px 0 80px;
+      background: linear-gradient(180deg,
+        #eef4f0 0%,
+        #f5f0e8 30%,
+        #e8f0ec 60%,
+        #f0ece4 100%);
+      position: relative;
+    }
+    /* Floating blobs behind grid */
+    .packages-main::before {
+      content:'';
+      position:absolute; top:0; left:0; right:0; bottom:0;
+      background:
+        radial-gradient(ellipse 600px 400px at 15% 20%, rgba(74,124,89,.07) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 350px at 85% 60%, rgba(201,146,43,.06) 0%, transparent 70%),
+        radial-gradient(ellipse 400px 300px at 50% 90%, rgba(27,58,45,.05) 0%, transparent 70%);
+      pointer-events:none;
+      z-index:0;
+    }
+    .packages-main .container { position:relative; z-index:1; }
+
+    /* ── Grid ── */
+    .packages-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:26px; }
+
+    /* ── Card base ── */
+    .pkg-img { position:relative; height:220px; overflow:hidden; flex-shrink:0; }
+    .pkg-img img { width:100%; height:100%; object-fit:cover; transition:transform .6s; }
+    .pkg-card:hover .pkg-img img { transform:scale(1.08); }
+    .pkg-img::after { content:''; position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,.6) 0%,transparent 55%); pointer-events:none; }
+    .pkg-badge { position:absolute; top:14px; left:14px; z-index:2; padding:5px 12px; border-radius:100px; font-size:.68rem; font-weight:700; letter-spacing:.8px; text-transform:uppercase; box-shadow:0 2px 8px rgba(0,0,0,.2); }
+    .badge-gold { background:var(--gold); color:#fff; }
+    .badge-red { background:#e53935; color:#fff; }
+    .badge-green { background:#2e7d32; color:#fff; }
+    .badge-purple { background:#7b1fa2; color:#fff; }
+    .badge-blue { background:#1565c0; color:#fff; }
+    .badge-orange { background:#e65100; color:#fff; }
+    .badge-teal { background:#00695c; color:#fff; }
+    .pkg-fav { position:absolute; top:14px; right:14px; z-index:2; width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.92); border:none; display:flex; align-items:center; justify-content:center; font-size:1rem; cursor:pointer; transition:transform .2s; box-shadow:0 2px 8px rgba(0,0,0,.15); }
+    .pkg-fav:hover { transform:scale(1.2); }
+    .pkg-dur { position:absolute; bottom:12px; left:14px; z-index:2; background:rgba(0,0,0,.5); color:#fff; backdrop-filter:blur(4px); padding:4px 11px; border-radius:100px; font-size:.7rem; font-weight:600; }
+    .pkg-body { padding:18px 20px 0; flex:1; display:flex; flex-direction:column; }
+    .pkg-chips { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+    .chip { display:inline-flex; align-items:center; gap:3px; padding:3px 9px; border-radius:100px; font-size:.68rem; font-weight:600; }
+    .chip-green { background:#e8f5e9; color:#2e7d32; }
+    .chip-blue { background:#e3f2fd; color:#1565c0; }
+    .chip-orange { background:#fff3e0; color:#bf360c; }
+    .chip-purple { background:#f3e5f5; color:#6a1b9a; }
+    .chip-teal { background:#e0f7fa; color:#006064; }
+    .chip-red { background:#fce4ec; color:#b71c1c; }
+    .chip-gold { background:#fff8e1; color:#c17900; }
+    .pkg-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:600; color:var(--pine); margin-bottom:7px; line-height:1.2; }
+    .pkg-desc { font-size:.83rem; color:#777; line-height:1.65; margin-bottom:12px; flex:1; }
+    .pkg-hls { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:14px; }
+    .hl { background:#f5f5f5; border:1px solid #eee; color:#555; font-size:.7rem; padding:3px 9px; border-radius:6px; font-weight:500; }
+    .pkg-incl { display:flex; gap:12px; flex-wrap:wrap; padding:10px 0; border-top:1px dashed #eee; }
+    .incl { display:flex; align-items:center; gap:4px; font-size:.7rem; color:#999; }
+    .incl span:first-child { font-size:.88rem; }
+    .pkg-footer { display:flex; align-items:center; justify-content:space-between; padding:14px 20px 18px; border-top:1px solid #f0f0f0; gap:10px; }
+    .pkg-price-label { font-size:.62rem; color:#bbb; text-transform:uppercase; letter-spacing:1.5px; display:block; margin-bottom:1px; }
+    .pkg-price-amount { font-family:'Cormorant Garamond',serif; font-size:1.9rem; font-weight:700; color:var(--pine); line-height:1; transition:color .3s; }
+    .pkg-price-per { font-size:.68rem; color:#bbb; display:block; }
+    .pkg-actions { display:flex; flex-direction:column; gap:6px; align-items:flex-end; flex-shrink:0; }
+    .btn-book { background:var(--pine); color:#fff; padding:9px 20px; border-radius:8px; font-size:.8rem; font-weight:600; border:none; cursor:pointer; transition:all .25s; white-space:nowrap; }
+    .btn-wa { display:flex; align-items:center; gap:4px; font-size:.7rem; color:#25D366; font-weight:600; background:none; border:none; cursor:pointer; padding:0; text-decoration:none; white-space:nowrap; }
+    .btn-wa:hover { color:#128C7E; }
+    .btn-brochure { display:inline-flex; align-items:center; gap:5px; font-size:.7rem; color:#1565c0; font-weight:600; background:none; border:1.5px solid #1565c0; border-radius:6px; padding:5px 11px; text-decoration:none; transition:all .2s; white-space:nowrap; }
+    .btn-brochure:hover { background:#1565c0; color:#fff; }
+    .btn-itin { display:inline-flex; align-items:center; gap:5px; font-size:.7rem; color:var(--pine); font-weight:600; background:#f0f7f3; border:1.5px solid var(--pine); border-radius:6px; padding:5px 11px; cursor:pointer; transition:all .2s; white-space:nowrap; font-family:'Outfit',sans-serif; }
+    .btn-itin:hover { background:var(--pine); color:#fff; }
+    .btn-outline-w { border:1.5px solid rgba(255,255,255,.5); color:#fff; padding:12px 28px; border-radius:6px; font-weight:500; font-size:.88rem; display:inline-block; transition:all .2s; background:none; cursor:pointer; font-family:'Outfit',sans-serif; }
+    .btn-outline-w:hover { background:rgba(255,255,255,.1); border-color:#fff; }
+    .btn-primary { background:var(--gold); color:#fff; padding:12px 28px; border-radius:6px; font-weight:600; font-size:.88rem; letter-spacing:.5px; border:none; cursor:pointer; transition:background .2s; display:inline-block; }
+    .btn-primary:hover { background:var(--ember); }
+    .btn-brochure-w { display:inline-flex; align-items:center; gap:6px; font-size:.8rem; color:rgba(255,255,255,.85); font-weight:500; border:1.5px solid rgba(255,255,255,.4); padding:9px 20px; border-radius:6px; text-decoration:none; transition:all .2s; }
+    .btn-brochure-w:hover { background:rgba(255,255,255,.15); border-color:#fff; color:#fff; }
+    .feat-price { display:flex; align-items:baseline; gap:8px; margin-bottom:28px; }
+    .feat-price .from { font-size:.8rem; color:var(--sage); }
+    .feat-price .amount { font-family:'Cormorant Garamond',serif; font-size:3rem; color:var(--gold); font-weight:600; line-height:1; }
+    .feat-price .per { font-size:.8rem; color:rgba(255,255,255,.5); }
+    .feat-btns { display:flex; gap:12px; flex-wrap:wrap; }
+    .day-timeline { display:flex; flex-direction:column; }
+    .day-item { display:flex; gap:14px; padding:9px 0; border-bottom:1px solid rgba(255,255,255,.08); align-items:flex-start; }
+    .day-item:last-child { border-bottom:none; }
+    .day-num { width:30px; height:30px; border-radius:50%; border:1.5px solid var(--gold); color:var(--gold); display:flex; align-items:center; justify-content:center; font-size:.68rem; font-weight:700; flex-shrink:0; }
+    .day-info strong { display:block; font-size:.85rem; color:var(--sage); }
+    .day-info span { font-size:.76rem; color:rgba(255,255,255,.5); }
+
+    @keyframes cardSlideUp {
+      from { opacity:0; transform:translateY(40px) scale(.97); }
+      to   { opacity:1; transform:translateY(0)   scale(1);   }
+    }
+    .pkg-card {
+      animation: cardSlideUp .55s ease both;
+      background: #fff;
+      border-radius:16px; overflow:hidden;
+      box-shadow:0 2px 16px rgba(0,0,0,.07);
+      transition:transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s;
+      display:flex; flex-direction:column;
+    }
+    .pkg-card:nth-child(1) { animation-delay:.05s }
+    .pkg-card:nth-child(2) { animation-delay:.12s }
+    .pkg-card:nth-child(3) { animation-delay:.19s }
+    .pkg-card:nth-child(4) { animation-delay:.26s }
+    .pkg-card:nth-child(5) { animation-delay:.33s }
+    .pkg-card:nth-child(6) { animation-delay:.40s }
+    .pkg-card:nth-child(7) { animation-delay:.47s }
+    .pkg-card:nth-child(8) { animation-delay:.54s }
+    .pkg-card:nth-child(9) { animation-delay:.61s }
+    .pkg-card:nth-child(10){ animation-delay:.68s }
+    .pkg-card:nth-child(11){ animation-delay:.75s }
+    .pkg-card:nth-child(12){ animation-delay:.82s }
+    .pkg-card:nth-child(n+4) { animation-delay: calc(.05s + (var(--i,0) * .07s)); }
+
+    .pkg-card:hover {
+      transform:translateY(-10px) scale(1.01);
+      box-shadow:0 28px 56px rgba(0,0,0,.15);
+    }
+
+    /* ── Shine sweep on card hover ── */
+    .pkg-card { position:relative; }
+    .pkg-card::after {
+      content:'';
+      position:absolute; top:0; left:-75%;
+      width:50%; height:100%;
+      background: linear-gradient(120deg,transparent 0%,rgba(255,255,255,.22) 50%,transparent 100%);
+      transform:skewX(-20deg);
+      transition:left .6s ease;
+      pointer-events:none;
+      z-index:5;
+    }
+    .pkg-card:hover::after { left:130%; }
+
+    /* ── Badge pop animation ── */
+    @keyframes badgePop {
+      0%   { transform:scale(1); }
+      35%  { transform:scale(1.18); }
+      65%  { transform:scale(.95); }
+      100% { transform:scale(1); }
+    }
+    .pkg-card:hover .pkg-badge { animation:badgePop .4s ease; }
+
+    /* ── Price color on hover ── */
+    .pkg-card:hover .pkg-price-amount { color:var(--forest); transition:color .3s; }
+
+    /* ── Highlight tags animate in ── */
+    .pkg-hls .hl {
+      opacity:0; transform:translateY(6px);
+      transition:opacity .3s, transform .3s, background .2s, border-color .2s, color .2s;
+    }
+    .pkg-card:hover .hl { opacity:1; transform:translateY(0); }
+    .pkg-card:hover .hl:nth-child(1) { transition-delay:.05s }
+    .pkg-card:hover .hl:nth-child(2) { transition-delay:.10s }
+    .pkg-card:hover .hl:nth-child(3) { transition-delay:.15s }
+    .pkg-card:hover .hl:nth-child(4) { transition-delay:.20s }
+    .pkg-card:hover .hl { background:var(--mist); border-color:var(--mist); color:var(--forest); }
+
+    /* ── Book button pulse ── */
+    @keyframes btnPulse {
+      0%,100% { box-shadow:0 0 0 0 rgba(27,58,45,.4); }
+      50%      { box-shadow:0 0 0 8px rgba(27,58,45,0); }
+    }
+    .btn-book:hover { background:var(--forest); animation:btnPulse .7s ease; }
+
+    /* ── Featured card ── */
+    .pkg-featured {
+      background:linear-gradient(135deg,#1B3A2D 0%,#2C5F3F 60%,#1a4a32 100%);
+      border-radius:16px; padding:48px 52px;
+      display:grid; grid-template-columns:1fr 1fr; gap:52px;
+      align-items:center; margin-bottom:56px; color:#fff;
+      position:relative; overflow:hidden;
+      box-shadow:0 16px 56px rgba(27,58,45,.35);
+    }
+    .pkg-featured::before {
+      content:'';
+      position:absolute; top:-80px; right:-80px;
+      width:360px; height:360px; border-radius:50%;
+      background:rgba(201,146,43,.12); pointer-events:none;
+    }
+    .pkg-featured::after {
+      content:'';
+      position:absolute; bottom:-60px; left:-40px;
+      width:260px; height:260px; border-radius:50%;
+      background:rgba(74,124,89,.15); pointer-events:none;
+    }
+
+    /* ── Section dividers with colour ── */
+    .section-divider {
+      height:3px;
+      background:linear-gradient(90deg, transparent, var(--gold), var(--sage), var(--pine), transparent);
+      margin:52px 0;
+      border-radius:100px;
+      opacity:.35;
+    }
+
+    /* ── Filter bar animated ── */
+    .filter-bar { background:#fff; border-bottom:1px solid #eee; padding:16px 0; position:sticky; top:72px; z-index:10; box-shadow:0 2px 16px rgba(0,0,0,.06); }
+    .filter-bar .container { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .filter-label { font-size:.72rem; color:#bbb; font-weight:600; letter-spacing:2px; text-transform:uppercase; }
+    .filter-btn { padding:7px 18px; border-radius:100px; font-size:.8rem; font-weight:500; cursor:pointer; border:1.5px solid #e0e0e0; background:transparent; color:#888; transition:all .25s cubic-bezier(.2,.8,.2,1); }
+    .filter-btn.active,.filter-btn:hover { background:var(--pine); color:#fff; border-color:var(--pine); transform:translateY(-1px); box-shadow:0 4px 12px rgba(27,58,45,.2); }
+
+    /* ── Upcoming departures — richer style ── */
+    .upcoming-section { margin:56px 0 0; }
+    .upcoming-section .section-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:24px; }
+    .upcoming-section .section-head h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(1.6rem,2.5vw,2.1rem); color:var(--pine); font-weight:600; }
+    .upcoming-section .section-head p { font-size:.82rem; color:#888; }
+
+    .dep-table { width:100%; border-collapse:collapse; background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 4px 24px rgba(27,58,45,.1); }
+    .dep-table thead tr { background:linear-gradient(90deg,var(--pine),var(--forest)); color:#fff; }
+    .dep-table thead th { padding:14px 20px; font-size:.72rem; letter-spacing:1.8px; text-transform:uppercase; font-weight:600; text-align:left; }
+    .dep-table tbody tr { border-bottom:1px solid #edf2ee; transition:background .2s, transform .2s; }
+    .dep-table tbody tr:last-child { border-bottom:none; }
+    .dep-table tbody tr:hover { background:linear-gradient(90deg,#f4faf6,#fdfaf5); }
+    .dep-table td { padding:14px 20px; font-size:.86rem; color:#333; vertical-align:middle; }
+    .dep-trip { font-weight:700; color:var(--pine); font-size:.9rem; }
+    .dep-dates { font-size:.83rem; color:#555; }
+    .dep-spots { font-size:.78rem; font-weight:700; padding:4px 12px; border-radius:100px; display:inline-block; }
+    .dep-spots.open     { background:#e8f5e9; color:#2e7d32; }
+    .dep-spots.filling  { background:#fff3e0; color:#e65100; }
+    .dep-spots.waitlist { background:#fce4ec; color:#c62828; }
+    .dep-book { background:var(--pine); color:#fff; border:none; padding:8px 20px; border-radius:8px; font-size:.78rem; font-weight:600; cursor:pointer; transition:all .2s; font-family:'Outfit',sans-serif; white-space:nowrap; }
+    .dep-book:hover { background:var(--forest); transform:translateY(-1px); box-shadow:0 4px 12px rgba(27,58,45,.25); }
+    @media(max-width:700px){
+      .dep-table thead th:nth-child(3),.dep-table td:nth-child(3){ display:none; }
+      .dep-table td,.dep-table thead th { padding:10px 12px; }
+    }
+
+    /* ── CTA box ── */
+    .pkg-cta {
+      text-align:center; margin-top:60px; padding:56px 40px;
+      background:linear-gradient(135deg,var(--pine) 0%,#1a5c38 50%,var(--forest) 100%);
+      border-radius:20px; color:#fff;
+      box-shadow:0 20px 60px rgba(27,58,45,.3);
+      position:relative; overflow:hidden;
+    }
+    .pkg-cta::before {
+      content:'';
+      position:absolute; top:-80px; right:-80px;
+      width:300px; height:300px; border-radius:50%;
+      background:rgba(201,146,43,.12); pointer-events:none;
+    }
+    .pkg-cta .slabel { font-size:.72rem; letter-spacing:4px; text-transform:uppercase; color:var(--sage); font-weight:600; margin-bottom:12px; display:block; }
+    .pkg-cta h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(1.8rem,3vw,2.6rem); color:var(--cream); max-width:520px; margin:0 auto 14px; font-weight:400; }
+    .pkg-cta p { color:rgba(255,255,255,.7); max-width:460px; margin:0 auto 32px; line-height:1.7; font-size:.95rem; }
+    .cta-btns { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+
+    /* ── Hero pulse on img ── */
+    @keyframes heroGlow {
+      0%,100% { box-shadow:0 0 0 0 rgba(201,146,43,0); }
+      50%      { box-shadow:0 0 40px 10px rgba(201,146,43,.12); }
+    }
+    .pkg-featured { animation:heroGlow 4s ease-in-out infinite; }
+
+    /* ── Incl strip hover ── */
+    .pkg-incl .incl { transition:color .2s, transform .2s; }
+    .pkg-card:hover .pkg-incl .incl { color:var(--moss); }
+    .pkg-card:hover .pkg-incl .incl:hover { transform:scale(1.08); }
+
+    /* ── Responsive ── */
+    @media(max-width:1060px){ .packages-grid{grid-template-columns:repeat(2,1fr);} }
+    @media(max-width:860px){ .pkg-featured{grid-template-columns:1fr;padding:32px;} .footer-grid{grid-template-columns:1fr 1fr;gap:28px;} }
+    @media(max-width:600px){ .packages-grid{grid-template-columns:1fr;} .footer-grid{grid-template-columns:1fr;} .footer-btm{flex-direction:column;gap:8px;} }
+
+    /* ── Footer ── */
+    footer { background:var(--charcoal); color:rgba(255,255,255,.6); padding:60px 0 28px; }
+    .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr 1fr; gap:36px; margin-bottom:40px; }
+    .footer-brand .logo { font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:var(--cream); font-weight:600; margin-bottom:12px; display:block; }
+    .footer-brand .logo span { color:var(--gold); }
+    .footer-brand p { font-size:.84rem; line-height:1.7; max-width:260px; }
+    .fsocial { display:flex; gap:10px; margin-top:16px; }
+    .fsoc { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; font-size:.88rem; transition:background .2s; border:1px solid rgba(255,255,255,.1); }
+    .fsoc:hover { background:var(--gold); }
+    .footer-col h4 { color:#fff; font-size:.78rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+    .footer-col ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
+    .footer-col ul li a { font-size:.83rem; color:rgba(255,255,255,.5); transition:color .2s; text-decoration:none; }
+    .footer-col ul li a:hover { color:var(--gold); }
+    .footer-btm { border-top:1px solid rgba(255,255,255,.1); padding-top:24px; display:flex; justify-content:space-between; font-size:.78rem; }
+
+    /* Float WA */
+    .float-wa { position:fixed; bottom:32px; right:32px; z-index:90; width:56px; height:56px; background:#25D366; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 24px rgba(37,211,102,.4); transition:transform .2s; }
+    .float-wa:hover { transform:scale(1.1); }
+
+    /* Modal */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.65); z-index:999; display:none; align-items:center; justify-content:center; padding:20px; }
+    .modal-overlay.open { display:flex; }
+    .modal { background:#fff; border-radius:12px; max-width:460px; width:100%; padding:36px; position:relative; animation:mIn .3s ease; max-height:90vh; overflow-y:auto; }
+    @keyframes mIn { from{transform:scale(.94);opacity:0} to{transform:scale(1);opacity:1} }
+    .modal-close { position:absolute; top:14px; right:18px; font-size:1.3rem; cursor:pointer; color:#aaa; border:none; background:none; }
+    .modal h3 { font-family:'Cormorant Garamond',serif; font-size:1.7rem; color:var(--pine); margin-bottom:6px; }
+    .modal-sub { color:#aaa; font-size:.85rem; margin-bottom:22px; }
+    .form-group { margin-bottom:16px; }
+    .form-group label { display:block; font-size:.78rem; color:#666; margin-bottom:6px; }
+    .form-group input,.form-group select { width:100%; background:#fafaf7; border:1.5px solid #e0e0e0; border-radius:6px; padding:10px 13px; color:var(--text); font-size:.88rem; font-family:'Outfit',sans-serif; outline:none; transition:border .2s; }
+    .form-group input:focus,.form-group select:focus { border-color:var(--gold); }
+    .form-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .btn-submit { width:100%; background:var(--pine); color:#fff; padding:13px; border-radius:6px; font-size:.9rem; font-weight:600; border:none; cursor:pointer; transition:background .2s; margin-top:4px; }
+    .btn-submit:hover { background:var(--forest); }
+    .toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%) translateY(80px); background:var(--pine); color:#fff; padding:13px 26px; border-radius:8px; font-size:.88rem; z-index:1000; opacity:0; transition:all .4s; pointer-events:none; }
+    .toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity .7s,transform .7s; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* ── PDF Modal ── */
+    .pdf-modal { position:fixed; inset:0; background:rgba(0,0,0,.85); z-index:1000; display:none; align-items:center; justify-content:center; padding:20px; }
+    .pdf-modal.open { display:flex; }
+    .pdf-wrap { background:#fff; border-radius:14px; width:100%; max-width:1100px; height:92vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 24px 80px rgba(0,0,0,.45); }
+    .pdf-hdr { background:var(--pine); color:#fff; padding:14px 22px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+    .pdf-hdr h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:500; color:#fff; margin:0; }
+    .pdf-hdr-r { display:flex; gap:10px; align-items:center; }
+    .pdf-hdr a, .pdf-hdr button { background:rgba(255,255,255,.12); color:#fff; padding:7px 14px; border:1px solid rgba(255,255,255,.2); border-radius:6px; font-size:.78rem; font-weight:500; text-decoration:none; cursor:pointer; transition:background .2s; font-family:'Outfit',sans-serif; }
+    .pdf-hdr a:hover, .pdf-hdr button:hover { background:rgba(255,255,255,.25); }
+    .pdf-close { background:rgba(255,255,255,.15) !important; font-size:1rem !important; padding:5px 12px !important; line-height:1; }
+    .pdf-body { flex:1; background:#525659; overflow:hidden; }
+    .pdf-body iframe { width:100%; height:100%; border:none; }
+    .pdf-fallback { padding:40px 24px; text-align:center; color:#fff; }
+    .pdf-fallback p { margin-bottom:18px; line-height:1.6; }
+
+    /* ── Card highlight tags visible by default on mobile ── */
+    @media(max-width:600px){ .pkg-hls .hl { opacity:1; transform:none; } }
+
+  </style>
+
+{% endblock %}
+
+{% block content %}
+<!-- NAV -->
+
+
+<!-- HERO -->
+<div class="pkg-page-hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="container">
+    <div class="page-hero-content">
+      <div class="section-label">12+ Handcrafted Journeys</div>
+      <h1>Our Packages</h1>
+    </div>
+  </div>
+</div>
+
+<!-- FILTER -->
+<div class="filter-bar">
+  <div class="container">
+    <span class="filter-label">Filter</span>
+    <button class="filter-btn active" data-cat="all">All Trips</button>
+    <button class="filter-btn" data-cat="himalaya">🏔 Himalayan</button>
+    <button class="filter-btn" data-cat="trekking">🥾 Trekking</button>
+    <button class="filter-btn" data-cat="ladakh">🏜 Ladakh</button>
+    <button class="filter-btn" data-cat="south">🌿 South India</button>
+    <button class="filter-btn" data-cat="rajasthan">🏰 Rajasthan</button>
+    <button class="filter-btn" data-cat="international">✈️ International</button>
+    <button class="filter-btn" data-cat="spiritual">🛕 Spiritual</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<section class="packages-main">
+<div class="container">
+
+<!-- FEATURED -->
+<div class="pkg-featured reveal">
+  <div>
+    <div class="subtitle">⭐ Featured Expedition · 2025–26</div>
+    <h2>Summer Escape:<br>Spiti Valley</h2>
+    <p>10 days through the roof of the world — ancient monasteries, high-altitude villages, Moon Lake at Chandrataal, and roads that feel like they lead to infinity. Shimla to Manali.</p>
+    <div class="feat-price"><span class="from">Starting from</span><span class="amount">₹19,500</span><span class="per">/ person</span></div>
+    <div class="feat-btns">
+      <button class="btn-primary" onclick="openModal('Spiti Valley – Summer Escape','₹19,500')">Book Now →</button>
+      <a href="{% url 'pages:contact' %}" class="btn-outline-w">Enquire</a>
+      <button class="btn-outline-w" onclick="openItin('Spiti Valley – Summer Escape','brochure-spiti.pdf')" style="background:none;cursor:pointer;font-family:'Outfit',sans-serif;">📄 Full Itinerary</button>
+      <a href="{% static 'brochures/brochure-spiti.pdf' %}" download="ModernMantra_Spiti_Valley_Brochure.pdf" class="btn-brochure-w">⬇ Brochure</a>
+    </div>
+  </div>
+  <div class="day-timeline">
+    <div class="day-item"><div class="day-num">01</div><div class="day-info"><strong>Delhi → Shimla (Overnight Bus)</strong><span>Pickup ISBT Kashmiri Gate, Delhi</span></div></div>
+    <div class="day-item"><div class="day-num">02</div><div class="day-info"><strong>Shimla Exploration</strong><span>Mall Road · Jakhu Temple · The Ridge</span></div></div>
+    <div class="day-item"><div class="day-num">03</div><div class="day-info"><strong>Shimla → Chitkul</strong><span>India's last village at 11,320 ft</span></div></div>
+    <div class="day-item"><div class="day-num">04</div><div class="day-info"><strong>Chitkul → Kalpa</strong><span>Baspa Valley · Kinner Kailash views</span></div></div>
+    <div class="day-item"><div class="day-num">05</div><div class="day-info"><strong>Kalpa → Nako → Tabo</strong><span>Shipki La Route · 1000-yr monastery</span></div></div>
+    <div class="day-item"><div class="day-num">06</div><div class="day-info"><strong>Tabo → Dhankar → Kaza</strong><span>Cliffside monastery · Heart of Spiti</span></div></div>
+    <div class="day-item"><div class="day-num">07</div><div class="day-info"><strong>Key · Hikkim · Langza · Komic</strong><span>World's highest PO · Stargazing</span></div></div>
+    <div class="day-item"><div class="day-num">08–10</div><div class="day-info"><strong>Chandrataal → Manali → Delhi</strong><span>Moon Lake · Rohtang · Overnight bus</span></div></div>
+  </div>
+</div>
+
+<!-- GRID -->
+<div class="section-divider"></div>
+<div class="packages-grid" id="packagesGrid">
+
+
+<!-- CARD MACRO: each card has image + chips + name + desc + highlights + includes + footer with price+book+wa -->
+
+<!-- 1. Zanskar -->
+<div class="pkg-card" data-cat="himalaya" data-trip="Zanskar Valley Road Trip">
+  <div class="pkg-img"><img src="{% static 'images/igloo.jpg' %}" alt="Zanskar Valley" loading="lazy"/>
+    <div class="pkg-badge badge-red">🔥 Expedition</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 7 Days · 6 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-blue">🚙 Road Trip</span><span class="chip chip-green">🏔️ 16,580 ft</span><span class="chip chip-orange">🥾 Trek Incl.</span></div>
+    <div class="pkg-name">Zanskar Valley Road Trip</div>
+    <p class="pkg-desc">Delhi → Manali → Shinku La Pass → Gonbo Rangjon → Phuktal Monastery (built into a cliff cave) → Padum → Drang Drung Glacier → Jispa → Delhi. One of India's most remote adventures.</p>
+    <div class="pkg-hls"><span class="hl">✦ Shinku La 16,580ft</span><span class="hl">✦ Phuktal Monastery</span><span class="hl">✦ Drang Drung Glacier</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> B&D Included</div><div class="incl"><span>🚐</span> Tempo/SUV/Hilux</div><div class="incl"><span>🏕️</span> Camp & Homestay</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹34,500</div><span class="pkg-price-per">per person (Tempo Traveller)</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Zanskar Valley Road Trip','₹34,500')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Zanskar Valley Road Trip" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <button class="btn-itin" onclick="openItin('Zanskar Valley Road Trip','brochure-ladakh.pdf')">📄 Full Itinerary</button>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Manali Weekend -->
+<div class="pkg-card" data-cat="himalaya" data-trip="Manali Weekend Escape">
+  <div class="pkg-img"><img src="{% static 'images/hero-base.jpg' %}" alt="Manali" loading="lazy"/>
+    <div class="pkg-badge badge-teal">⚡ Quick Escape</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 4 Days · 3 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-green">❄️ Snow Points</span><span class="chip chip-blue">👥 Group Trip</span><span class="chip chip-orange">🪂 Paragliding</span></div>
+    <div class="pkg-name">Manali Weekend Escape</div>
+    <p class="pkg-desc">Delhi → Manali. Hadimba Temple, Mall Road, Vashisht hot springs, Solang Valley snow activities, drive through Atal Tunnel to Sissu. Perfect long-weekend from Delhi.</p>
+    <div class="pkg-hls"><span class="hl">✦ Solang Valley</span><span class="hl">✦ Atal Tunnel</span><span class="hl">✦ Snow Activities</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> B&D Included</div><div class="incl"><span>🚌</span> Delhi–Delhi</div><div class="incl"><span>🏨</span> Hotel Stay</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹8,500</div><span class="pkg-price-per">per person</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Manali Weekend Escape','₹8,500')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Manali Weekend Escape" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <button class="btn-itin" onclick="openItin('Manali Weekend Escape','brochure-manali.pdf')">📄 Full Itinerary</button>
+      <a href="{% static 'brochures/brochure-manali.pdf' %}" download="ModernMantra_Manali_Brochure.pdf" class="btn-brochure">⬇ Brochure</a>
+    </div>
+  </div>
+</div>
+
+<!-- 3. Manali–Kasol–Manikaran -->
+<div class="pkg-card" data-cat="himalaya" data-trip="Manali–Kasol–Manikaran 6D">
+  <div class="pkg-img"><img src="{% static 'images/campfire-waterfall.jpg' %}" alt="Manali Kasol" loading="lazy"/>
+    <div class="pkg-badge badge-gold">⭐ Bestseller</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 6 Days · 5 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-green">🌊 River Rafting</span><span class="chip chip-orange">🪂 Paragliding</span><span class="chip chip-teal">☕ Kasol Cafés</span></div>
+    <div class="pkg-name">Manali – Kasol – Manikaran</div>
+    <p class="pkg-desc">Complete Himachal Pradesh — Manali sightseeing, Solang Valley, Kullu river rafting, paragliding at Dobhi, Kasol riverside cafés, Manikaran hot springs & Gurudwara.</p>
+    <div class="pkg-hls"><span class="hl">✦ Kullu Rafting</span><span class="hl">✦ Kasol Vibes</span><span class="hl">✦ Manikaran Temple</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> B&D Included</div><div class="incl"><span>🚌</span> Volvo Delhi</div><div class="incl"><span>🏕️</span> Hotel/Camp</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹11,500</div><span class="pkg-price-per">per person</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Manali–Kasol–Manikaran 6D','₹11,500')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Manali Kasol Manikaran" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <button class="btn-itin" onclick="openItin('Manali–Kasol–Manikaran 6D','brochure-manali.pdf')">📄 Full Itinerary</button>
+      <a href="{% static 'brochures/brochure-manali.pdf' %}" download="ModernMantra_Manali_Brochure.pdf" class="btn-brochure">⬇ Brochure</a>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Ladakh -->
+<div class="pkg-card" data-cat="ladakh" data-trip="Ladakh – Nubra & Pangong 5D">
+  <div class="pkg-img"><img src="{% static 'images/snow-lake.jpg' %}" alt="Ladakh" loading="lazy"/>
+    <div class="pkg-badge badge-gold">🏆 Popular</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 5 Days · 4 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-blue">✈️ Fly In/Out</span><span class="chip chip-green">🐪 Nubra Valley</span><span class="chip chip-teal">🏔️ 4,350m Lake</span></div>
+    <div class="pkg-name">Ladakh – Nubra & Pangong</div>
+    <p class="pkg-desc">Leh arrival & acclimatization → Sham Valley tour → Nubra via Khardung-La (5,359m), one of world's highest roads → Hunder sand dunes → Pangong Tso → Chang-La → Leh departure.</p>
+    <div class="pkg-hls"><span class="hl">✦ Khardung-La Pass</span><span class="hl">✦ Pangong Tso</span><span class="hl">✦ Bactrian Camel Ride</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> MAP Meals</div><div class="incl"><span>🚗</span> Leh to Leh</div><div class="incl"><span>📋</span> Inner Line Permit</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹22,000</div><span class="pkg-price-per">per person</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Ladakh – Nubra & Pangong 5D','₹22,000')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Ladakh Package" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <button class="btn-itin" onclick="openItin('Ladakh – Nubra & Pangong 5D','brochure-ladakh.pdf')">📄 Full Itinerary</button>
+      <a href="{% static 'brochures/brochure-ladakh.pdf' %}" download="ModernMantra_Ladakh_Brochure.pdf" class="btn-brochure">⬇ Brochure</a>
+    </div>
+  </div>
+</div>
+
+<!-- 5. Rajasthan -->
+<div class="pkg-card" data-cat="rajasthan" data-trip="Rajasthan Grand Tour 9D">
+  <div class="pkg-img"><img src="{% static 'images/rajasthan-1.jpg' %}" alt="Rajasthan – Hawa Mahal" loading="lazy"/>
+    <div class="pkg-badge badge-orange">👑 Grand Tour</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 9 Days · 8 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-gold">🏰 5 Royal Cities</span><span class="chip chip-orange">🐪 Desert Camp</span><span class="chip chip-red">🌅 Lake Pichola</span></div>
+    <div class="pkg-name">Rajasthan Grand Tour</div>
+    <p class="pkg-desc">Jaipur (2N) → Jaisalmer desert camp (2N) → Jodhpur (1N) → Chittorgarh Fort enroute → Udaipur (3N). Private Innova Crysta throughout. The complete royal Rajasthan route.</p>
+    <div class="pkg-hls"><span class="hl">✦ Amber Fort</span><span class="hl">✦ Sam Sand Dunes</span><span class="hl">✦ Camel Safari</span><span class="hl">✦ Pichola Boat Ride</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> B&D (MAP)</div><div class="incl"><span>🚗</span> Innova Crysta</div><div class="incl"><span>🏨</span> 3★ Hotels</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹30,400</div><span class="pkg-price-per">per person</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Rajasthan Grand Tour 9D','₹30,400')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Rajasthan Grand Tour" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <a class="btn-itin" href="https://wa.me/917736855515?text=Hi!%20Please%20share%20the%20full%20itinerary%20PDF%20for%20Rajasthan%20Grand%20Tour%209D" target="_blank" style="text-decoration:none;">📄 Request Full Itinerary</a>
+    </div>
+  </div>
+</div>
+
+<!-- 6. Munnar -->
+<div class="pkg-card" data-cat="south" data-trip="Munnar Getaway 3D">
+  <div class="pkg-img"><img src="{% static 'images/waterfall2.jpg' %}" alt="Munnar" loading="lazy"/>
+    <div class="pkg-badge badge-green">🌿 Nature Escape</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 3 Days · 2 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-green">🌿 Tea Gardens</span><span class="chip chip-teal">🛻 Jeep Safari</span><span class="chip chip-orange">🏕️ Highest Campsite</span></div>
+    <div class="pkg-name">Munnar Getaway</div>
+    <p class="pkg-desc">Rose Garden → Mattupetty Tea Factory → Echo Point → Viripara Waterfalls → Tribal village → Jeep river crossing → Kolukkumalai offroad jeep safari → Gap Road tea plantation drive.</p>
+    <div class="pkg-hls"><span class="hl">✦ 33 Waterfalls</span><span class="hl">✦ Jeep Offroad Safari</span><span class="hl">✦ Campfire Night</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> Breakfast</div><div class="incl"><span>🔥</span> Campfire</div><div class="incl"><span>🏊</span> Pool Resort</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹9,500</div><span class="pkg-price-per">per person</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Munnar Getaway 3D','₹9,500')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Munnar Getaway" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <a class="btn-itin" href="https://wa.me/917736855515?text=Hi!%20Please%20share%20the%20full%20itinerary%20PDF%20for%20Munnar%20Getaway%203D" target="_blank" style="text-decoration:none;">📄 Request Full Itinerary</a>
+    </div>
+  </div>
+</div>
+
+<!-- 7. Goa -->
+<div class="pkg-card" data-cat="south" data-trip="Goa Holiday 5D">
+  <div class="pkg-img"><img src="{% static 'images/hammock-view.jpg' %}" alt="Goa" loading="lazy"/>
+    <div class="pkg-badge badge-teal">🌴 Beach Vibes</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 5 Days · 4 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-teal">🏖️ N&S Goa Tours</span><span class="chip chip-blue">🚢 Cruise Dinner</span><span class="chip chip-orange">🪂 Water Sports</span></div>
+    <div class="pkg-name">Goa Holiday Package</div>
+    <p class="pkg-desc">Arrival → Evening sunset cruise dinner → North Goa (Baga, Calangute, Anjuna, Fort Aguada) → South Goa (Colva, Miramar, Dona Paula, Old Goa Churches) → Leisure day → Departure.</p>
+    <div class="pkg-hls"><span class="hl">✦ Cruise Dinner</span><span class="hl">✦ Fort Aguada</span><span class="hl">✦ Old Goa Church</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> Breakfast</div><div class="incl"><span>🚢</span> Cruise Dinner</div><div class="incl"><span>🏨</span> 3★ Hotel</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹8,640</div><span class="pkg-price-per">per person</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Goa Holiday 5D','₹8,640')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Goa Holiday Package" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <a class="btn-itin" href="https://wa.me/917736855515?text=Hi!%20Please%20share%20the%20full%20itinerary%20PDF%20for%20Goa%20Holiday%205D" target="_blank" style="text-decoration:none;">📄 Request Full Itinerary</a>
+    </div>
+  </div>
+</div>
+
+<!-- 8. Mauritius -->
+<div class="pkg-card" data-cat="international" data-trip="Mauritius 6D Escape">
+  <div class="pkg-img"><img src="{% static 'images/mauritius-main.jpg' %}" alt="Mauritius beach" loading="lazy"/>
+    <div class="pkg-badge badge-purple">✈️ International</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 6 Days · 5 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-blue">🏝️ 5 Islands Tour</span><span class="chip chip-teal">🐬 Dolphin Watch</span><span class="chip chip-purple">🦁 Casela Safari</span></div>
+    <div class="pkg-name">Mauritius 6D Escape</div>
+    <p class="pkg-desc">Catamaran sunset cruise → 5 Islands BBQ tour with snorkelling & dolphin watching → South tour (Chamarel, Seven Coloured Earth, Ganga Talao) → Casela World of Adventures → North tour → Departure.</p>
+    <div class="pkg-hls"><span class="hl">✦ BBQ Lunch Cruise</span><span class="hl">✦ Sunset Catamaran</span><span class="hl">✦ Seven Coloured Earth</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> Breakfast Daily</div><div class="incl"><span>🚗</span> Private Transfers</div><div class="incl"><span>🎟️</span> Casela Entry</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹70,000</div><span class="pkg-price-per">per couple</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Mauritius 6D Escape','₹70,000')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Mauritius Package" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <a class="btn-itin" href="https://wa.me/917736855515?text=Hi!%20Please%20share%20the%20full%20itinerary%20PDF%20for%20Mauritius%206D%20Escape" target="_blank" style="text-decoration:none;">📄 Request Full Itinerary</a>
+    </div>
+  </div>
+</div>
+
+<!-- 9. Sri Lanka -->
+<div class="pkg-card" data-cat="international" data-trip="Sri Lanka Heritage Tour 5D">
+  <div class="pkg-img"><img src="{% static 'images/waterfall1.jpg' %}" alt="Sri Lanka" loading="lazy"/>
+    <div class="pkg-badge badge-purple">✈️ International</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 5 Days · 4 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-green">🐘 Elephants</span><span class="chip chip-teal">☕ Tea Estates</span><span class="chip chip-blue">🏖️ Bentota Beach</span></div>
+    <div class="pkg-name">Sri Lanka Heritage Tour</div>
+    <p class="pkg-desc">Colombo → Pinnawela Elephant Orphanage → Kandy (Temple of the Tooth, cultural show) → Nuwara Eliya tea factory → Bentota golden beaches → Colombo city & Lotus Tower → Departure.</p>
+    <div class="pkg-hls"><span class="hl">✦ Temple of the Tooth</span><span class="hl">✦ Tea Factory Tour</span><span class="hl">✦ English-speaking Guide</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> Half Board</div><div class="incl"><span>🚗</span> AC Transport</div><div class="incl"><span>🏨</span> 3★ or 4★</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹35,300</div><span class="pkg-price-per">per person (group of 8)</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Sri Lanka Heritage Tour 5D','₹35,300')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Sri Lanka Package" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <a class="btn-itin" href="https://wa.me/917736855515?text=Hi!%20Please%20share%20the%20full%20itinerary%20PDF%20for%20Sri%20Lanka%20Heritage%20Tour%205D" target="_blank" style="text-decoration:none;">📄 Request Full Itinerary</a>
+    </div>
+  </div>
+</div>
+
+<!-- 10. Varanasi -->
+<div class="pkg-card" data-cat="spiritual" data-trip="Varanasi Spiritual Tour 3D">
+  <div class="pkg-img"><img src="{% static 'images/varanasi-2.jpg' %}" alt="Varanasi – Sadhus on the Ganges" loading="lazy"/>
+    <div class="pkg-badge badge-orange">🙏 Spiritual</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 3 Days · 2 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-orange">🔥 Ganga Aarti</span><span class="chip chip-gold">🚣 Boat Ride</span><span class="chip chip-purple">🛕 Kashi Vishwanath</span></div>
+    <div class="pkg-name">Varanasi Spiritual Tour</div>
+    <p class="pkg-desc">Delhi → Varanasi by train/flight. Check-in → Evening Dashashwamedh Ghat Ganga Aarti → Early morning Ganges boat ride → Kashi Vishwanath Temple → Sarnath Buddhist site → Departure.</p>
+    <div class="pkg-hls"><span class="hl">✦ Ganga Aarti Live</span><span class="hl">✦ Sarnath</span><span class="hl">✦ Dawn Boat Ride</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> Breakfast</div><div class="incl"><span>🚗</span> Local Sightseeing</div><div class="incl"><span>🏨</span> Hotel Stay</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹6,500</div><span class="pkg-price-per">per person (one way)</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Varanasi Spiritual Tour 3D','₹6,500')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Varanasi Spiritual Tour" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <a class="btn-itin" href="https://wa.me/917736855515?text=Hi!%20Please%20share%20the%20full%20itinerary%20PDF%20for%20Varanasi%20Spiritual%20Tour%203D" target="_blank" style="text-decoration:none;">📄 Request Full Itinerary</a>
+    </div>
+  </div>
+</div>
+
+<!-- 11. Sikkim–Darjeeling -->
+<div class="pkg-card" data-cat="himalaya" data-trip="Sikkim–Darjeeling 6D">
+  <div class="pkg-img"><img src="{% static 'images/sikkim-main.jpg' %}" alt="Sikkim Darjeeling" loading="lazy"/>
+    <div class="pkg-badge badge-teal">🌄 Northeast India</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 6 Days · 5 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-blue">🏔️ Tsomgo 12,000ft</span><span class="chip chip-gold">☕ Darjeeling Tea</span><span class="chip chip-green">🌅 Tiger Hill Sunrise</span></div>
+    <div class="pkg-name">Sikkim – Darjeeling Discovery</div>
+    <p class="pkg-desc">NJP/Bagdogra → Gangtok → Tsomgo Lake (12,000 ft) & Baba Mandir → Gangtok local sightseeing → Darjeeling → 4AM Tiger Hill sunrise over Kangchenjunga → Tea garden walk → Departure.</p>
+    <div class="pkg-hls"><span class="hl">✦ Yak Ride</span><span class="hl">✦ Ghoom Monastery</span><span class="hl">✦ Batasia Loop</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> Breakfast</div><div class="incl"><span>🚗</span> Point to Point</div><div class="incl"><span>🏨</span> Hotel Stay</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹16,500</div><span class="pkg-price-per">per person</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Sikkim–Darjeeling 6D','₹16,500')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Sikkim Darjeeling Package" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <a class="btn-itin" href="https://wa.me/917736855515?text=Hi!%20Please%20share%20the%20full%20itinerary%20PDF%20for%20Sikkim–Darjeeling%206D" target="_blank" style="text-decoration:none;">📄 Request Full Itinerary</a>
+    </div>
+  </div>
+</div>
+
+<!-- 12. Hyderabad -->
+<div class="pkg-card" data-cat="south" data-trip="Hyderabad Heritage Tour 5D">
+  <div class="pkg-img"><img src="{% static 'images/hyderabad-main.jpg' %}" alt="Hyderabad – Charminar" loading="lazy"/>
+    <div class="pkg-badge badge-blue">🏙️ City Break</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 5 Days · 4 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-orange">🎬 Ramoji Film City</span><span class="chip chip-red">🏰 Golconda Fort</span><span class="chip chip-blue">🕌 Charminar</span></div>
+    <div class="pkg-name">Hyderabad Heritage Tour</div>
+    <p class="pkg-desc">Arrival → Birla Mandir, NTR Garden → Full day Ramoji Film City → Charminar, Chowmahalla Palace, Salar Jung Museum → Zoo, Golconda Fort, Qutub Shahi Tombs → Departure.</p>
+    <div class="pkg-hls"><span class="hl">✦ Ramoji Film City</span><span class="hl">✦ Salar Jung Museum</span><span class="hl">✦ Biryani & Shopping</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> 4 Breakfasts</div><div class="incl"><span>🚗</span> AC Sedan</div><div class="incl"><span>✈️</span> Airport Pickup</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹16,200</div><span class="pkg-price-per">per person (triple sharing)</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Hyderabad Heritage Tour 5D','₹16,200')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Hyderabad Heritage Tour" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <a class="btn-itin" href="https://wa.me/917736855515?text=Hi!%20Please%20share%20the%20full%20itinerary%20PDF%20for%20Hyderabad%20Heritage%20Tour%205D" target="_blank" style="text-decoration:none;">📄 Request Full Itinerary</a>
+    </div>
+  </div>
+</div>
+
+<!-- 13. Kedarkantha Trek -->
+<div class="pkg-card" data-cat="trekking himalaya" data-trip="Kedarkantha Trek 5D">
+  <div class="pkg-img"><img src="{% static 'images/snow-lake.jpg' %}" alt="Kedarkantha Trek" loading="lazy"/>
+    <div class="pkg-badge badge-red">🥾 Trek</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 5 Days · 4 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-blue">❄️ 12,500 ft</span><span class="chip chip-green">🌱 First-Timer Friendly</span><span class="chip chip-orange">🔥 Bestseller</span></div>
+    <div class="pkg-name">Kedarkantha Trek</div>
+    <p class="pkg-desc">Dehradun → Sankri → Juda Ka Talab → Kedarkantha Base → Summit (12,500 ft) → Hargaon → Sankri → Dehradun. Easy-moderate Himalayan trek through pine forests and snow ridges. Best Nov–April.</p>
+    <div class="pkg-hls"><span class="hl">✦ Kedarkantha Summit</span><span class="hl">✦ Camping in Snow</span><span class="hl">✦ Malayali Guide</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> All Meals</div><div class="incl"><span>🏕️</span> Camping Gear</div><div class="incl"><span>🆘</span> Oxygen + First Aid</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Special Price</span><div class="pkg-price-amount">₹5,999</div><span class="pkg-price-per">per person (Dehradun-Dehradun)</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Kedarkantha Trek 5D','₹5,999')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Kedarkantha Trek 5D/4N" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <a class="btn-itin" href="https://wa.me/917736855515?text=Hi!%20Please%20share%20the%20full%20itinerary%20PDF%20for%20Kedarkantha%20Trek" target="_blank" style="text-decoration:none;">📄 Request Full Itinerary</a>
+    </div>
+  </div>
+</div>
+
+<!-- 14. Chandrakhani Pass Trek -->
+<div class="pkg-card" data-cat="trekking himalaya" data-trip="Chandrakhani Pass Trek 5D">
+  <div class="pkg-img"><img src="{% static 'images/sheep-mountains.jpg' %}" alt="Chandrakhani Pass Trek" loading="lazy"/>
+    <div class="pkg-badge badge-green">🥾 Trek</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 5 Days · 4 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-blue">🏔 12,000 ft Pass</span><span class="chip chip-green">🌲 Pine Forests</span><span class="chip chip-purple">🏘 Malana Village</span></div>
+    <div class="pkg-name">Chandrakhani Pass Trek</div>
+    <p class="pkg-desc">Dhobi → Modernmantra Farm Stay (Dhara) → Rumshu → Chandrakhani Pass top → ancient Malana Village descent. Perfect intro trek with mix of farm stay comfort & tent camping.</p>
+    <div class="pkg-hls"><span class="hl">✦ Farm Stay Night</span><span class="hl">✦ Pass Summit</span><span class="hl">✦ Malana Descent</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> All Meals</div><div class="incl"><span>🏕️</span> Tents + Stay</div><div class="incl"><span>🚐</span> Transport (ex-Dobhi)</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹4,499</div><span class="pkg-price-per">ex-Dhara · ₹5,999 ex-Dobhi</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Chandrakhani Pass Trek 5D','₹4,499')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Chandrakhani Pass Trek" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <a class="btn-itin" href="https://wa.me/917736855515?text=Hi!%20Please%20share%20the%20full%20itinerary%20PDF%20for%20Chandrakhani%20Pass%20Trek" target="_blank" style="text-decoration:none;">📄 Request Full Itinerary</a>
+    </div>
+  </div>
+</div>
+
+<!-- 15. Hampta Pass + Chandratal Trek -->
+<div class="pkg-card" data-cat="trekking himalaya" data-trip="Hampta Pass + Chandratal Trek 5D">
+  <div class="pkg-img"><img src="{% static 'images/igloo.jpg' %}" alt="Hampta Pass Chandratal Trek" loading="lazy"/>
+    <div class="pkg-badge badge-gold">🥾 Featured Trek</div>
+    <button class="pkg-fav">♡</button>
+    <div class="pkg-dur">📅 5 Days · 4 Nights</div>
+  </div>
+  <div class="pkg-body">
+    <div class="pkg-chips"><span class="chip chip-blue">🏔 14,100 ft Pass</span><span class="chip chip-teal">🌙 Chandratal Lake</span><span class="chip chip-orange">🧗 Easy-Moderate</span></div>
+    <div class="pkg-name">Hampta Pass + Chandratal Trek</div>
+    <p class="pkg-desc">Manali → Chika → Balu Ka Ghera → Hampta Pass (14,100 ft) → Sheagoru → Chatru → Chandratal Lake & back → Manali. Classic crossover trek from green Kullu to barren Spiti, with the Moon Lake as the crown.</p>
+    <div class="pkg-hls"><span class="hl">✦ Hampta Pass Crossing</span><span class="hl">✦ Chandratal Lake</span><span class="hl">✦ River Crossing</span><span class="hl">✦ Camp + Guesthouse</span></div>
+    <div class="pkg-incl"><div class="incl"><span>🍽️</span> All Meals</div><div class="incl"><span>🏕️</span> Tents + Gear</div><div class="incl"><span>🧑‍🤝‍🧑</span> Certified Trek Lead</div></div>
+  </div>
+  <div class="pkg-footer">
+    <div><span class="pkg-price-label">Starting from</span><div class="pkg-price-amount">₹7,500</div><span class="pkg-price-per">per person + 5% GST</span></div>
+    <div class="pkg-actions">
+      <button class="btn-book" onclick="openModal('Hampta Pass + Chandratal Trek 5D','₹7,500')">Book Now</button>
+      <a href="https://wa.me/917736855515?text=Hi! Enquiry: Hampta Pass + Chandratal Trek" target="_blank" class="btn-wa"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> WhatsApp Enquiry</a>
+      <button class="btn-itin" onclick="openItin('Hampta Pass + Chandratal Trek','brochure-hampta-chandratal.pdf')">📄 Full Itinerary</button>
+      <a href="{% static 'brochures/brochure-hampta-chandratal.pdf' %}" download="Hampta_Chandratal_Trek_Brochure.pdf" class="btn-brochure">⬇ Brochure</a>
+    </div>
+  </div>
+</div>
+
+</div><!-- /packages-grid -->
+
+<!-- UPCOMING DEPARTURES -->
+<div class="upcoming-section reveal">
+  <div class="section-head">
+    <h2>📅 Upcoming Departures</h2>
+    <p>Book early — batches fill fast</p>
+  </div>
+  <table class="dep-table">
+    <thead>
+      <tr>
+        <th>Trip</th>
+        <th>Dates</th>
+        <th>Duration</th>
+        <th>Availability</th>
+        <th>Price</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for batch in upcoming_departures %}
+      <tr>
+        <td class="dep-trip">{{ batch.package.name }}</td>
+        <td class="dep-dates">
+          {{ batch.start_date|date:"d M" }} – {{ batch.end_date|date:"d M Y" }}
+        </td>
+        <td class="dep-dates"><span>{{ batch.package.duration_label }}</span></td>
+        <td>
+          {% with left=batch.slots_left %}
+          {% if batch.status == "waitlist" %}
+            <span class="dep-spots waitlist">Waitlist</span>
+          {% elif left <= 3 %}
+            <span class="dep-spots filling">{{ left }} spot{{ left|pluralize }} left</span>
+          {% elif left <= 8 %}
+            <span class="dep-spots filling">Filling fast · {{ left }} left</span>
+          {% else %}
+            <span class="dep-spots open">{{ left }} spots open</span>
+          {% endif %}
+          {% endwith %}
+        </td>
+        <td class="dep-dates">
+          {% if batch.price_override %}
+            ₹{{ batch.price_override|floatformat:0 }}
+          {% else %}
+            {{ batch.package.price_label }}
+          {% endif %}
+        </td>
+        <td>
+          <button class="dep-book" onclick="openModal('{{ batch.package.name|escapejs }}','{% if batch.price_override %}₹{{ batch.price_override|floatformat:0 }}{% else %}{{ batch.package.price_label }}{% endif %}')">Book Now</button>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" style="text-align:center;padding:48px 20px;">
+          <div style="font-size:2.5rem;margin-bottom:12px;">🗓️</div>
+          <div style="font-weight:600;color:var(--pine);font-size:1rem;margin-bottom:6px;">No Upcoming Departures Yet</div>
+          <div style="font-size:.85rem;color:#999;max-width:320px;margin:0 auto 20px;line-height:1.6;">We're finalising dates for the next season. Drop us a message and we'll notify you the moment they're live.</div>
+          <a href="https://wa.me/917736855515?text=Hi! Please notify me when new batch dates are available." target="_blank" style="display:inline-block;background:var(--pine);color:#fff;padding:10px 24px;border-radius:8px;font-size:.82rem;font-weight:600;text-decoration:none;">💬 Get Notified</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- CTA -->
+<div class="pkg-cta reveal">
+  <span class="slabel">Build Your Own</span>
+  <h2>Don't See Your Dream Destination?</h2>
+  <p>We custom-build any itinerary — solo, couple, family or corporate group. Himalayan treks, beach holidays, spiritual journeys, international escapes. Just tell us where you want to go.</p>
+  <div class="cta-btns">
+    <a href="{% url 'pages:contact' %}" class="btn-primary">Plan a Custom Trip →</a>
+    <a href="https://wa.me/917736855515?text=Hi! I want to plan a custom trip with ModernMantra." target="_blank" style="border:1.5px solid rgba(255,255,255,.5);color:#fff;padding:12px 28px;border-radius:6px;font-weight:500;font-size:.88rem;text-decoration:none;transition:all .2s;display:inline-block;">💬 WhatsApp Us</a>
+  </div>
+</div>
+
+</div></section>
+
+<!-- FOOTER -->
+
+
+<a href="https://wa.me/917736855515?text=Hi! I want to enquire about a trip package." target="_blank" class="float-wa">
+  <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<!-- Review floating button -->
+<button onclick="openReviewModal()" title="Write a Review" style="position:fixed;bottom:100px;right:32px;z-index:90;width:56px;height:56px;background:var(--gold);border:none;border-radius:50%;font-size:1.4rem;cursor:pointer;box-shadow:0 6px 20px rgba(201,146,43,.45);transition:transform .2s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">⭐</button>
+
+<!-- Review modal -->
+<div class="modal-overlay" id="reviewModal" onclick="if(event.target===this)closeReviewModal()">
+  <div class="modal" id="reviewModalInner" style="max-width:520px;">
+    <button class="modal-close" onclick="closeReviewModal()">✕</button>
+    <h3>Share Your Experience</h3>
+    <p>Travelled with us? Tell others about it — your review makes a huge difference.</p>
+    <form id="reviewForm" novalidate>
+      <input type="hidden" name="_subject" value="⭐ New Review – ModernMantra"/>
+      <input type="hidden" name="FormType" value="Review"/>
+      <div class="form-row-2">
+        <div class="form-group"><label>Your Name *</label><input type="text" name="Name" placeholder="Full name" required/></div>
+        <div class="form-group"><label>Your City</label><input type="text" name="City" placeholder="e.g. Mumbai"/></div>
+      </div>
+      <div class="form-group">
+        <label>Which Trip Did You Take?</label>
+        <select name="Trip">
+          <option value="">— Select your trip —</option>
+          <option>Spiti Valley – Summer Escape</option><option>Zanskar Valley Road Trip</option>
+          <option>Manali Weekend Escape</option><option>Manali–Kasol–Manikaran 6D</option>
+          <option>Ladakh – Nubra &amp; Pangong 5D</option><option>Rajasthan Grand Tour 9D</option>
+          <option>Munnar Getaway 3D</option><option>Goa Holiday 5D</option>
+          <option>Mauritius 6D Escape</option><option>Sri Lanka Heritage Tour 5D</option>
+          <option>Varanasi Spiritual Tour 3D</option><option>Sikkim–Darjeeling 6D</option>
+          <option>Hyderabad Heritage Tour 5D</option>
+          <option>Kedarkantha Trek 5D</option>
+          <option>Chandrakhani Pass Trek 5D</option>
+          <option>Hampta Pass + Chandratal Trek 5D</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Your Rating</label>
+        <div style="display:flex;gap:4px;padding:6px 0 2px;">
+          <span class="pub-star lit" onclick="setPubRating(1)">★</span>
+          <span class="pub-star lit" onclick="setPubRating(2)">★</span>
+          <span class="pub-star lit" onclick="setPubRating(3)">★</span>
+          <span class="pub-star lit" onclick="setPubRating(4)">★</span>
+          <span class="pub-star lit" onclick="setPubRating(5)">★</span>
+        </div>
+        <input type="hidden" name="Rating" id="pubRatingVal" value="5"/>
+      </div>
+      <div class="form-group">
+        <label>Your Review *</label>
+        <textarea name="Review" rows="4" placeholder="Tell us about your trip — the highlights, the moments, and what you'd say to someone considering it…" required style="resize:vertical;width:100%;padding:12px 14px;border:1.5px solid #e8e8e8;border-radius:8px;font-family:'Outfit',sans-serif;font-size:.88rem;line-height:1.65;outline:none;transition:border .2s;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#e8e8e8'"></textarea>
+      </div>
+      <button type="submit" class="btn-submit" id="reviewSubmitBtn" style="width:100%;padding:14px;">Submit Review →</button>
+    </form>
+  </div>
+</div>
+<div class="modal-overlay" id="bookModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>Book Your Trip</h3>
+    <p class="modal-sub" id="modalSubtitle">Fill in your details and we'll confirm within 2 hours.</p>
+    <form id="bookingForm" novalidate>
+      <input type="hidden" name="Package" id="modalPackageName"/>
+      <input type="hidden" name="Price" id="modalPackagePrice"/>
+      <div class="form-group"><label>Full Name *</label><input type="text" name="Name" placeholder="Your full name" required/></div>
+      <div class="form-row-2">
+        <div class="form-group"><label>Phone / WhatsApp *</label><input type="tel" name="Phone" placeholder="+91 XXXXX XXXXX" required/></div>
+        <div class="form-group"><label>No. of Persons</label><select name="Persons"><option>1</option><option>2</option><option>3–5</option><option>6–10</option><option>10+</option></select></div>
+      </div>
+      <div class="form-group"><label>Email</label><input type="email" name="Email" placeholder="your@email.com"/></div>
+      <div class="form-group"><label>Preferred Travel Date</label><input type="text" name="Date" placeholder="e.g. June 15, 2025"/></div>
+      <button type="submit" class="btn-submit" id="bookingBtn">Confirm Booking →</button>
+    </form>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- PDF Itinerary Viewer -->
+<div class="pdf-modal" id="pdfModal" onclick="if(event.target===this)closeItin()">
+  <div class="pdf-wrap">
+    <div class="pdf-hdr">
+      <h3 id="pdfTitle">Full Itinerary</h3>
+      <div class="pdf-hdr-r">
+        <a id="pdfDownload" href="#" download>⬇ Download</a>
+        <button class="pdf-close" onclick="closeItin()">✕ Close</button>
+      </div>
+    </div>
+    <div class="pdf-body" id="pdfBody"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/main.js' %}"></script>
+<script>
+  // ENDPOINTS comes from js/main.js (loaded before this script)
+
+  // ── WhatsApp share buttons ──
+  document.querySelectorAll('.pkg-card').forEach(card=>{
+    const nameEl=card.querySelector('.pkg-name');
+    const priceEl=card.querySelector('.amount');
+    if(!nameEl)return;
+    const tripName=nameEl.textContent.trim();
+    const price=priceEl?priceEl.textContent.trim():'';
+    const msg=encodeURIComponent(`Hi! Check out this trip by ModernMantra 🏔\n*${tripName}* — ${price}/person\nBook here: ${window.location.href}`);
+    const a=document.createElement('a');
+    a.className='pkg-wa-share';
+    a.href=`https://wa.me/?text=${msg}`;
+    a.target='_blank';
+    a.title='Share on WhatsApp';
+    a.setAttribute('aria-label','Share on WhatsApp');
+    a.innerHTML='<svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>';
+    const imgDiv=card.querySelector('.pkg-img');
+    if(imgDiv)imgDiv.appendChild(a);
+  });
+  window.addEventListener('scroll',()=>{ document.querySelector('nav').style.padding=window.scrollY>60?'12px 48px':'18px 48px'; });
+
+  // Filter
+  document.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat=btn.dataset.cat;
+      document.querySelectorAll('.pkg-card').forEach(c=>{ c.style.display=(cat==='all'||c.dataset.cat?.includes(cat))?'flex':'none'; });
+    });
+  });
+
+  // Wishlist
+  document.querySelectorAll('.pkg-fav').forEach(f=>{
+    f.addEventListener('click',function(){ this.textContent=this.textContent==='♡'?'♥':'♡'; this.style.color=this.textContent==='♥'?'#e74c3c':''; });
+  });
+
+  // Modal
+  function openModal(name,price){
+    document.getElementById('modalSubtitle').textContent=`${name} — ${price} / person`;
+    document.getElementById('modalPackageName').value=name;
+    document.getElementById('modalPackagePrice').value=price;
+    document.getElementById('bookModal').classList.add('open');
+  }
+  function closeModal(){ document.getElementById('bookModal').classList.remove('open'); document.getElementById('bookingForm').reset(); }
+  document.getElementById('bookModal').addEventListener('click',function(e){ if(e.target===this)closeModal(); });
+
+
+  // Toast
+  function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),5000); }
+
+  // ── Full Itinerary PDF Viewer ──
+  function openItin(title, pdfUrl){
+    // Resolve bare filenames to full static path
+    if(!pdfUrl.startsWith('http') && !pdfUrl.startsWith('/') && window.MM_BROCHURES_URL){
+      pdfUrl = window.MM_BROCHURES_URL + pdfUrl;
+    }
+    const modal=document.getElementById('pdfModal');
+    const body=document.getElementById('pdfBody');
+    document.getElementById('pdfTitle').textContent=title+' — Full Itinerary';
+    document.getElementById('pdfDownload').href=pdfUrl;
+    document.getElementById('pdfDownload').setAttribute('download', pdfUrl.split('/').pop());
+    // Mobile-friendly: iframe with toolbar disabled
+    body.innerHTML='<iframe src="'+pdfUrl+'#toolbar=1&navpanes=0&view=FitH" title="Itinerary PDF"></iframe>';
+    modal.classList.add('open');
+    document.body.style.overflow='hidden';
+    // Add fallback message if iframe fails to load (some mobile browsers)
+    setTimeout(()=>{
+      const f=body.querySelector('iframe');
+      if(f && !f.contentDocument && /Mobi|Android/i.test(navigator.userAgent)){
+        body.innerHTML='<div class="pdf-fallback"><p>📱 Some mobile browsers don\'t support inline PDF viewing.</p><p>Tap the button below to open the brochure in a new tab:</p><a href="'+pdfUrl+'" target="_blank" class="btn-primary" style="display:inline-block;text-decoration:none;">📄 Open Itinerary PDF</a></div>';
+      }
+    }, 1500);
+  }
+  function closeItin(){
+    document.getElementById('pdfModal').classList.remove('open');
+    document.getElementById('pdfBody').innerHTML='';
+    document.body.style.overflow='';
+  }
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&document.getElementById('pdfModal').classList.contains('open'))closeItin(); });
+
+  // Review modal
+  var _pubRating=5;
+  function openReviewModal(){ document.getElementById('reviewModal').classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeReviewModal(){ document.getElementById('reviewModal').classList.remove('open'); document.body.style.overflow=''; }
+  function setPubRating(n){
+    _pubRating=n; document.getElementById('pubRatingVal').value=n;
+    document.querySelectorAll('.pub-star').forEach(function(s,i){s.classList.toggle('lit',i<n);});
+  }
+  document.querySelectorAll('.pub-star').forEach(function(s,i){
+    s.addEventListener('mouseenter',function(){document.querySelectorAll('.pub-star').forEach(function(x,j){x.classList.toggle('lit',j<=i);});});
+    s.addEventListener('mouseleave',function(){document.querySelectorAll('.pub-star').forEach(function(x,j){x.classList.toggle('lit',j<_pubRating);});});
+  });
+  document.getElementById('reviewForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    var btn=document.getElementById('reviewSubmitBtn');
+    var formEl=this;
+    btn.textContent='Sending…'; btn.disabled=true;
+    try{
+      // 1. Save to Google Sheets backend
+      if(window.MMBackend && window.MMBackend.isEnabled()){
+        var fd=new FormData(formEl);
+        var item={
+          id:'RV-'+Date.now(),
+          name:fd.get('Name')||'',
+          city:fd.get('City')||'',
+          trip:fd.get('Trip')||'',
+          rating:fd.get('Rating')||'5',
+          message:fd.get('Review')||'',
+          time:new Date().toISOString(),
+          approved:'false'
+        };
+        window.MMBackend.addReview(item).then(function(r){
+          if(r && r.ok){ console.log('[Review] Saved to Google Sheets:', r.id); }
+          else { console.warn('[Review] Sheet save failed:', r); }
+        }).catch(function(err){ console.warn('[Review] Sheet error:', err); });
+      }
+      // 2. Also send to Formspree
+      var res=await fetch(window.MM_ENDPOINTS.review,{method:'POST',body:new FormData(formEl),credentials:'same-origin',headers:{Accept:'application/json','X-CSRFToken':window.MM_CSRF_TOKEN}});
+      if(res.ok){
+        document.getElementById('reviewModalInner').innerHTML='<div style="text-align:center;padding:28px 0;"><div style="font-size:3.5rem;margin-bottom:16px;">🙏</div><h3 style="color:var(--pine);font-family:\'Cormorant Garamond\',serif;font-size:2.2rem;margin-bottom:10px;">Thank You!</h3><p style="color:#888;line-height:1.75;max-width:340px;margin:0 auto 28px;">Your review has been received. We\'ll verify and publish it soon!</p><button class="btn-submit" onclick="closeReviewModal()" style="width:auto;padding:12px 32px;">Close</button></div>';
+      } else { btn.textContent='Submit Review →'; btn.disabled=false; showToast('⚠️ Something went wrong. Try again.'); }
+    }catch(err){ btn.textContent='Submit Review →'; btn.disabled=false; showToast('⚠️ Network error. Try again.'); }
+  });
+
+  // Scroll reveal
+  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}}),{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+
+  // ── ADMIN PRICE OVERRIDE ──────────────────────────────────────────────
+  // Prices: DB is source of truth (injected server-side), localStorage as fallback
+  // Format: { "Trip Name": 12345, ... }
+  (function applyAdminPrices(){
+    let saved;
+    // DB data injected by Django view takes priority
+    const dbPrices = {{ db_prices_json|safe }};
+    try { const ls = JSON.parse(localStorage.getItem('mm_prices') || 'null'); saved = Object.assign({}, ls || {}, dbPrices); } catch(e){ saved = dbPrices; }
+    if(!saved || !Object.keys(saved).length) return;
+
+    // Match by data-trip (exact DB name) → reliable, no text mismatch
+    document.querySelectorAll('.pkg-card').forEach(card => {
+      const tripAttr = card.getAttribute('data-trip');
+      if(!tripAttr) return;
+      // Exact match first, then fallback: DB key starts with data-trip words
+      let key = saved.hasOwnProperty(tripAttr) ? tripAttr
+        : Object.keys(saved).find(k => k.startsWith(tripAttr) || tripAttr.startsWith(k.replace(/\s+\d+D.*$/,'')));
+      if(!key || saved[key] == null) return;
+      const newPrice = saved[key];
+      const fmt = '₹' + newPrice.toLocaleString('en-IN');
+      // Update display price
+      const amtEl = card.querySelector('.pkg-price-amount');
+      if(amtEl) amtEl.textContent = fmt;
+      // Update book button onclick
+      const bookBtn = card.querySelector('.btn-book');
+      if(bookBtn){
+        const existing = bookBtn.getAttribute('onclick') || '';
+        const tripName = existing.match(/openModal\('([^']+)'/)?.[1] || tripAttr;
+        bookBtn.setAttribute('onclick', `openModal('${tripName}','${fmt}')`);
+      }
+    });
+
+    // Featured package (Spiti)
+    const featKey = Object.keys(saved).find(k => k.toLowerCase().includes('spiti'));
+    if(featKey && saved[featKey]){
+      const fmt = '₹' + saved[featKey].toLocaleString('en-IN');
+      const featAmt = document.querySelector('.feat-price .amount');
+      if(featAmt) featAmt.textContent = fmt;
+      const featBtn = document.querySelector('.btn-primary[onclick*="Spiti"]');
+      if(featBtn) featBtn.setAttribute('onclick', `openModal('Spiti Valley – Summer Escape','${fmt}')`);
+    }
+  })();
+  // ─────────────────────────────────────────────────────────────────────
+
+  // ── ADMIN BROCHURE OVERRIDE ──────────────────────────────────────────
+  // Reads Cloudinary URLs from localStorage (set by admin.html on this device)
+  // AND from Google Sheets config (set when admin uploaded from any device).
+  (async function applyAdminBrochures(){
+    // 1. Start with localStorage brochures (fast, immediate)
+    const meta = JSON.parse(localStorage.getItem('mm_brochures') || '{}');
+
+    // 2. Merge in URLs from Google Sheets config (works across all devices)
+    if(window.MMBackend && window.MMBackend.isEnabled()){
+      try{
+        const res = await window.MMBackend.getConfig();
+        if(res && res.ok && res.data){
+          for(const [k,v] of Object.entries(res.data)){
+            if(!k.startsWith('brochure_url__') || !v) continue;
+            const suffix = k.replace('brochure_url__','');
+            let matched = Object.keys(meta).find(name=>{
+              const norm = name.toLowerCase().replace(/[^a-z0-9]+/g,'_');
+              return norm === suffix || norm.startsWith(suffix.slice(0,12));
+            });
+            if(matched){ if(!meta[matched].url) meta[matched] = {...meta[matched], url:v}; }
+            else { meta['__sheet__'+suffix] = {url:v, filename:'brochure.pdf'}; }
+          }
+        }
+      }catch(e){ /* backend unavailable — localStorage still works */ }
+    }
+
+    if(!Object.keys(meta).length) return;
+
+    for(const card of document.querySelectorAll('.pkg-card')){
+      const nameEl=card.querySelector('.pkg-name'); if(!nameEl)continue;
+      const rawName=nameEl.textContent.trim();
+      const key=Object.keys(meta).find(k=>{
+        const clean=k.replace('__sheet__','');
+        return clean.includes(rawName)||rawName.includes(clean.split(' ').slice(0,3).join(' '))||
+               rawName.toLowerCase().replace(/[^a-z0-9]+/g,'_').startsWith(clean.slice(0,12));
+      });
+      if(!key) continue;
+      const info=meta[key]; if(!info) continue;
+
+      // Use Cloudinary URL (or static filename fallback)
+      const href = info.url || (typeof info==='string'?info:info.filename);
+      if(!href) continue;
+
+      const fname=typeof info==='string'?info:(info.filename||'brochure.pdf');
+      let existing=card.querySelector('.btn-brochure');
+      const actions=card.querySelector('.pkg-actions');
+      if(existing){ existing.href=href; existing.setAttribute('download',fname); existing.target='_blank'; }
+      else if(actions){
+        const a=document.createElement('a');
+        a.className='btn-brochure'; a.href=href;
+        a.setAttribute('download',fname); a.target='_blank';
+        a.style.cssText='display:inline-flex;align-items:center;gap:5px;padding:8px 14px;background:#f7f3ec;border:1px solid #d4c9b0;border-radius:8px;font-size:.75rem;font-weight:600;color:#1B3A2D;text-decoration:none;margin-top:6px;';
+        a.innerHTML='⬇ Brochure'; actions.appendChild(a);
+      }
+    }
+  })();
+
+  // ── BATCH DATES ────────────────────────────────────────────────────────
+  // DB batches injected server-side; localStorage and Sheet supplement only
+  (async function applyBatchDates(){
+    // 1. Start with DB-injected batches (always current)
+    const dbBatches = {{ db_batches_json|safe }};
+
+    // 2. Merge localStorage (for any manually-added batches not in DB)
+    let batches = Object.assign({}, dbBatches);
+    let comingSoon = null;
+    try { const ls = JSON.parse(localStorage.getItem('mm_batches') || 'null'); if(ls) batches = Object.assign({}, ls, batches); } catch(e){}
+    try { comingSoon = JSON.parse(localStorage.getItem('mm_coming_soon')  || 'null'); } catch(e){}
+
+    // 2. Supplement with Sheet (only if Sheet returns non-empty data)
+    if (window.MMBackend && window.MMBackend.isEnabled()) {
+      try {
+        const res = await window.MMBackend.getBatches();
+        if (res && res.ok && Array.isArray(res.data) && res.data.length > 0) {
+          // Sheet has data — parse and merge (don't blindly overwrite)
+          const sheetBatches = {}, sheetCS = {};
+          res.data.forEach(b => {
+            if (b.id && String(b.id).startsWith('cs-')) {
+              if (b.comingSoon === 'true' || b.comingSoon === true) sheetCS[b.trip] = true;
+              else if (b.comingSoon === 'false' || b.comingSoon === false) sheetCS[b.trip] = false;
+            } else if (b.trip) {
+              if (!sheetBatches[b.trip]) sheetBatches[b.trip] = [];
+              sheetBatches[b.trip].push({
+                id: b.id,
+                startDate: b.startDate || '',
+                endDate:   b.endDate   || '',
+                label:     b.label     || '',
+                totalSpots:  b.totalSpots  || '0',
+                filledSpots: b.filledSpots || '0',
+                status: b.status || 'available'
+              });
+            }
+          });
+          // Merge: Sheet is authoritative for trips it knows; keep local-only trips
+          if (Object.keys(sheetBatches).length > 0) {
+            batches = Object.assign({}, batches || {}, sheetBatches);
+          }
+          if (Object.keys(sheetCS).length > 0) {
+            comingSoon = Object.assign({}, comingSoon || {}, sheetCS);
+          }
+          // Update cache with merged data
+          try {
+            localStorage.setItem('mm_batches',      JSON.stringify(batches    || {}));
+            localStorage.setItem('mm_coming_soon',  JSON.stringify(comingSoon || {}));
+          } catch(e){}
+        }
+        // If Sheet returned empty, silently keep localStorage data as-is
+      } catch(e) { console.warn('[Batches] Sheet pull failed, using local cache:', e.message); }
+    }
+
+    if (!batches && !comingSoon) return;
+
+    const today = new Date().toISOString().split('T')[0];
+
+    document.querySelectorAll('.pkg-card').forEach(card => {
+      // Exact match by data-trip attribute
+      const trip = card.getAttribute('data-trip');
+      if (!trip) return;
+
+      const tripBatches = (batches && batches[trip]) || [];
+      const futureBatches = tripBatches.filter(b => b.startDate >= today && b.status !== 'full');
+      const isCS = comingSoon && comingSoon[trip];
+
+      // Remove any previous render
+      const old = card.querySelector('.pkg-batches'); if (old) old.remove();
+      const oldBadge = card.querySelector('.cs-badge'); if (oldBadge) oldBadge.remove();
+
+      if (futureBatches.length) {
+        const div = document.createElement('div');
+        div.className = 'pkg-batches';
+        div.style.cssText = 'padding:8px 20px 0;border-top:1px dashed #eee;margin-top:8px;';
+        div.innerHTML =
+          '<div style="font-size:.68rem;color:#bbb;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-bottom:7px;">📅 Upcoming Batches</div>' +
+          futureBatches.slice(0, 3).map(b => {
+            const filled = +b.filledSpots || 0, total = +b.totalSpots || 0;
+            const left = total - filled;
+            const spotsHtml = total > 0
+              ? `<span style="font-size:.7rem;color:${left <= 3 ? '#e53935' : left <= 6 ? '#f57f17' : '#43a047'}">${left <= 0 ? 'Full' : left + ' spots left'}</span>`
+              : '';
+            const labelText = (b.label || b.startDate || '').toString();
+            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #f5f5f5;"><span style="font-size:.78rem;font-weight:600;color:#1B3A2D;">${labelText}</span>${spotsHtml}</div>`;
+          }).join('') +
+          (futureBatches.length > 3 ? `<div style="font-size:.7rem;color:#bbb;margin-top:4px;">+${futureBatches.length - 3} more dates</div>` : '');
+        const footer = card.querySelector('.pkg-footer');
+        if (footer) card.insertBefore(div, footer); else card.appendChild(div);
+      } else if (isCS || (tripBatches && tripBatches.length && !futureBatches.length)) {
+        const imgDiv = card.querySelector('.pkg-img');
+        if (imgDiv && !imgDiv.querySelector('.cs-badge')) {
+          const badge = document.createElement('div');
+          badge.className = 'cs-badge';
+          badge.style.cssText = 'position:absolute;bottom:12px;right:14px;z-index:2;background:rgba(201,146,43,.9);color:#fff;font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:.5px;text-transform:uppercase;';
+          badge.textContent = 'Coming Soon';
+          if (getComputedStyle(imgDiv).position === 'static') imgDiv.style.position = 'relative';
+          imgDiv.appendChild(badge);
+        }
+      }
+    });
+  })();
+  // ────────────────────────────────────────────────────────────────────
+</script>
+{% endblock %}

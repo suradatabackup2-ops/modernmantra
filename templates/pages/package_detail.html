@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% load static humanize %}
+
+{% block title %}{{ package.name }} – {{ package.duration_label }} – ₹{{ package.price|intcomma }} | Modern Mantra{% endblock %}
+
+{% block meta_description %}{% if package.short_description %}{{ package.short_description }} {% endif %}Book {{ package.name }} with Modern Mantra. {{ package.duration_label }} from ₹{{ package.price|intcomma }} per person.{% endblock %}
+
+{% block og_type %}product{% endblock %}
+{% block og_title %}{{ package.name }} – ₹{{ package.price|intcomma }} | Modern Mantra{% endblock %}
+{% block og_description %}{% if package.short_description %}{{ package.short_description }}{% else %}{{ package.duration_label }} trip with Modern Mantra. Book now.{% endif %}{% endblock %}
+{% block og_image %}{% if package.hero_image %}{{ request.scheme }}://{{ request.get_host }}{{ package.hero_image.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/hero-base.jpg' %}{% endif %}{% endblock %}
+
+{% block head_extra %}
+{# ── TouristTrip structured data for SEO ────────────────────── #}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TouristTrip",
+  "name": "{{ package.name|escapejs }}",
+  "description": "{{ package.short_description|default:package.name|escapejs }}",
+  "offers": {
+    "@type": "Offer",
+    "price": "{{ package.price }}",
+    "priceCurrency": "INR",
+    "availability": "https://schema.org/InStock",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{{ request.path }}"
+  }{% if package.duration_days %},
+  "duration": "P{{ package.duration_days }}D"{% endif %}{% if package.hero_image %},
+  "image": "{{ request.scheme }}://{{ request.get_host }}{{ package.hero_image.url }}"{% endif %},
+  "provider": {
+    "@type": "TravelAgency",
+    "name": "Modern Mantra",
+    "url": "{{ request.scheme }}://{{ request.get_host }}/"
+  }
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages.css' %}"/>
+<link rel="stylesheet" href="{% static 'css/pkg-detail.css' %}"/>
+{% endblock %}
+
+{% block content %}
+
+<!-- ═══ Hero ═══ -->
+<section class="pd-hero" {% if package.hero_image %}style="background-image: linear-gradient(rgba(27,58,45,.5), rgba(27,58,45,.7)), url('{{ package.hero_image.url }}');"{% else %}style="background-image: linear-gradient(rgba(27,58,45,.55), rgba(27,58,45,.7)), url('{% static 'images/hero-base.jpg' %}');"{% endif %}>
+  <div class="container">
+    <nav class="pd-crumbs">
+      <a href="{% url 'pages:home' %}">Home</a> ·
+      <a href="{% url 'pages:packages' %}">Packages</a> ·
+      <span>{{ package.name }}</span>
+    </nav>
+    <h1 class="pd-title">{{ package.name }}</h1>
+    <div class="pd-meta">
+      {% if package.duration_label %}<span class="pd-meta-item">📅 {{ package.duration_label }}</span>{% endif %}
+      <span class="pd-meta-item">💰 ₹{{ package.price|intcomma }} <small>per person</small></span>
+      {% if package.get_category_display %}<span class="pd-meta-item">🏷️ {{ package.get_category_display }}</span>{% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Body — two column layout ═══ -->
+<section class="pd-body">
+  <div class="container pd-grid">
+
+    <!-- ── Main content ── -->
+    <div class="pd-main">
+
+      {% if package.short_description %}
+      <p class="pd-lead">{{ package.short_description }}</p>
+      {% endif %}
+
+      {% if package.long_description %}
+      <div class="pd-section">
+        <h2>About this trip</h2>
+        <div class="pd-prose">{{ package.long_description|linebreaks }}</div>
+      </div>
+      {% endif %}
+
+      <!-- Upcoming batches -->
+      {% if upcoming_batches %}
+      <div class="pd-section">
+        <h2>Upcoming departures</h2>
+        <div class="pd-batches">
+          {% for b in upcoming_batches %}
+          <div class="pd-batch">
+            <div class="pd-batch-dates">
+              <strong>{{ b.start_date|date:"D, d M Y" }}</strong>
+              <span>→ {{ b.end_date|date:"d M Y" }}</span>
+            </div>
+            <div class="pd-batch-meta">
+              <span class="pd-batch-status pd-batch-status-{{ b.status }}">{{ b.get_status_display }}</span>
+              {% if b.slots_left > 0 %}<span class="pd-batch-slots">{{ b.slots_left }} slots left</span>{% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Brochure download -->
+      {% if package.brochure_pdf %}
+      <div class="pd-section">
+        <a href="{{ package.brochure_pdf.url }}" target="_blank" rel="noopener" class="pd-brochure-btn">
+          📄 Download full itinerary (PDF)
+        </a>
+      </div>
+      {% endif %}
+
+      <!-- Reviews for this package -->
+      {% if package_reviews %}
+      <div class="pd-section">
+        <h2>What travelers say</h2>
+        <div class="pd-reviews">
+          {% for r in package_reviews %}
+          <div class="pd-review">
+            <div class="pd-review-stars" style="color:#d4a017">
+              {% for _ in "12345" %}{% if forloop.counter <= r.rating %}★{% else %}☆{% endif %}{% endfor %}
+            </div>
+            <p class="pd-review-body">"{{ r.body }}"</p>
+            <div class="pd-review-author">— {{ r.name }}{% if r.city %}, {{ r.city }}{% endif %}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+
+    <!-- ── Sticky sidebar — booking ── -->
+    <aside class="pd-sidebar">
+      <div class="pd-book-card">
+        <div class="pd-book-price">
+          <span class="pd-book-price-label">From</span>
+          <span class="pd-book-price-value">₹{{ package.price|intcomma }}</span>
+          <span class="pd-book-price-unit">per person</span>
+        </div>
+
+        <form id="bookingForm" novalidate>
+          <input type="hidden" name="Package" value="{{ package.name }}"/>
+          <input type="hidden" name="Price" value="₹{{ package.price|intcomma }}"/>
+
+          <label>Name <input type="text" name="Name" required/></label>
+          <label>Phone <input type="tel" name="Phone" required placeholder="+91 …"/></label>
+          <label>Email <input type="email" name="Email" required/></label>
+          <label>Persons <input type="number" name="Persons" min="1" max="20" value="2"/></label>
+          <label>Preferred date <input type="date" name="Date"/></label>
+
+          <button type="submit" id="bookingBtn" class="pd-book-btn">Book this trip →</button>
+        </form>
+
+        <div class="pd-book-divider"><span>or</span></div>
+
+        <a href="https://wa.me/{{ SITE_CONTACT.whatsapp }}?text={{ wa_message|urlencode }}"
+           target="_blank"
+           rel="noopener"
+           class="pd-wa-btn">
+          💬 Ask on WhatsApp
+        </a>
+      </div>
+    </aside>
+
+  </div>
+</section>
+
+<!-- ═══ Related packages ═══ -->
+{% if related_packages %}
+<section class="pd-related">
+  <div class="container">
+    <h2>You might also like</h2>
+    <div class="pd-related-grid">
+      {% for p in related_packages %}
+      <a href="{% url 'pages:package_detail' p.slug %}" class="pd-related-card">
+        {% if p.hero_image %}
+        <div class="pd-related-img" style="background-image: url('{{ p.hero_image.url }}');"></div>
+        {% endif %}
+        <div class="pd-related-body">
+          <h3>{{ p.name }}</h3>
+          <p>{{ p.short_description|truncatewords:18 }}</p>
+          <div class="pd-related-meta">
+            {% if p.duration_label %}<span>{{ p.duration_label }}</span>{% endif %}
+            <span class="pd-related-price">₹{{ p.price|intcomma }}</span>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

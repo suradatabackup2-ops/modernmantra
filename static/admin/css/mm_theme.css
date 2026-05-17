@@ -1,0 +1,185 @@
+/* ═══════════════════════════════════════════════════════════
+   MODERN MANTRA — ADMIN THEME
+   Light brand overlay on top of standard Django admin.
+   Colors: pine green nav, gold accents, cream background.
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
+
+:root {
+    --mm-pine:   #1B3A2D;
+    --mm-forest: #4A7C59;
+    --mm-gold:   #c9922b;
+    --mm-cream:  #f7f3ec;
+    --mm-ink:    #1a1a1a;
+    --mm-mute:   #666;
+    --mm-border: #ddd8cf;
+
+    /* Override Django admin CSS variables */
+    --primary:              var(--mm-pine);
+    --secondary:            var(--mm-pine);
+    --accent:               var(--mm-gold);
+    --primary-fg:           #fff;
+
+    --header-color:         #fff;
+    --header-branding-color: var(--mm-gold);
+    --header-bg:            var(--mm-pine);
+    --header-link-color:    rgba(255,255,255,.85);
+
+    --breadcrumbs-fg:       rgba(255,255,255,.8);
+    --breadcrumbs-link-fg:  #fff;
+    --breadcrumbs-bg:       var(--mm-forest);
+
+    --link-fg:              var(--mm-forest);
+    --link-hover-color:     var(--mm-pine);
+    --link-selected-fg:     var(--mm-pine);
+
+    --body-bg:              var(--mm-cream);
+    --body-fg:              var(--mm-ink);
+    --body-quiet-color:     var(--mm-mute);
+
+    --button-fg:            #fff;
+    --button-bg:            var(--mm-pine);
+    --button-hover-bg:      var(--mm-forest);
+    --default-button-bg:    var(--mm-pine);
+    --default-button-hover-bg: var(--mm-forest);
+
+    --selected-bg:          #f0ece4;
+    --selected-row:         #faf6ed;
+
+    --darkened-bg:          #eee8dc;
+    --nav-sidebar-bg:       var(--mm-pine);
+}
+
+/* ── Typography ─────────────────────────────────────────── */
+body {
+    font-family: 'Outfit', -apple-system, sans-serif;
+}
+#branding h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: .3px;
+}
+#branding h1 a:link,
+#branding h1 a:visited {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+#header {
+    background: var(--mm-pine);
+    border-bottom: 2px solid var(--mm-gold);
+    padding: 14px 40px;
+}
+#header a:focus,
+#header a:hover { color: var(--mm-gold); }
+
+/* ── Breadcrumbs ────────────────────────────────────────── */
+div.breadcrumbs {
+    background: var(--mm-forest);
+    color: rgba(255,255,255,.8);
+    padding: 8px 40px;
+}
+div.breadcrumbs a { color: #fff; }
+
+/* ── Sidebar nav ────────────────────────────────────────── */
+#nav-sidebar {
+    background: var(--mm-pine);
+}
+#nav-sidebar .current-app .section:link,
+#nav-sidebar .current-app .section:visited,
+#nav-sidebar a:link,
+#nav-sidebar a:visited {
+    color: rgba(255,255,255,.85);
+}
+#nav-sidebar a:hover { color: #fff; }
+#nav-sidebar .current-model > a {
+    color: var(--mm-gold);
+    font-weight: 600;
+}
+#nav-sidebar .module th {
+    background: rgba(255,255,255,.07);
+    color: rgba(255,255,255,.55);
+    font-size: .68rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.button, input[type=submit], input[type=button],
+.submit-row input, a.button {
+    background: var(--mm-pine);
+    color: #fff;
+    border-radius: 5px;
+    border: none;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    transition: background .15s;
+}
+.button:hover, input[type=submit]:hover,
+.submit-row input:hover { background: var(--mm-forest); }
+.button.default, input[type=submit].default {
+    background: var(--mm-pine);
+}
+.deletelink, a.deletelink {
+    background: #b71c1c;
+    color: #fff;
+}
+
+/* ── Module / change-list table ──────────────────────────── */
+.module caption, .inline-group h2 {
+    background: var(--mm-pine);
+    color: #fff;
+    padding: 8px 14px;
+    font-size: .8rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+#changelist table thead th {
+    background: var(--mm-pine);
+    color: #fff;
+}
+#changelist table thead th a:link,
+#changelist table thead th a:visited { color: rgba(255,255,255,.9); }
+#changelist table thead th a:hover  { color: var(--mm-gold); }
+tr.selected td { background: var(--selected-row); }
+
+/* ── Filters sidebar ─────────────────────────────────────── */
+#changelist-filter h2 {
+    background: var(--mm-pine);
+    color: #fff;
+    font-size: .78rem;
+    letter-spacing: 1.2px;
+    padding: 8px 14px;
+}
+#changelist-filter h3 { color: var(--mm-pine); }
+#changelist-filter li.selected a { color: var(--mm-pine); font-weight: 600; }
+
+/* ── Fieldset ────────────────────────────────────────────── */
+fieldset h2 {
+    background: var(--mm-forest);
+    color: #fff;
+    padding: 7px 14px;
+    font-size: .78rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.form-row { border-bottom: 1px solid var(--mm-border); }
+
+/* ── Dashboard index ─────────────────────────────────────── */
+#content-main .module h2 {
+    background: var(--mm-pine);
+    color: #fff;
+    padding: 8px 14px;
+    font-size: .78rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+#content-main .module table th {
+    background: #e8e2d6;
+}
+.dashboard .module table td a {
+    color: var(--mm-forest);
+    font-weight: 500;
+}

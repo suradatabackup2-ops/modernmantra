@@ -1,0 +1,176 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Modern Mantra – Travel Experiences{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Curated solo & group travel experiences across India and beyond — Himalayan treks, road trips, weekend getaways. Spiti, Ladakh, Zanskar, Manali, Rajasthan, Mauritius and more.{% endblock %}"/>
+
+  {# ─── Canonical URL ─────────────────────────────────────────── #}
+  <link rel="canonical" href="{% block canonical_url %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}"/>
+
+  {# ─── Open Graph (Facebook, WhatsApp, LinkedIn previews) ───── #}
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}"/>
+  <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}"/>
+  <meta property="og:title" content="{% block og_title %}Modern Mantra – Travel Experiences{% endblock %}"/>
+  <meta property="og:description" content="{% block og_description %}Curated solo & group travel experiences across India and beyond — Himalayan treks, road trips and more.{% endblock %}"/>
+  <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/hero-base.jpg' %}{% endblock %}"/>
+  <meta property="og:site_name" content="Modern Mantra"/>
+  <meta property="og:locale" content="en_IN"/>
+
+  {# ─── Twitter Card ──────────────────────────────────────────── #}
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="{% block twitter_title %}{{ block.super|default:'Modern Mantra' }}{% endblock %}"/>
+  <meta name="twitter:description" content="{% block twitter_description %}Curated solo & group travel experiences across India.{% endblock %}"/>
+  <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'images/hero-base.jpg' %}{% endblock %}"/>
+
+  {# ─── Favicon ───────────────────────────────────────────────── #}
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏔️</text></svg>"/>
+
+  <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/extras.css' %}"/>
+  {% block extra_css %}{% endblock %}
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+
+<!-- ═══ NAVIGATION ═══ -->
+<nav id="mainNav">
+  <a href="{% url 'pages:home' %}" class="logo">Modern<span>Mantra</span></a>
+  <ul class="nav-links">
+    <li><a href="{% url 'pages:home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Home</a></li>
+    <li><a href="{% url 'pages:about' %}" {% if request.resolver_match.url_name == 'about' %}class="active"{% endif %}>About</a></li>
+    <li><a href="{% url 'pages:packages' %}" {% if request.resolver_match.url_name == 'packages' %}class="active"{% endif %}>Packages</a></li>
+    <li><a href="{% url 'pages:gallery' %}" {% if request.resolver_match.url_name == 'gallery' %}class="active"{% endif %}>Gallery</a></li>
+    <li><a href="{% url 'pages:contact' %}" {% if request.resolver_match.url_name == 'contact' %}class="active"{% endif %}>Contact</a></li>
+  </ul>
+  <a href="{% url 'pages:contact' %}#enquiry" class="nav-cta">Book a Trip</a>
+  <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="nav-mobile" id="navMobile">
+  <ul>
+    <li><a href="{% url 'pages:home' %}">Home</a></li>
+    <li><a href="{% url 'pages:about' %}">About Us</a></li>
+    <li><a href="{% url 'pages:packages' %}">Packages</a></li>
+    <li><a href="{% url 'pages:gallery' %}">Gallery</a></li>
+    <li><a href="{% url 'pages:contact' %}">Contact</a></li>
+  </ul>
+  <a href="{% url 'pages:contact' %}#enquiry" class="mob-cta">Book a Trip →</a>
+</div>
+
+{% if messages %}
+<div class="django-messages" style="position:fixed;top:88px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;">
+  {% for m in messages %}
+  <div class="django-msg django-msg-{{ m.tags }}" style="background:#fff;border-left:4px solid var(--forest, #4A7C59);padding:14px 20px;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.12);font-size:.9rem;color:#333;max-width:360px;">{{ m }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% block content %}{% endblock %}
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="{% url 'pages:home' %}" class="logo">Modern<span>Mantra</span></a>
+        <p>Curated solo &amp; group travel experiences across India and beyond. Where every mile feels like freedom.</p>
+        <form class="mm-newsletter" data-source="footer">
+          <input type="email" name="email" placeholder="Your email for trip alerts" required/>
+          <button type="submit">Subscribe</button>
+        </form>
+        <div class="mm-newsletter-success" aria-live="polite"></div>
+        <div class="footer-social" style="margin-top:18px;">
+          <a href="https://www.instagram.com/{{ SITE_CONTACT.instagram }}" target="_blank" rel="noopener" class="soc-btn" title="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <a href="https://wa.me/{{ SITE_CONTACT.whatsapp }}" target="_blank" rel="noopener" class="soc-btn" title="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Destinations</h4>
+        <ul>
+          <li><a href="{% url 'pages:packages' %}">Spiti Valley</a></li>
+          <li><a href="{% url 'pages:packages' %}">Manali</a></li>
+          <li><a href="{% url 'pages:packages' %}">Ladakh</a></li>
+          <li><a href="{% url 'pages:packages' %}">Zanskar</a></li>
+          <li><a href="{% url 'pages:packages' %}">Rajasthan</a></li>
+          <li><a href="{% url 'pages:packages' %}">Mauritius</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="{% url 'pages:about' %}">About Us</a></li>
+          <li><a href="{% url 'pages:packages' %}">All Packages</a></li>
+          <li><a href="{% url 'pages:gallery' %}">Gallery</a></li>
+          <li><a href="{% url 'pages:contact' %}">Contact Us</a></li>
+          <li><a href="{% url 'pages:contact' %}#enquiry">Book a Trip</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="tel:{{ SITE_CONTACT.phone_primary|cut:' ' }}">{{ SITE_CONTACT.phone_primary }}</a></li>
+          <li><a href="tel:{{ SITE_CONTACT.phone_secondary|cut:' ' }}">{{ SITE_CONTACT.phone_secondary }}</a></li>
+          <li><a href="mailto:{{ SITE_CONTACT.email }}">{{ SITE_CONTACT.email }}</a></li>
+          <li><a href="https://wa.me/{{ SITE_CONTACT.whatsapp }}" target="_blank" rel="noopener">WhatsApp Us</a></li>
+          <li><a href="https://instagram.com/{{ SITE_CONTACT.instagram }}" target="_blank" rel="noopener">@{{ SITE_CONTACT.instagram }}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {% now "Y" %} ModernMantra. All rights reserved.</span>
+      <span>Focus · Flow · Frequency</span>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/{{ SITE_CONTACT.whatsapp }}?text=Hi! I'm interested in booking a trip with ModernMantra." target="_blank" rel="noopener" class="float-wa" title="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+
+<!-- Toast container (used by main.js) -->
+<div id="toast" class="toast"></div>
+
+<!-- ═══ DJANGO ENDPOINTS — exposed to JS ═══ -->
+<script>
+  window.MM_ENDPOINTS = {
+    enquiry:      "{% url 'bookings:enquiry_create' %}",
+    booking:      "{% url 'bookings:booking_create' %}",
+    review:       "{% url 'bookings:review_create' %}",
+    registration: "{% url 'bookings:registration_create' %}",
+    newsletter:   "{% url 'catalog:newsletter_subscribe' %}"
+  };
+  window.MM_CSRF_TOKEN = "{{ csrf_token }}";
+  window.MM_BROCHURES_URL = "{% load static %}{% static 'brochures/' %}";
+</script>
+
+<!-- LocalBusiness structured data for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TravelAgency",
+  "name": "Modern Mantra",
+  "description": "Curated solo & group travel experiences across India and beyond. Himachal Pradesh, Ladakh, Spiti, Rajasthan, and more.",
+  "telephone": "{{ SITE_CONTACT.phone_primary }}",
+  "email": "{{ SITE_CONTACT.email }}",
+  "url": "{{ request.scheme }}://{{ request.get_host }}",
+  "sameAs": [
+    "https://instagram.com/{{ SITE_CONTACT.instagram }}",
+    "https://wa.me/{{ SITE_CONTACT.whatsapp }}"
+  ]
+}
+</script>
+
+{% block extra_js %}{% endblock %}
+
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/extras.js' %}"></script>
+</body>
+</html>

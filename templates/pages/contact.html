@@ -1,0 +1,449 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contact Us – Modern Mantra | Book Your Next Trip{% endblock %}
+{% block meta_description %}Plan your custom trip with Modern Mantra. Reach us by WhatsApp, phone, or contact form. We reply within 24 hours. Solo, group, and family trips welcome.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages.css' %}"/>
+<style>
+    .contact-hero-bg { background-image: url('{% static 'images/group-mountains.jpg' %}'); }
+    .contact-page-main { background: var(--snow); padding: 80px 0; }
+    .contact-layout { display: grid; grid-template-columns: 1fr 1.3fr; gap: 72px; align-items: start; }
+    .info-heading { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--pine); margin-bottom: 8px; }
+    .info-sub { color: #777; font-size: .95rem; line-height: 1.7; margin-bottom: 32px; }
+    .info-cards { display: flex; flex-direction: column; gap: 20px; }
+    .info-card { background: #fff; border-radius: 10px; padding: 22px; box-shadow: 0 4px 20px rgba(0,0,0,.06); display: flex; gap: 16px; align-items: flex-start; transition: transform .2s; }
+    .info-card:hover { transform: translateY(-2px); }
+    .info-card-icon { width: 50px; height: 50px; background: var(--mist); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .info-card h4 { font-weight: 600; color: var(--pine); margin-bottom: 6px; font-size: .95rem; }
+    .info-card p { font-size: .88rem; color: #666; line-height: 1.6; }
+    .info-card a { color: var(--forest); font-weight: 500; transition: color .2s; }
+    .info-card a:hover { color: var(--gold); }
+    /* Enquiry Form */
+    .enquiry-box { background: linear-gradient(160deg, var(--pine) 0%, var(--forest) 100%); border-radius: 16px; padding: 48px; }
+    .enquiry-box h3 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--cream); margin-bottom: 8px; }
+    .enquiry-box p { color: rgba(255,255,255,.7); margin-bottom: 32px; font-size: .9rem; line-height: 1.6; }
+    /* Payment Info */
+    .payment-section { background: var(--cream); padding: 80px 0; }
+    .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; }
+    .payment-card { background: #fff; border-radius: 12px; padding: 36px; box-shadow: 0 4px 24px rgba(0,0,0,.07); }
+    .payment-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--pine); margin-bottom: 16px; }
+    .pay-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; font-size: .9rem; color: #555; line-height: 1.5; }
+    .pay-item::before { content: '✓'; color: var(--forest); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .bank-box { background: var(--pine); color: var(--cream); border-radius: 10px; padding: 24px; margin-top: 20px; }
+    .bank-box h4 { color: var(--gold); font-size: .82rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+    .bank-row { display: flex; justify-content: space-between; font-size: .88rem; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .bank-row:last-child { border-bottom: none; }
+    .bank-row span:last-child { color: var(--gold); font-weight: 600; }
+    /* FAQ */
+    .faq-section { background: var(--snow); padding: 80px 0; }
+    .faq-list { margin-top: 48px; display: flex; flex-direction: column; gap: 12px; }
+    .faq-item { background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.05); }
+    .faq-q { padding: 20px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 500; color: var(--pine); font-size: .95rem; }
+    .faq-q:hover { background: var(--cream); }
+    .faq-icon { font-size: 1.2rem; color: var(--gold); transition: transform .3s; flex-shrink: 0; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-a { padding: 0 24px; max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .3s; font-size: .9rem; color: #666; line-height: 1.7; }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
+    @media (max-width: 900px) { .contact-layout, .payment-grid { grid-template-columns: 1fr; } }
+  </style>
+
+{% endblock %}
+
+{% block content %}
+<!-- NAV -->
+
+
+<!-- PAGE HERO -->
+<div class="page-hero contact-hero-bg">
+  <div class="container">
+    <div class="page-hero-content">
+      <div class="section-label">We'd Love to Hear From You</div>
+      <h1>Plan Your<br>Next Adventure</h1>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT MAIN -->
+<section class="contact-page-main" id="enquiry">
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- Left: Info -->
+      <div>
+        <h2 class="info-heading reveal">Let's Plan Something Incredible</h2>
+        <p class="info-sub reveal">Whether you're a solo traveller, a couple, or a group of 30 — we'll craft the perfect itinerary. WhatsApp us, email us, or fill the form. We reply within a few hours.</p>
+
+        <div class="info-cards">
+          <div class="info-card reveal">
+            <div class="info-card-icon">📞</div>
+            <div>
+              <h4>Call or WhatsApp</h4>
+              <p><a href="tel:+917736855515">+91 77368 55515</a><br><a href="tel:+916238053483">+91 62380 53483</a></p>
+            </div>
+          </div>
+          <div class="info-card reveal">
+            <div class="info-card-icon">📧</div>
+            <div>
+              <h4>Email Us</h4>
+              <p><a href="mailto:ziyaziu17@gmail.com">ziyaziu17@gmail.com</a></p>
+            </div>
+          </div>
+          <div class="info-card reveal">
+            <div class="info-card-icon">📸</div>
+            <div>
+              <h4>Instagram</h4>
+              <p><a href="https://instagram.com/modernmantra_" target="_blank">@modernmantra_</a><br>Daily stories from the trail</p>
+            </div>
+          </div>
+          <div class="info-card reveal">
+            <div class="info-card-icon">🕐</div>
+            <div>
+              <h4>Response Time</h4>
+              <p>Mon–Sun: 8 AM – 9 PM<br>WhatsApp replies within 2 hours</p>
+            </div>
+          </div>
+          <div class="info-card reveal">
+            <div class="info-card-icon">📍</div>
+            <div>
+              <h4>Base Location</h4>
+              <p>Manali, Himachal Pradesh<br>Trips depart from Delhi & hometown</p>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px;" class="reveal">
+          <a href="https://wa.me/917736855515?text=Hi! I want to book a trip with ModernMantra." target="_blank" class="btn-primary" style="margin-right: 12px;">
+            💬 WhatsApp Now
+          </a>
+          <a href="tel:+917736855515" class="btn-dark">📞 Call Us</a>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div id="enquiry-form" class="reveal-right">
+        <div class="enquiry-box">
+          <h3>Send an Enquiry</h3>
+          <p>Tell us where you want to go and we'll put together a perfect plan for you, completely free.</p>
+          <form id="enquiryForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Your Name *</label>
+                <input type="text" name="Name" placeholder="Full name" required/>
+              </div>
+              <div class="form-group">
+                <label>Phone / WhatsApp *</label>
+                <input type="tel" name="Phone" placeholder="+91 XXXXX XXXXX" required/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" name="Email" placeholder="your@email.com"/>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Destination *</label>
+                <select name="Destination">
+                  <option value="">— Select —</option>
+                  <option>Spiti Valley</option>
+                  <option>Manali</option>
+                  <option>Zanskar Valley</option>
+                  <option>Ladakh</option>
+                  <option>Rajasthan</option>
+                  <option>Munnar / Kerala</option>
+                  <option>Goa</option>
+                  <option>Mauritius</option>
+                  <option>Sri Lanka</option>
+                  <option>Sikkim / Darjeeling</option>
+                  <option>Varanasi</option>
+                  <option>Hyderabad</option>
+                  <option>Custom / Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Group Size</label>
+                <select name="GroupSize">
+                  <option>Solo</option>
+                  <option>2 people</option>
+                  <option>3–5 people</option>
+                  <option>6–10 people</option>
+                  <option>10+ people</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Preferred Month</label>
+                <select name="Month">
+                  <option>Flexible</option>
+                  <option>June 2025</option><option>July 2025</option><option>August 2025</option>
+                  <option>September 2025</option><option>October 2025</option><option>November 2025</option>
+                  <option>December 2025</option><option>January 2026</option><option>February 2026</option>
+                  <option>March 2026</option><option>April 2026</option><option>May 2026</option><option>June 2026</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Budget Range (per person)</label>
+                <select name="Budget">
+                  <option>Under ₹10,000</option>
+                  <option>₹10,000 – ₹20,000</option>
+                  <option>₹20,000 – ₹40,000</option>
+                  <option>₹40,000 – ₹70,000</option>
+                  <option>₹70,000+</option>
+                  <option>Flexible</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Message / Special Requests</label>
+              <textarea name="Message" rows="4" placeholder="Tell us about your travel style, any specific places you want to visit, dietary needs, or anything else we should know…"></textarea>
+            </div>
+            <button type="submit" class="btn-submit" id="enquiryBtn">Send Enquiry →</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WRITE A REVIEW -->
+<section style="background:#fff;padding:60px 0;border-bottom:1px solid #f0f0f0;">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;">
+    <div>
+      <div class="section-label reveal">Share Your Story</div>
+      <h2 class="section-title reveal" style="font-size:2rem;margin-bottom:10px;">Already Travelled With Us?</h2>
+      <p class="reveal" style="color:#888;max-width:460px;line-height:1.7;font-size:.92rem;">Your review helps other travellers discover ModernMantra. It only takes a minute and we'd love to hear from you.</p>
+    </div>
+    <button class="btn-primary reveal" onclick="openReviewModal()" style="white-space:nowrap;padding:14px 36px;">⭐ Write a Review</button>
+  </div>
+</section>
+
+<!-- PAYMENT INFO -->
+<section class="payment-section">
+  <div class="container">
+    <div class="section-label reveal">Booking Process</div>
+    <h2 class="section-title reveal">How to Book</h2>
+    <p class="section-sub reveal">Simple, transparent, no hidden charges. Here's how to confirm your spot.</p>
+
+    <div class="payment-grid">
+      <div class="payment-card reveal">
+        <h3>Booking Steps</h3>
+        <div class="pay-item">Send an enquiry or WhatsApp us your trip preference.</div>
+        <div class="pay-item">We'll send you a detailed itinerary and pricing within a few hours.</div>
+        <div class="pay-item">Confirm your slot with 30% advance payment.</div>
+        <div class="pay-item">Complete the remaining 70% at least 10 days before trip start.</div>
+        <div class="pay-item">Receive trip kit — packing list, pickup details, and emergency contacts.</div>
+        <div class="pay-item">Show up on day 1 and have the trip of your life!</div>
+        <br>
+        <div style="background:var(--mist); border-radius:8px; padding:16px; font-size:.88rem; color:var(--pine);">
+          <strong>📌 Cancellation Policy</strong><br>
+          Cancel 15+ days before → Credit note valid 365 days<br>
+          Cancel within 7 days → Non-refundable<br>
+          Organiser cancels → 100% refund
+        </div>
+      </div>
+
+      <div class="payment-card reveal">
+        <h3>Payment Details</h3>
+        <p style="color:#666; font-size:.88rem; line-height:1.6; margin-bottom:20px;">Pay via UPI, Google Pay, PhonePe or direct bank transfer. We'll send an acknowledgement slip after receiving your payment.</p>
+        <div class="bank-box">
+          <h4>Bank Transfer</h4>
+          <div class="bank-row"><span>Account No</span><span>33352247284</span></div>
+          <div class="bank-row"><span>IFSC Code</span><span>SBIN0008589</span></div>
+          <div class="bank-row"><span>Account Name</span><span>Modern Mantra</span></div>
+        </div>
+        <div style="margin-top:20px; padding:20px; background:var(--cream); border-radius:8px; text-align:center;">
+          <div style="font-size:.8rem; color:#888; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">UPI ID</div>
+          <div style="font-size:1.1rem; font-weight:700; color:var(--pine);">c.arjun20@oksbi</div>
+          <div style="font-size:.8rem; color:#aaa; margin-top:4px;">Google Pay · PhonePe · Any UPI App</div>
+        </div>
+        <div style="margin-top:16px; display:flex; gap:12px;">
+          <a href="https://wa.me/917736855515?text=I want to book a trip and confirm my payment." target="_blank" class="btn-dark" style="flex:1; text-align:center; padding:12px">💬 Confirm via WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="container" style="max-width:800px;">
+    <div class="section-label reveal">Got Questions?</div>
+    <h2 class="section-title reveal">Frequently Asked Questions</h2>
+
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">Do I need prior trekking experience? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Most of our trips are designed for beginners to intermediate travellers. We specify the difficulty level on each package. Our trip captains ensure everyone moves at a comfortable pace, and we always have first aid and medical backup on high-altitude trips.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I book as a solo traveller? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Absolutely! Solo travel is our specialty. You'll be placed with a small, like-minded group. Many of our best friendships have started on ModernMantra trips. We offer single-person bookings on all group trips.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">What's included in the price? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Each package includes accommodation, breakfast & dinner, all sightseeing transport, trip captain, inner line permits where needed, and medical backup on Himalayan trips. Lunch, personal expenses, entry fees, and activities are generally extra — check the specific package for details.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">Can you plan a custom trip for my group? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Yes! We love custom trips. Whether it's a corporate offsite, a family reunion, a college group, or a couple's holiday — just tell us your dates, destination preference, and group size. We'll put together a tailored itinerary and quote.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">When is the best time to visit the Himalayas? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Manali and Kasol are great year-round. Spiti Valley and Zanskar are best from June to September. Ladakh is open May to October. Rajasthan is ideal October to March. We run winter Manali trips for snow experiences from December to February. WhatsApp us for the best time for your specific destination.</div>
+      </div>
+      <div class="faq-item reveal">
+        <div class="faq-q" onclick="toggleFaq(this)">Is this the same Modern Mantra base camp in Manali? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Yes! Our base camp in the hills above Manali is one of our most iconic experiences. It's a colourful, prayer-flag-draped wooden house with hammocks, a dreamcatcher, mountain murals, and views that'll stay with you forever. Guests can stay at the base or join it as part of longer trips.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+
+<a href="https://wa.me/917736855515?text=Hi! I want to book a trip with ModernMantra." target="_blank" class="float-wa" title="WhatsApp">
+  <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+</a>
+<div class="toast" id="toast"></div>
+
+<!-- ── PUBLIC REVIEW MODAL ── -->
+<div class="modal-overlay" id="reviewModal" onclick="if(event.target===this)closeReviewModal()">
+  <div class="modal" id="reviewModalInner" style="max-width:520px;">
+    <button class="modal-close" onclick="closeReviewModal()">✕</button>
+    <h3>Share Your Experience</h3>
+    <p>Your review helps other travellers discover their next adventure.</p>
+    <form id="reviewForm" novalidate>
+      <input type="hidden" name="_subject" value="⭐ New Review – ModernMantra"/>
+      <input type="hidden" name="FormType" value="Review"/>
+      <div class="form-row">
+        <div class="form-group"><label>Your Name *</label><input type="text" name="Name" placeholder="Full name" required/></div>
+        <div class="form-group"><label>Your City</label><input type="text" name="City" placeholder="e.g. Mumbai"/></div>
+      </div>
+      <div class="form-group">
+        <label>Which Trip Did You Take?</label>
+        <select name="Trip">
+          <option value="">— Select your trip —</option>
+          <option>Spiti Valley – Summer Escape</option><option>Zanskar Valley Road Trip</option>
+          <option>Manali Weekend Escape</option><option>Manali–Kasol–Manikaran 6D</option>
+          <option>Ladakh – Nubra &amp; Pangong 5D</option><option>Rajasthan Grand Tour 9D</option>
+          <option>Munnar Getaway 3D</option><option>Goa Holiday 5D</option>
+          <option>Mauritius 6D Escape</option><option>Sri Lanka Heritage Tour 5D</option>
+          <option>Varanasi Spiritual Tour 3D</option><option>Sikkim–Darjeeling 6D</option>
+          <option>Hyderabad Heritage Tour 5D</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Your Rating</label>
+        <div style="display:flex;gap:4px;padding:6px 0 2px;">
+          <span class="pub-star lit" onclick="setPubRating(1)">★</span>
+          <span class="pub-star lit" onclick="setPubRating(2)">★</span>
+          <span class="pub-star lit" onclick="setPubRating(3)">★</span>
+          <span class="pub-star lit" onclick="setPubRating(4)">★</span>
+          <span class="pub-star lit" onclick="setPubRating(5)">★</span>
+        </div>
+        <input type="hidden" name="Rating" id="pubRatingVal" value="5"/>
+      </div>
+      <div class="form-group">
+        <label>Your Review *</label>
+        <textarea name="Review" rows="4" placeholder="Tell us about your trip — the highlights, the moments, and what you'd say to someone considering it…" required style="resize:vertical;width:100%;padding:12px 14px;border:1.5px solid #e8e8e8;border-radius:8px;font-family:'Outfit',sans-serif;font-size:.88rem;line-height:1.65;outline:none;transition:border .2s;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='#e8e8e8'"></textarea>
+      </div>
+      <button type="submit" class="btn-submit" id="reviewSubmitBtn" style="width:100%;padding:14px;">Submit Review →</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block head_extra %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I book a trip with Modern Mantra?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can book by filling out the enquiry form on this page, messaging us on WhatsApp at +91 77368 55515, or calling us directly. We typically respond within 2 hours during business hours, and within 24 hours otherwise."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you organise solo or group trips?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both. Many of our trips run as small group departures (8–15 people), but we also organise private custom trips for solo travellers, couples, families, and corporate groups."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is included in the trip price?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standard inclusions are accommodation (twin sharing), transportation, breakfast and dinner, permits, and a trip captain. Specifics vary by trip — see the package brochure or ask us directly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is your cancellation policy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cancellation refunds vary by trip and time before departure. As a general rule: 90% refund 30+ days before departure, 50% refund 15-29 days before, no refund within 14 days. Contact us for the exact policy on your trip."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need travel insurance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We strongly recommend travel insurance, especially for high-altitude treks. It's optional but advisable. We can suggest providers if asked."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/main.js' %}"></script>
+<script>
+  var _pubRating=5;
+  function toggleFaq(el){ const item=el.closest('.faq-item'); const isOpen=item.classList.contains('open'); document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open')); if(!isOpen)item.classList.add('open'); }
+  function openReviewModal(){ document.getElementById('reviewModal').classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeReviewModal(){ document.getElementById('reviewModal').classList.remove('open'); document.body.style.overflow=''; }
+  function setPubRating(n){
+    _pubRating=n; document.getElementById('pubRatingVal').value=n;
+    document.querySelectorAll('.pub-star').forEach(function(s,i){s.classList.toggle('lit',i<n);});
+  }
+  document.querySelectorAll('.pub-star').forEach(function(s,i){
+    s.addEventListener('mouseenter',function(){document.querySelectorAll('.pub-star').forEach(function(x,j){x.classList.toggle('lit',j<=i);});});
+    s.addEventListener('mouseleave',function(){document.querySelectorAll('.pub-star').forEach(function(x,j){x.classList.toggle('lit',j<_pubRating);});});
+  });
+  document.getElementById('reviewForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    var btn=document.getElementById('reviewSubmitBtn');
+    btn.textContent='Sending…'; btn.disabled=true;
+    try{
+      var fd=new FormData(this);
+      // Send to Google Sheets if configured
+      if(window.MMBackend && window.MMBackend.isEnabled()){
+        window.MMBackend.addReview({
+          name:    fd.get('Name')   || '',
+          trip:    fd.get('Trip')   || '',
+          rating:  fd.get('Rating') || '5',
+          message: fd.get('Message')|| '',
+          approved:'false'
+        });
+      }
+      var res=await fetch(window.MM_ENDPOINTS.review,{method:'POST',body:fd,credentials:'same-origin',headers:{Accept:'application/json','X-CSRFToken':window.MM_CSRF_TOKEN}});
+      if(res.ok){
+        document.getElementById('reviewModalInner').innerHTML='<div style="text-align:center;padding:28px 0;"><div style="font-size:3.5rem;margin-bottom:16px;">🙏</div><h3 style="color:var(--pine);font-family:\'Cormorant Garamond\',serif;font-size:2.2rem;margin-bottom:10px;">Thank You!</h3><p style="color:#888;line-height:1.75;max-width:340px;margin:0 auto 28px;">Your review has been received. We\'ll verify and publish it on the site soon!</p><button class="btn-primary" onclick="closeReviewModal()">Close</button></div>';
+      } else { btn.textContent='Submit Review →'; btn.disabled=false; showToast('⚠️ Something went wrong. Try again.'); }
+    }catch(err){ btn.textContent='Submit Review →'; btn.disabled=false; showToast('⚠️ Network error. Try again.'); }
+  });
+</script>
+{% endblock %}
