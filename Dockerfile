@@ -65,15 +65,25 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD curl -fsS http://localhost:${PORT}/ || exit 1
 
 # Migrate-on-start is convenient for single-instance deployments
-# (Lightsail, Render, Fly free tier). For multi-instance fleets (ECS,
-# multi-replica Beanstalk), run migrations in a separate one-off task
-# and remove the migrate step from here.
+# (Railway, Lightsail, Render, Fly free tier). For multi-instance fleets
+# (ECS, multi-replica Beanstalk), run migrations in a separate one-off
+# task and remove the migrate step from here.
 #
-# seed_packages is idempotent — running it on every container start
-# only inserts trips that don't already exist. To force-refresh existing
-# rows with new prices/descriptions, run `python manage.py seed_packages
-# --update` once manually from the Railway terminal.
+# Startup chain (runs at every container start):
+#   1. migrate            apply pending DB schema changes
+#   2. ensure_superuser   create the admin user from DJANGO_SUPERUSER_*
+#                         env vars on first deploy; skips on subsequent
+#                         deploys when user already exists. Set
+#                         DJANGO_SUPERUSER_RESET=1 to force a password
+#                         reset (useful if you forgot the admin password).
+#   3. seed_packages      idempotent — inserts trips that don't already
+#                         exist. To force-refresh existing rows with new
+#                         prices/descriptions, run `python manage.py
+#                         seed_packages --update` once manually from the
+#                         Railway terminal.
+#   4. gunicorn           start the web server
 CMD sh -c "python manage.py migrate --noinput && \
+           python manage.py ensure_superuser && \
            python manage.py seed_packages && \
            exec gunicorn modernmantra.wsgi:application \
                 --bind 0.0.0.0:${PORT} \
