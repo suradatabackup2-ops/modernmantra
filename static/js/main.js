@@ -648,3 +648,154 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 5000);
 }
+
+// ═══════════════════════════════════════════════════════════
+//  ADVANCED ANIMATIONS v4
+// ═══════════════════════════════════════════════════════════
+
+(function initAdvancedAnimations() {
+  'use strict';
+
+  // Skip heavy motion for users who prefer reduced motion
+  const noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── 1. Magnetic 3D card tilt ────────────────────────────
+  if (!noMotion) {
+    document.querySelectorAll('.pkg-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        const x = e.clientX - r.left - r.width  / 2;
+        const y = e.clientY - r.top  - r.height / 2;
+        const tiltX = (y / r.height) * -10;  // degrees
+        const tiltY = (x / r.width)  *  10;
+        card.classList.add('tilting');
+        card.style.transform =
+          `perspective(900px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-10px) scale(1.01)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.classList.remove('tilting');
+        card.style.transform = '';
+      });
+    });
+  }
+
+  // ── 2. Parallax scroll layers ───────────────────────────
+  if (!noMotion) {
+    const parallaxEls = document.querySelectorAll('[data-parallax]');
+    if (parallaxEls.length) {
+      function updateParallax() {
+        const sy = window.scrollY;
+        parallaxEls.forEach(el => {
+          const speed = parseFloat(el.dataset.parallax) || 0.15;
+          el.style.transform = `translateY(${sy * speed}px)`;
+        });
+      }
+      window.addEventListener('scroll', updateParallax, { passive: true });
+      updateParallax();
+    }
+  }
+
+  // ── 3. Staggered reveal with IntersectionObserver ───────
+  const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+  if (revealEls.length && 'IntersectionObserver' in window) {
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        // Stagger siblings that appear at the same time
+        const siblings = Array.from(
+          entry.target.parentElement?.querySelectorAll('.reveal, .reveal-left, .reveal-right') || []
+        );
+        const idx = siblings.indexOf(entry.target);
+        const delay = idx * 80;  // ms between siblings
+        setTimeout(() => entry.target.classList.add('visible'), delay);
+        revealObs.unobserve(entry.target);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => revealObs.observe(el));
+  }
+
+  // ── 4. Stat counter animation ───────────────────────────
+  function animateCounter(el) {
+    const target = parseInt(el.textContent.replace(/\D/g, ''), 10);
+    if (isNaN(target) || target === 0) return;
+    const suffix = el.textContent.replace(/[\d,]/g, '');
+    const duration = 1400;
+    const start = performance.now();
+    function step(now) {
+      const t = Math.min((now - start) / duration, 1);
+      // Ease out expo
+      const eased = t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+      const val = Math.round(eased * target);
+      el.textContent = val.toLocaleString('en-IN') + suffix;
+      if (t < 1) requestAnimationFrame(step);
+      else {
+        el.textContent = target.toLocaleString('en-IN') + suffix;
+        el.classList.add('counted');
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  const statEls = document.querySelectorAll('.stat-num');
+  if (statEls.length && 'IntersectionObserver' in window) {
+    const statObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        if (!noMotion) animateCounter(e.target);
+        else e.target.classList.add('counted');
+        statObs.unobserve(e.target);
+      });
+    }, { threshold: 0.6 });
+    statEls.forEach(el => statObs.observe(el));
+  }
+
+  // ── 5. Section label underline animate ─────────────────
+  const labelObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('line-ready');
+        labelObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.section-label').forEach(el => labelObs.observe(el));
+
+  // ── 6. Smooth scroll for anchor links ──────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // ── 7. Hero: soft cursor glow that follows mouse ────────
+  if (!noMotion) {
+    const hero = document.getElementById('hero');
+    if (hero) {
+      let glow = document.querySelector('.hero-cursor-glow');
+      if (!glow) {
+        glow = document.createElement('div');
+        glow.className = 'hero-cursor-glow';
+        glow.style.cssText = [
+          'position:absolute', 'width:300px', 'height:300px',
+          'border-radius:50%', 'pointer-events:none', 'z-index:3',
+          'background:radial-gradient(circle, rgba(201,146,43,.18) 0%, transparent 70%)',
+          'transform:translate(-50%,-50%)',
+          'transition:left .12s ease, top .12s ease',
+          'top:50%', 'left:50%'
+        ].join(';');
+        hero.appendChild(glow);
+      }
+      hero.addEventListener('mousemove', e => {
+        const r = hero.getBoundingClientRect();
+        glow.style.left = (e.clientX - r.left) + 'px';
+        glow.style.top  = (e.clientY - r.top)  + 'px';
+      });
+    }
+  }
+
+})();

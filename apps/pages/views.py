@@ -11,6 +11,17 @@ from django.views.generic import DetailView, TemplateView
 class HomeView(TemplateView):
     template_name = "pages/home.html"
 
+    def get_context_data(self, **kwargs):
+        from apps.catalog.models import Package
+        ctx = super().get_context_data(**kwargs)
+        # Featured packages shown on the home page cards — includes hero_image
+        ctx["featured_packages"] = (
+            Package.objects
+            .filter(is_active=True, is_featured=True)
+            .order_by("display_order", "name")[:6]
+        )
+        return ctx
+
 
 class AboutView(TemplateView):
     template_name = "pages/about.html"
@@ -55,6 +66,41 @@ class PackagesView(TemplateView):
 
         ctx["db_prices_json"] = json.dumps(prices)
         ctx["db_batches_json"] = json.dumps(batches)
+
+        # Admin-added packages that are NOT one of the 16 hardcoded seed trips
+        # These are rendered as DB-driven cards appended after the hardcoded grid
+        SEED_TRIP_NAMES = {
+            "Spiti Valley – Summer Escape",
+            "Zanskar Valley Road Trip",
+            "Manali Weekend Escape",
+            "Manali–Kasol–Manikaran 6D",
+            "Ladakh – Nubra & Pangong 5D",
+            "Rajasthan Grand Tour 9D",
+            "Munnar Getaway 3D",
+            "Goa Holiday 5D",
+            "Mauritius 6D Escape",
+            "Sri Lanka Heritage Tour 5D",
+            "Varanasi Spiritual Tour 3D",
+            "Sikkim–Darjeeling 6D",
+            "Hyderabad Heritage Tour 5D",
+            "Kedarkantha Trek 5D",
+            "Chandrakhani Pass Trek 5D",
+            "Hampta Pass + Chandratal Trek 5D",
+        }
+        ctx["admin_packages"] = [
+            p for p in packages
+            if p.name not in SEED_TRIP_NAMES
+        ]
+
+        # Build a lookup: trip_name → hero_image_url (only for seed trips that
+        # have had an image uploaded in admin). The template uses this to override
+        # the hardcoded {% static %} image when an uploaded one exists.
+        seed_images = {}
+        for p in packages:
+            if p.name in SEED_TRIP_NAMES and p.hero_image:
+                key = p.data_trip.strip() if p.data_trip else p.name
+                seed_images[key] = p.hero_image.url
+        ctx["seed_images"] = seed_images
 
         # Flat list for the "Upcoming Departures" section — all future batches across all trips
         from apps.catalog.models import Batch

@@ -15,7 +15,7 @@
 
 <!-- ═══ HERO SLIDESHOW ═══ -->
 <section id="hero">
-  <div class="hero-slides">
+  <div class="hero-slides" data-parallax="0.25">
     <div class="hero-slide hero-slide-1 active"></div>
     <div class="hero-slide hero-slide-2"></div>
     <div class="hero-slide hero-slide-3"></div>
@@ -206,62 +206,46 @@
     </div>
     <div class="pkg-grid">
 
-      <!-- Spiti Valley -->
-      <div class="pkg-card reveal" data-cat="himalaya">
+      {% load humanize %}
+      {% for pkg in featured_packages %}
+      <div class="pkg-card reveal" data-cat="{{ pkg.category|lower }}" data-trip="{{ pkg.data_trip|default:pkg.name }}">
         <div class="pkg-img">
-          <img src="{% static 'images/snow-lake.jpg' %}" alt="Spiti Valley"/>
-          <div class="pkg-badge">Most Popular</div>
+          {% if pkg.hero_image %}
+            <img src="{{ pkg.hero_image.url }}" alt="{{ pkg.name }}" loading="lazy"/>
+          {% else %}
+            <img src="{% static 'images/hero-base.jpg' %}" alt="{{ pkg.name }}" loading="lazy"/>
+          {% endif %}
+          {% if pkg.is_featured %}<div class="pkg-badge">⭐ Featured</div>{% endif %}
+          {% if pkg.coming_soon %}<div class="pkg-badge hot">Coming Soon</div>{% endif %}
           <button class="pkg-fav" aria-label="Save">♡</button>
         </div>
         <div class="pkg-body">
-          <div class="pkg-meta"><span>📅 10 Days</span><span>👥 Group Trip</span><span>🏔️ 15,000 ft+</span></div>
-          <div class="pkg-name">Spiti Valley Summer Escape</div>
-          <p class="pkg-desc">Delhi → Shimla → Chitkul → Kalpa → Tabo → Kaza → Chandrataal → Manali. A complete high-altitude road trip.</p>
-          <div class="pkg-tags"><span class="pkg-tag">High Altitude</span><span class="pkg-tag">Monasteries</span><span class="pkg-tag">Stargazing</span></div>
+          <div class="pkg-meta">
+            {% if pkg.duration_days %}<span>📅 {{ pkg.duration_days }}D / {{ pkg.duration_nights }}N</span>{% endif %}
+            <span>👥 Group Trip</span>
+            <span>🏔️ {{ pkg.get_category_display }}</span>
+          </div>
+          <div class="pkg-name">{{ pkg.name }}</div>
+          <p class="pkg-desc">{{ pkg.short_description|default:pkg.long_description|truncatewords:30 }}</p>
           <div class="pkg-footer">
-            <div class="pkg-price"><span class="from">Starting from</span><span class="amount">₹19,500</span><span class="per">/person</span></div>
-            <button class="btn-book" onclick="openModal('Spiti Valley Summer Escape','₹19,500')">Book Now</button>
+            <div class="pkg-price">
+              <span class="from">Starting from</span>
+              <span class="amount">₹{{ pkg.price|intcomma }}</span>
+              <span class="per">/person</span>
+            </div>
+            <button class="btn-book"
+                    onclick="openModal('{{ pkg.name|escapejs }}', '₹{{ pkg.price|intcomma }}')">
+              Book Now
+            </button>
           </div>
         </div>
       </div>
-
-      <!-- Zanskar -->
-      <div class="pkg-card reveal" data-cat="himalaya">
-        <div class="pkg-img">
-          <img src="{% static 'images/igloo.jpg' %}" alt="Zanskar Valley"/>
-          <div class="pkg-badge hot">Adventure</div>
-          <button class="pkg-fav" aria-label="Save">♡</button>
-        </div>
-        <div class="pkg-body">
-          <div class="pkg-meta"><span>📅 7 Days</span><span>👥 Group Trip</span><span>🚙 4x4 Road Trip</span></div>
-          <div class="pkg-name">Zanskar Valley Road Trip</div>
-          <p class="pkg-desc">Delhi → Manali → Shinku La → Phuktal Monastery → Padum → Drang Drung Glacier → Jispa → Delhi.</p>
-          <div class="pkg-tags"><span class="pkg-tag">Phuktal Trek</span><span class="pkg-tag">Remote</span><span class="pkg-tag">Expedition</span></div>
-          <div class="pkg-footer">
-            <div class="pkg-price"><span class="from">Starting from</span><span class="amount">₹34,500</span><span class="per">/person</span></div>
-            <button class="btn-book" onclick="openModal('Zanskar Valley Road Trip','₹34,500')">Book Now</button>
-          </div>
-        </div>
+      {% empty %}
+      <div class="reveal" style="grid-column:1/-1;text-align:center;padding:40px 20px;color:#666">
+        <p>No featured trips yet. <a href="/admin/catalog/package/" style="color:var(--gold)">Add some in the admin</a>
+        and mark them as <strong>Featured</strong>.</p>
       </div>
-
-      <!-- Ladakh -->
-      <div class="pkg-card reveal" data-cat="ladakh">
-        <div class="pkg-img">
-          <img src="{% static 'images/group-mountains.jpg' %}" alt="Ladakh"/>
-          <div class="pkg-badge">Bestseller</div>
-          <button class="pkg-fav" aria-label="Save">♡</button>
-        </div>
-        <div class="pkg-body">
-          <div class="pkg-meta"><span>📅 5 Days</span><span>✈️ Fly In/Out</span><span>🐪 Nubra Camel</span></div>
-          <div class="pkg-name">Ladakh Escape – Nubra & Pangong</div>
-          <p class="pkg-desc">Leh arrival → Sham Valley → Nubra via Khardung-La → Pangong Tso → Chang-La → Departure.</p>
-          <div class="pkg-tags"><span class="pkg-tag">Pangong Lake</span><span class="pkg-tag">Khardung-La</span><span class="pkg-tag">Nubra</span></div>
-          <div class="pkg-footer">
-            <div class="pkg-price"><span class="from">Starting from</span><span class="amount">₹22,000</span><span class="per">/person</span></div>
-            <button class="btn-book" onclick="openModal('Ladakh Escape','₹22,000')">Book Now</button>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
 
     </div>
     <div class="pkg-see-all reveal">

@@ -1,12 +1,14 @@
 /* ═══════════════════════════════════════════════════════════
    MODERN MANTRA — ADMIN THEME
    Light brand overlay on top of standard Django admin.
-   Colors: pine green nav, gold accents, cream background.
+   Supports Django 4.2+ light / dark / auto toggle.
    ═══════════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
 
-:root {
+/* ── Light mode custom properties ─────────────────────────── */
+:root,
+[data-theme="light"] {
     --mm-pine:   #1B3A2D;
     --mm-forest: #4A7C59;
     --mm-gold:   #c9922b;
@@ -15,7 +17,6 @@
     --mm-mute:   #666;
     --mm-border: #ddd8cf;
 
-    /* Override Django admin CSS variables */
     --primary:              var(--mm-pine);
     --secondary:            var(--mm-pine);
     --accent:               var(--mm-gold);
@@ -46,9 +47,38 @@
 
     --selected-bg:          #f0ece4;
     --selected-row:         #faf6ed;
-
     --darkened-bg:          #eee8dc;
     --nav-sidebar-bg:       var(--mm-pine);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DARK MODE — triggered by Django's data-theme="dark"
+   AND by OS prefers-color-scheme (when set to Auto)
+   ═══════════════════════════════════════════════════════════ */
+[data-theme="dark"],
+@media (prefers-color-scheme: dark) {
+    :root {
+        --mm-pine:   #1B3A2D;
+        --mm-forest: #5a9c70;
+        --mm-gold:   #e0a83a;
+        --mm-cream:  #141f18;
+        --mm-ink:    #e8e3db;
+        --mm-mute:   #9a9a8e;
+        --mm-border: #2e3e32;
+    }
+}
+
+/* Fallback: explicit selectors for data-theme="dark" */
+[data-theme="dark"] {
+    --primary:              #5a9c70;
+    --body-bg:              #141f18;
+    --body-fg:              #e8e3db;
+    --body-quiet-color:     #9a9a8e;
+    --selected-bg:          #1e3026;
+    --selected-row:         #1e3026;
+    --darkened-bg:          #0e1812;
+    --nav-sidebar-bg:       #0f1e16;
+    color-scheme:           dark;
 }
 
 /* ── Typography ─────────────────────────────────────────── */
@@ -145,7 +175,11 @@ div.breadcrumbs a { color: #fff; }
 #changelist table thead th a:hover  { color: var(--mm-gold); }
 tr.selected td { background: var(--selected-row); }
 
-/* ── Filters sidebar ─────────────────────────────────────── */
+/* ── Filters sidebar — light mode ────────────────────────── */
+#changelist-filter {
+    background: #fbf8f0;
+    border-left: 4px solid var(--mm-gold);
+}
 #changelist-filter h2 {
     background: var(--mm-pine);
     color: #fff;
@@ -153,8 +187,35 @@ tr.selected td { background: var(--selected-row); }
     letter-spacing: 1.2px;
     padding: 8px 14px;
 }
-#changelist-filter h3 { color: var(--mm-pine); }
-#changelist-filter li.selected a { color: var(--mm-pine); font-weight: 600; }
+#changelist-filter h3 {
+    color: var(--mm-pine);
+    font-weight: 700;
+    margin-top: 14px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #e7e0cd;
+}
+#changelist-filter li a:link,
+#changelist-filter li a:visited {
+    color: var(--mm-forest);
+    font-weight: 500;
+    padding: 4px 12px;
+    display: block;
+    border-radius: 4px;
+    transition: background .15s, color .15s;
+}
+#changelist-filter li a:hover {
+    background: #f3eddc;
+    color: var(--mm-pine);
+}
+#changelist-filter li.selected a {
+    color: #fff;
+    font-weight: 700;
+    background: var(--mm-pine);
+    border-radius: 4px;
+}
+#changelist-filter li.selected a:hover {
+    background: var(--mm-forest);
+}
 
 /* ── Fieldset ────────────────────────────────────────────── */
 fieldset h2 {
@@ -182,4 +243,184 @@ fieldset h2 {
 .dashboard .module table td a {
     color: var(--mm-forest);
     font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DARK MODE OVERRIDES
+   Scoped under [data-theme="dark"] for the Django toggle,
+   plus @media for OS-level dark mode (Auto setting).
+   ═══════════════════════════════════════════════════════════ */
+
+/* Helper mixin — applied to both selectors */
+[data-theme="dark"] body,
+[data-theme="dark"] #content,
+[data-theme="dark"] #content-main {
+    background-color: #141f18;
+    color: #e8e3db;
+}
+
+/* Content area */
+[data-theme="dark"] .module,
+[data-theme="dark"] fieldset {
+    background: #1a2820;
+    border-color: #2e3e32;
+}
+[data-theme="dark"] .form-row {
+    border-bottom-color: #2e3e32;
+}
+
+/* Tables */
+[data-theme="dark"] #changelist table tbody td,
+[data-theme="dark"] #changelist table tbody th {
+    background: #1a2820;
+    color: #e2ddd5;
+    border-bottom-color: #263326;
+}
+[data-theme="dark"] #changelist table tbody tr:hover td,
+[data-theme="dark"] #changelist table tbody tr:hover th {
+    background: #22362a;
+}
+[data-theme="dark"] tr.selected td { background: #1e3026; }
+
+/* ── Filter sidebar — DARK — high contrast, always readable ── */
+[data-theme="dark"] #changelist-filter {
+    background: #111c15;
+    border-left: 4px solid var(--mm-gold);
+}
+[data-theme="dark"] #changelist-filter h2 {
+    background: #0d1710;
+    color: #c8e6c9;
+    letter-spacing: 1.2px;
+}
+[data-theme="dark"] #changelist-filter h3 {
+    color: #a5c8a8;
+    border-bottom-color: #2a3d2e;
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+/* All filter links — bright enough on the very dark sidebar */
+[data-theme="dark"] #changelist-filter ul,
+[data-theme="dark"] #changelist-filter li {
+    background: transparent;
+}
+[data-theme="dark"] #changelist-filter li a,
+[data-theme="dark"] #changelist-filter li a:link,
+[data-theme="dark"] #changelist-filter li a:visited {
+    color: #b8dbb9 !important;   /* light mint — clear on dark bg */
+    background: transparent;
+    border-radius: 4px;
+    padding: 5px 12px;
+    display: block;
+    font-weight: 500;
+    transition: background .15s, color .15s;
+}
+[data-theme="dark"] #changelist-filter li a:hover {
+    background: #1e3a24 !important;
+    color: #d4f0d7 !important;
+}
+/* Selected / active filter — gold pill */
+[data-theme="dark"] #changelist-filter li.selected a,
+[data-theme="dark"] #changelist-filter li.selected a:link,
+[data-theme="dark"] #changelist-filter li.selected a:visited {
+    background: var(--mm-gold) !important;
+    color: #1a1a1a !important;   /* dark text on gold = max contrast */
+    font-weight: 700;
+    border-radius: 4px;
+}
+[data-theme="dark"] #changelist-filter li.selected a:hover {
+    background: #b8860b !important;
+    color: #fff !important;
+}
+
+/* Form inputs */
+[data-theme="dark"] input[type=text],
+[data-theme="dark"] input[type=email],
+[data-theme="dark"] input[type=password],
+[data-theme="dark"] input[type=number],
+[data-theme="dark"] input[type=url],
+[data-theme="dark"] textarea,
+[data-theme="dark"] select,
+[data-theme="dark"] .vTextField {
+    background: #1e2e22;
+    color: #e2ddd5;
+    border-color: #2e3e32;
+}
+[data-theme="dark"] input:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] select:focus {
+    border-color: var(--mm-gold);
+    outline: none;
+}
+
+/* Dashboard */
+[data-theme="dark"] #content-main .module {
+    background: #1a2820;
+    border-color: #2e3e32;
+}
+[data-theme="dark"] #content-main .module table th {
+    background: #1e3026;
+    color: #9ab8a0;
+}
+[data-theme="dark"] .dashboard .module table td a {
+    color: #7ec99a;
+}
+
+/* Pagination */
+[data-theme="dark"] .paginator a { color: #7ec99a; }
+[data-theme="dark"] .paginator .this-page { color: var(--mm-gold); }
+
+/* Help text, quiet text */
+[data-theme="dark"] .help,
+[data-theme="dark"] p.help,
+[data-theme="dark"] span.help {
+    color: #8aac8e;
+}
+
+/* Submit row */
+[data-theme="dark"] .submit-row {
+    background: #111c15;
+    border-top-color: #2e3e32;
+}
+
+/* Inline row background */
+[data-theme="dark"] .inline-related {
+    background: #1a2820;
+    border-color: #2e3e32;
+}
+
+/* ── Same rules mirrored for OS dark mode (Auto setting) ─── */
+@media (prefers-color-scheme: dark) {
+    body, #content, #content-main {
+        background-color: #141f18;
+        color: #e8e3db;
+    }
+    .module, fieldset { background: #1a2820; border-color: #2e3e32; }
+    .form-row { border-bottom-color: #2e3e32; }
+    #changelist table tbody td, #changelist table tbody th {
+        background: #1a2820; color: #e2ddd5; border-bottom-color: #263326;
+    }
+    #changelist-filter {
+        background: #111c15;
+        border-left: 4px solid var(--mm-gold);
+    }
+    #changelist-filter h2 { background: #0d1710; color: #c8e6c9; }
+    #changelist-filter h3 { color: #a5c8a8; border-bottom-color: #2a3d2e; }
+    #changelist-filter li a,
+    #changelist-filter li a:link,
+    #changelist-filter li a:visited {
+        color: #b8dbb9 !important;
+        background: transparent;
+    }
+    #changelist-filter li a:hover {
+        background: #1e3a24 !important;
+        color: #d4f0d7 !important;
+    }
+    #changelist-filter li.selected a,
+    #changelist-filter li.selected a:link,
+    #changelist-filter li.selected a:visited {
+        background: var(--mm-gold) !important;
+        color: #1a1a1a !important;
+        font-weight: 700;
+    }
 }
