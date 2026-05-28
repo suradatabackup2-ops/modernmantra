@@ -7,8 +7,12 @@ whitenoise==6.8.2
 
 # ─── DB / config ─────────────────────────────────────────────────────
 dj-database-url==2.3.0
-# Postgres driver — uncomment for production with RDS / managed Postgres:
-psycopg[binary]==3.2.3
+# Postgres driver — required for production (Railway/Render/Fly/Heroku/RDS).
+# Note: NOT pinned strictly because psycopg-binary needs a separate prebuilt
+# wheel per Python version. 3.2.3 only has wheels up to Python 3.13; for
+# Python 3.14 (on Windows or any other OS) you need 3.2.10 or newer. Using
+# >= lets pip pick whichever current version matches your interpreter.
+psycopg[binary]>=3.2.3
 
 # ─── Object storage for media (PDFs, package images) ─────────────────
 # Used when MEDIA_STORAGE_BACKEND env var is set to s3 / r2 / b2 / do.

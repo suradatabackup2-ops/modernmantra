@@ -24,6 +24,13 @@ urlpatterns = [
     path("", include(("apps.pages.urls", "pages"), namespace="pages")),
 ]
 
-# Serve user-uploaded media in DEBUG mode (Django dev server only).
-if settings.DEBUG:
+# Serve uploaded media files via Django when using local filesystem storage.
+# In development (DEBUG=True) this was already active.
+# In production with MEDIA_STORAGE_BACKEND=local (the default), the /media/
+# route was missing — causing hero images to 404 on every page.
+# Cloud backends (R2/S3/B2/DO) serve files from their own CDN so this route
+# is harmless but unused when those backends are configured.
+import os as _os
+_local_storage = _os.environ.get("MEDIA_STORAGE_BACKEND", "local").lower() == "local"
+if settings.DEBUG or _local_storage:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
