@@ -53,11 +53,31 @@
 
 /* ═══════════════════════════════════════════════════════════
    DARK MODE — triggered by Django's data-theme="dark"
-   AND by OS prefers-color-scheme (when set to Auto)
+   AND by OS prefers-color-scheme (when the theme toggle is "Auto")
+   ───────────────────────────────────────────────────────────
+   IMPORTANT: a CSS selector list may NOT contain an @media rule.
+   Writing `[data-theme="dark"], @media (...) { :root {...} }` makes
+   the WHOLE rule invalid, so the browser silently drops it — which
+   meant the --mm-* palette never flipped and dark-mode text rendered
+   in its dark light-mode colour (invisible on the dark background).
+   The toggle case and the OS case must therefore be SEPARATE blocks.
    ═══════════════════════════════════════════════════════════ */
-[data-theme="dark"],
+
+/* 1. Explicit dark toggle */
+[data-theme="dark"] {
+    --mm-pine:   #1B3A2D;
+    --mm-forest: #5a9c70;
+    --mm-gold:   #e0a83a;
+    --mm-cream:  #141f18;
+    --mm-ink:    #e8e3db;
+    --mm-mute:   #9a9a8e;
+    --mm-border: #2e3e32;
+}
+
+/* 2. OS-level dark mode (theme = Auto). The :not([data-theme="light"])
+      guard means an explicit "Light" choice still wins under OS dark. */
 @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
         --mm-pine:   #1B3A2D;
         --mm-forest: #5a9c70;
         --mm-gold:   #e0a83a;
@@ -389,6 +409,41 @@ fieldset h2 {
     border-color: #2e3e32;
 }
 
+/* ── RIGHT-SIDE panels — dark mode ───────────────────────────
+      The dashboard's "Recent actions" lives in #content-related (the
+      right column) and the welcome / theme-toggle / log-out links live
+      in #user-tools (top-right). Neither inherited readable colours, so
+      their text was invisible in dark mode. Force light text here. */
+[data-theme="dark"] #content-related,
+[data-theme="dark"] #content-related .module {
+    background: #1a2820;
+    color: #e8e3db;
+}
+[data-theme="dark"] #content-related .module h2,
+[data-theme="dark"] #content-related h2,
+[data-theme="dark"] #content-related h3 {
+    background: #0d1710;
+    color: #c8e6c9;
+}
+[data-theme="dark"] #content-related .module p,
+[data-theme="dark"] #content-related li,
+[data-theme="dark"] #content-related .actionlist li {
+    color: #d6e4d8;
+}
+[data-theme="dark"] #content-related a:link,
+[data-theme="dark"] #content-related a:visited {
+    color: #7ec99a;
+}
+
+[data-theme="dark"] #user-tools,
+[data-theme="dark"] #user-tools a:link,
+[data-theme="dark"] #user-tools a:visited {
+    color: rgba(255,255,255,.85);
+}
+[data-theme="dark"] #user-tools a:hover {
+    color: var(--mm-gold);
+}
+
 /* ── Same rules mirrored for OS dark mode (Auto setting) ─── */
 @media (prefers-color-scheme: dark) {
     body, #content, #content-main {
@@ -423,4 +478,25 @@ fieldset h2 {
         color: #1a1a1a !important;
         font-weight: 700;
     }
+
+    /* Right-side panels (Recent actions + user tools) */
+    #content-related,
+    #content-related .module {
+        background: #1a2820;
+        color: #e8e3db;
+    }
+    #content-related .module h2,
+    #content-related h2,
+    #content-related h3 {
+        background: #0d1710;
+        color: #c8e6c9;
+    }
+    #content-related .module p,
+    #content-related li,
+    #content-related .actionlist li { color: #d6e4d8; }
+    #content-related a:link,
+    #content-related a:visited { color: #7ec99a; }
+    #user-tools,
+    #user-tools a:link,
+    #user-tools a:visited { color: rgba(255,255,255,.85); }
 }

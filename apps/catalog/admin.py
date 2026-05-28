@@ -21,7 +21,7 @@ from django.contrib import admin, messages
 from django.http import HttpResponse
 from django.utils.html import format_html
 
-from .models import Batch, NewsletterSubscriber, Package
+from .models import Batch, GalleryPhoto, NewsletterSubscriber, Package
 
 
 # ─── Inline: Batches shown on the Package edit page ──────────────────
@@ -169,3 +169,37 @@ class NewsletterAdmin(admin.ModelAdmin):
         updated = queryset.update(is_active=False, unsubscribed_at=timezone.now())
         messages.success(request, f"{updated} subscriber(s) unsubscribed.")
     mark_unsubscribed.short_description = "Mark as unsubscribed"
+
+
+# ─── Gallery admin ───────────────────────────────────────────────────
+@admin.register(GalleryPhoto)
+class GalleryPhotoAdmin(admin.ModelAdmin):
+    """Manage public gallery photos. Uploads go to the configured media
+    backend (R2/S3/…) and render server-side, so every visitor sees them."""
+    list_display = ("thumb", "caption", "category", "is_active", "display_order", "created_at")
+    list_display_links = ("thumb", "caption")
+    list_filter = ("category", "is_active")
+    search_fields = ("caption",)
+    list_editable = ("category", "is_active", "display_order")
+    readonly_fields = ("created_at", "preview")
+    fields = ("image", "preview", "caption", "category", "is_active", "display_order", "created_at")
+
+    def thumb(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="height:46px;width:64px;object-fit:cover;'
+                'border-radius:4px;" alt=""/>',
+                obj.image.url,
+            )
+        return "—"
+    thumb.short_description = "Photo"
+
+    def preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="max-height:260px;max-width:100%;'
+                'border-radius:6px;" alt=""/>',
+                obj.image.url,
+            )
+        return "Save to see a preview."
+    preview.short_description = "Preview"

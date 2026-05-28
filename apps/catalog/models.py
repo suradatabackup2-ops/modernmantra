@@ -25,6 +25,10 @@ def package_brochure_path(instance, filename):
     return f"packages/{instance.slug or 'pkg'}/brochures/{filename}"
 
 
+def gallery_image_path(instance, filename):
+    return f"gallery/{filename}"
+
+
 class Package(models.Model):
     """A travel package / trip offering.
 
@@ -143,3 +147,39 @@ class NewsletterSubscriber(models.Model):
 
     def __str__(self) -> str:
         return self.email
+
+
+class GalleryPhoto(models.Model):
+    """A photo shown on the public Gallery page.
+
+    The image uses Django's default storage, so it uploads to whichever
+    backend MEDIA_STORAGE_BACKEND points at (local / R2 / S3 / …). Photos
+    added here are server-rendered and therefore visible to ALL visitors —
+    unlike the old client-side gallery, which only lived in one browser.
+    """
+
+    class GalleryCategory(models.TextChoices):
+        BASE = "base", "Modern Mantra Base"
+        NATURE = "nature", "Nature & Landscape"
+        GROUP = "group", "Group Moments"
+        WINTER = "winter", "Winter & Snow"
+        WATER = "water", "Waterfalls"
+
+    image = models.ImageField(upload_to=gallery_image_path)
+    caption = models.CharField(max_length=160, blank=True,
+                               help_text="Shown on hover and in the lightbox")
+    category = models.CharField(max_length=16, choices=GalleryCategory.choices,
+                                default=GalleryCategory.NATURE,
+                                help_text="Controls which filter tab the photo appears under")
+    is_active = models.BooleanField(default=True, help_text="Uncheck to hide without deleting")
+    display_order = models.PositiveSmallIntegerField(default=100,
+                                                     help_text="Lower numbers shown first")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["display_order", "-created_at"]
+        verbose_name = "Gallery photo"
+        verbose_name_plural = "Gallery photos"
+
+    def __str__(self) -> str:
+        return self.caption or f"Gallery photo #{self.pk}"

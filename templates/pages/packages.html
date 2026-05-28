@@ -6,19 +6,238 @@
 
 {% block extra_css %}
 <style>
-    /* ── NAV (from main.css) ── */
-    .pkg-page-hero { height:360px; background-image:url('{% static 'images/hero-village.jpg' %}'); background-size:cover; background-position:center; position:relative; display:flex; align-items:flex-end; padding-bottom:56px; margin-top:72px; overflow:hidden; }
-    .pkg-page-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(to top,rgba(27,58,45,.9),rgba(27,58,45,.25)); }
-    .pkg-page-hero .container { position:relative; z-index:2; }
-    .page-hero-content .section-label { color:var(--sage); animation:fadeSlideUp .6s .1s both; }
-    .page-hero-content h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.4rem,5vw,4rem); color:#fff; font-weight:300; animation:fadeSlideUp .7s .25s both; }
-    @keyframes fadeSlideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-    /* Animated orbs in hero */
-    .hero-orb { position:absolute; border-radius:50%; pointer-events:none; z-index:1; }
-    .hero-orb-1 { width:220px; height:220px; background:radial-gradient(circle,rgba(201,146,43,.18),transparent 70%); top:-40px; right:10%; animation:orbFloat 6s ease-in-out infinite; }
-    .hero-orb-2 { width:160px; height:160px; background:radial-gradient(circle,rgba(74,124,89,.2),transparent 70%); bottom:20px; right:30%; animation:orbFloat 8s ease-in-out infinite reverse; }
-    .hero-orb-3 { width:100px; height:100px; background:radial-gradient(circle,rgba(200,221,209,.15),transparent 70%); top:30%; left:5%; animation:orbFloat 7s ease-in-out infinite 2s; }
-    @keyframes orbFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-18px) scale(1.08)} }
+    /* ══════════════════════════════════════════════════════
+       ANIMATED MOUNTAIN HERO
+       ══════════════════════════════════════════════════════ */
+
+    /* Container */
+    .pkg-page-hero {
+      height: 480px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 60px;
+      margin-top: 72px;
+      overflow: hidden;
+    }
+
+    /* ── Crossfading photo slideshow ── */
+    .hero-slides {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center 30%;
+      opacity: 0;
+      animation: slideShow 24s ease-in-out infinite;
+      transform: scale(1.08);
+    }
+    .hero-slide:nth-child(1) { background-image: url('{% static "images/group-mountains.jpg" %}');   animation-delay: 0s;   }
+    .hero-slide:nth-child(2) { background-image: url('{% static "images/sheep-mountains.jpg" %}');   animation-delay: 6s;   }
+    .hero-slide:nth-child(3) { background-image: url('{% static "images/new-snow-base-1.jpg" %}');   animation-delay: 12s;  }
+    .hero-slide:nth-child(4) { background-image: url('{% static "images/snow-lake.jpg" %}');          animation-delay: 18s;  }
+
+    @keyframes slideShow {
+      0%   { opacity: 0;    transform: scale(1.08); }
+      8%   { opacity: 1;    transform: scale(1.04); }
+      25%  { opacity: 1;    transform: scale(1.00); }
+      33%  { opacity: 0;    transform: scale(1.00); }
+      100% { opacity: 0;    transform: scale(1.08); }
+    }
+
+    /* ── Dark gradient overlay ── */
+    .pkg-page-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(10,25,18,.92) 0%, rgba(10,25,18,.45) 50%, rgba(10,25,18,.18) 100%),
+        linear-gradient(to right, rgba(10,25,18,.3) 0%, transparent 50%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ── Drifting cloud SVGs ── */
+    .hero-clouds {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .cloud {
+      position: absolute;
+      opacity: 0;
+      fill: rgba(255,255,255,0.07);
+    }
+    .cloud-1 { top: 12%; left: -120px; width: 280px; animation: cloudDrift 28s linear infinite; animation-delay: 0s; }
+    .cloud-2 { top: 22%; left: -200px; width: 180px; animation: cloudDrift 38s linear infinite; animation-delay: 6s; }
+    .cloud-3 { top: 8%;  left: -160px; width: 240px; animation: cloudDrift 45s linear infinite; animation-delay: 14s; }
+
+    @keyframes cloudDrift {
+      0%   { transform: translateX(0);      opacity: 0; }
+      5%   { opacity: 1; }
+      90%  { opacity: 0.6; }
+      100% { transform: translateX(calc(100vw + 400px)); opacity: 0; }
+    }
+
+    /* ── Layered SVG mountain silhouettes ── */
+    .hero-mountains {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .mtn-layer-far {
+      animation: mtnParallax 12s ease-in-out infinite;
+    }
+    .mtn-layer-mid {
+      animation: mtnParallax 9s ease-in-out infinite reverse;
+    }
+    .mtn-layer-near {
+      animation: mtnParallax 6s ease-in-out infinite;
+    }
+    @keyframes mtnParallax {
+      0%,100% { transform: translateX(0) translateY(0); }
+      50%      { transform: translateX(-6px) translateY(-3px); }
+    }
+
+    /* Snow sparkles on peaks */
+    .peak-sparkle {
+      position: absolute;
+      width: 4px; height: 4px;
+      background: #fff;
+      border-radius: 50%;
+      animation: sparkle 3s ease-in-out infinite;
+      z-index: 4;
+    }
+    .peak-sparkle:nth-child(1) { top: 32%; left: 18%; animation-delay: 0s; }
+    .peak-sparkle:nth-child(2) { top: 24%; left: 32%; animation-delay: 0.8s; }
+    .peak-sparkle:nth-child(3) { top: 28%; left: 55%; animation-delay: 1.6s; }
+    .peak-sparkle:nth-child(4) { top: 22%; left: 72%; animation-delay: 2.4s; }
+    .peak-sparkle:nth-child(5) { top: 30%; left: 85%; animation-delay: 0.4s; }
+    @keyframes sparkle {
+      0%,100% { opacity: 0; transform: scale(0); }
+      40%,60%  { opacity: 1; transform: scale(1.5); }
+    }
+
+    /* ── Floating particles (snow/stars) ── */
+    .hero-particles {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      animation: particleFall linear infinite;
+    }
+    .particle:nth-child(1)  { width:3px; height:3px; left:10%; animation-duration:8s;  animation-delay:0s; }
+    .particle:nth-child(2)  { width:2px; height:2px; left:25%; animation-duration:12s; animation-delay:2s; }
+    .particle:nth-child(3)  { width:2px; height:2px; left:40%; animation-duration:9s;  animation-delay:4s; }
+    .particle:nth-child(4)  { width:3px; height:3px; left:58%; animation-duration:11s; animation-delay:1s; }
+    .particle:nth-child(5)  { width:2px; height:2px; left:72%; animation-duration:7s;  animation-delay:3s; }
+    .particle:nth-child(6)  { width:2px; height:2px; left:88%; animation-duration:10s; animation-delay:5s; }
+    @keyframes particleFall {
+      0%   { transform: translateY(-10px) translateX(0); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.5; }
+      100% { transform: translateY(490px) translateX(20px); opacity: 0; }
+    }
+
+    /* ── Animated orbs (kept, enhanced) ── */
+    .hero-orb { position:absolute; border-radius:50%; pointer-events:none; z-index:2; }
+    .hero-orb-1 { width:280px; height:280px; background:radial-gradient(circle,rgba(201,146,43,.14),transparent 70%); top:-60px; right:8%; animation:orbFloat 7s ease-in-out infinite; }
+    .hero-orb-2 { width:200px; height:200px; background:radial-gradient(circle,rgba(74,124,89,.16),transparent 70%); bottom:40px; right:28%; animation:orbFloat 9s ease-in-out infinite reverse; }
+    .hero-orb-3 { width:140px; height:140px; background:radial-gradient(circle,rgba(200,221,209,.12),transparent 70%); top:25%; left:4%; animation:orbFloat 8s ease-in-out infinite 2s; }
+    @keyframes orbFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-22px) scale(1.06)} }
+
+    /* ── Hero text ── */
+    .pkg-page-hero .container { position:relative; z-index:5; }
+    .page-hero-content { max-width: 680px; }
+    .page-hero-content .section-label {
+      color: var(--sage);
+      animation: fadeSlideUp .6s .2s both;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .78rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .page-hero-content .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--sage);
+    }
+    .page-hero-content h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+      color: #fff;
+      font-weight: 300;
+      line-height: 1.1;
+      animation: fadeSlideUp .8s .35s both;
+      text-shadow: 0 2px 20px rgba(0,0,0,.4);
+    }
+    .page-hero-content .hero-tagline {
+      color: rgba(255,255,255,.6);
+      font-size: .95rem;
+      margin-top: 10px;
+      animation: fadeSlideUp .8s .5s both;
+      font-style: italic;
+      letter-spacing: .5px;
+    }
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      opacity: .5;
+      animation: scrollHint 2s ease-in-out infinite;
+    }
+    .hero-scroll-hint span { color: #fff; font-size: .65rem; letter-spacing: 2px; text-transform: uppercase; }
+    .hero-scroll-hint svg { fill: #fff; }
+    @keyframes scrollHint {
+      0%,100% { transform: translateX(-50%) translateY(0); opacity:.4; }
+      50%      { transform: translateX(-50%) translateY(6px); opacity:.8; }
+    }
+
+    /* Dot indicators */
+    .hero-dots {
+      position: absolute;
+      bottom: 20px;
+      right: 32px;
+      z-index: 5;
+      display: flex;
+      gap: 6px;
+    }
+    .hero-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.3);
+      border: 1px solid rgba(255,255,255,.5);
+      transition: background .3s;
+    }
+    .hero-dot.active { background: var(--gold); border-color: var(--gold); width: 18px; border-radius: 3px; }
+
+    @keyframes fadeSlideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
 
     /* ── Filter ── */
     .filter-bar { background:#fff; border-bottom:1px solid #eee; padding:16px 0; position:sticky; top:72px; z-index:10; box-shadow:0 2px 16px rgba(0,0,0,.06); }
@@ -360,17 +579,96 @@
 <!-- NAV -->
 
 
-<!-- HERO -->
-<div class="pkg-page-hero">
+<!-- HERO — Animated Mountain -->
+<div class="pkg-page-hero" id="pkgHero">
+
+  <!-- Crossfading mountain photo slideshow -->
+  <div class="hero-slides">
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+    <div class="hero-slide"></div>
+  </div>
+
+  <!-- Drifting clouds -->
+  <div class="hero-clouds">
+    <svg class="cloud cloud-1" viewBox="0 0 200 80"><ellipse cx="100" cy="50" rx="100" ry="30"/><ellipse cx="70" cy="38" rx="55" ry="28"/><ellipse cx="130" cy="40" rx="45" ry="24"/></svg>
+    <svg class="cloud cloud-2" viewBox="0 0 160 60"><ellipse cx="80" cy="38" rx="80" ry="22"/><ellipse cx="55" cy="28" rx="44" ry="22"/><ellipse cx="110" cy="30" rx="36" ry="18"/></svg>
+    <svg class="cloud cloud-3" viewBox="0 0 220 70"><ellipse cx="110" cy="44" rx="110" ry="26"/><ellipse cx="75" cy="32" rx="60" ry="26"/><ellipse cx="150" cy="34" rx="50" ry="22"/></svg>
+  </div>
+
+  <!-- Floating snow particles -->
+  <div class="hero-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <!-- Layered SVG mountain silhouettes -->
+  <div class="hero-mountains" aria-hidden="true">
+    <!-- Far range — lightest, purple-blue -->
+    <svg class="mtn-layer-far" viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:200px;">
+      <path d="M0,200 L0,130 L60,95 L120,115 L190,70 L260,100 L340,55 L420,85 L500,45 L580,75 L660,30 L740,60 L820,40 L900,65 L980,25 L1060,55 L1140,35 L1220,60 L1300,80 L1370,55 L1440,70 L1440,200 Z"
+            fill="rgba(50,75,90,0.55)"/>
+    </svg>
+    <!-- Mid range — deeper green-grey -->
+    <svg class="mtn-layer-mid" viewBox="0 0 1440 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:180px;margin-top:-160px;">
+      <path d="M0,180 L0,145 L80,110 L160,130 L240,90 L320,115 L400,75 L480,100 L560,65 L640,88 L720,50 L800,80 L880,60 L960,85 L1040,45 L1120,72 L1200,55 L1280,75 L1360,90 L1440,70 L1440,180 Z"
+            fill="rgba(27,58,45,0.65)"/>
+      <!-- Snow caps on mid peaks -->
+      <path d="M400,75 L415,88 L385,88 Z M560,65 L578,80 L542,80 Z M720,50 L740,67 L700,67 Z M1040,45 L1058,62 L1022,62 Z"
+            fill="rgba(255,255,255,0.55)"/>
+    </svg>
+    <!-- Near range — darkest, rich forest green -->
+    <svg class="mtn-layer-near" viewBox="0 0 1440 160" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:160px;margin-top:-140px;">
+      <path d="M0,160 L0,130 L100,105 L200,118 L300,88 L400,108 L500,72 L600,95 L700,60 L800,88 L900,70 L1000,92 L1100,75 L1200,95 L1300,80 L1440,100 L1440,160 Z"
+            fill="rgba(20,40,30,0.80)"/>
+      <!-- Larger snow caps near range -->
+      <path d="M500,72 L522,92 L478,92 Z M700,60 L724,82 L676,82 Z M900,70 L920,88 L880,88 Z M1100,75 L1120,93 L1080,93 Z"
+            fill="rgba(255,255,255,0.70)"/>
+    </svg>
+    <!-- Ground strip -->
+    <div style="background:rgba(15,30,22,0.92);height:62px;margin-top:-56px;"></div>
+  </div>
+
+  <!-- Peak sparkles -->
+  <div class="peak-sparkle"></div>
+  <div class="peak-sparkle"></div>
+  <div class="peak-sparkle"></div>
+  <div class="peak-sparkle"></div>
+  <div class="peak-sparkle"></div>
+
+  <!-- Glow orbs -->
   <div class="hero-orb hero-orb-1"></div>
   <div class="hero-orb hero-orb-2"></div>
   <div class="hero-orb hero-orb-3"></div>
-  <div class="container">
+
+  <!-- Content -->
+  <div class="container" style="position:relative;z-index:5;">
     <div class="page-hero-content">
       <div class="section-label">12+ Handcrafted Journeys</div>
       <h1>Our Packages</h1>
+      <p class="hero-tagline">From high Himalayan passes to coastal shores — find your perfect escape</p>
     </div>
   </div>
+
+  <!-- Scroll hint -->
+  <div class="hero-scroll-hint">
+    <span>Explore</span>
+    <svg width="14" height="14" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+  </div>
+
+  <!-- Slide dots -->
+  <div class="hero-dots" id="heroDots">
+    <div class="hero-dot active"></div>
+    <div class="hero-dot"></div>
+    <div class="hero-dot"></div>
+    <div class="hero-dot"></div>
+  </div>
+
 </div>
 
 <!-- FILTER -->
@@ -1139,7 +1437,18 @@
   const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}}),{threshold:.08});
   document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
 
-  // ── SEED TRIP HERO IMAGE OVERRIDE ────────────────────────────────
+  // ── Mountain Hero: slide dot sync ──────────────────────────────────
+  (function() {
+    const dots = document.querySelectorAll('.hero-dot');
+    const total = dots.length;
+    let current = 0;
+    setInterval(() => {
+      dots[current].classList.remove('active');
+      current = (current + 1) % total;
+      dots[current].classList.add('active');
+    }, 6000);
+  })();
+  // ───────────────────────────────────────────────────────────────────
   // When an admin uploads a hero image for one of the 15 seed trips,
   // replace the hardcoded static image with the uploaded one.
   (function applySeedImages() {

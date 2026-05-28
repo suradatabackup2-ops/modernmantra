@@ -20,6 +20,15 @@ class HomeView(TemplateView):
             .filter(is_active=True, is_featured=True)
             .order_by("display_order", "name")[:6]
         )
+        # Approved reviews for the "What Our Explorers Say" section. Rendered
+        # server-side so every visitor sees the same testimonials (the template
+        # falls back to its built-in examples when there are none).
+        from apps.bookings.models import Review
+        ctx["approved_reviews"] = (
+            Review.objects
+            .filter(approved=True)
+            .order_by("-created_at")[:6]
+        )
         return ctx
 
 
@@ -116,6 +125,17 @@ class PackagesView(TemplateView):
 
 class GalleryView(TemplateView):
     template_name = "pages/gallery.html"
+
+    def get_context_data(self, **kwargs):
+        from apps.catalog.models import GalleryPhoto
+        ctx = super().get_context_data(**kwargs)
+        # Admin-uploaded photos, rendered server-side so all visitors see them.
+        ctx["gallery_photos"] = (
+            GalleryPhoto.objects
+            .filter(is_active=True)
+            .order_by("display_order", "-created_at")
+        )
+        return ctx
 
 
 class ContactView(TemplateView):

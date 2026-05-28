@@ -8,6 +8,29 @@
   <link rel="stylesheet" href="{% static 'admin/css/mm_theme.css' %}">
 {% endblock %}
 
+{% comment %}
+  Default the admin to the DARK theme.
+
+  Django's theme.js (loaded inside this block) reads localStorage["theme"]
+  and falls back to "auto" when nothing is stored. We seed "dark" *before*
+  theme.js runs, so the very first visit renders dark with no flash. Once a
+  user picks a theme via the toggle (light / dark / auto), theme.js stores
+  that choice and the seed below no-ops — so the toggle still works fully.
+{% endcomment %}
+{% block dark-mode-vars %}
+  <link rel="stylesheet" href="{% static 'admin/css/dark_mode.css' %}">
+  <script>
+    (function () {
+      try {
+        if (!window.localStorage.getItem("theme")) {
+          window.localStorage.setItem("theme", "dark");
+        }
+      } catch (e) { /* localStorage unavailable — ignore */ }
+    })();
+  </script>
+  <script src="{% static 'admin/js/theme.js' %}"></script>
+{% endblock %}
+
 {% block branding %}
 <h1 id="site-name">
   <a href="{% url 'admin:index' %}">Modern Mantra Admin</a>

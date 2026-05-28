@@ -84,3 +84,70 @@ def configure_media_storage(storages: dict, base_dir: Path) -> dict:
         "OPTIONS": options,
     }
     return storages
+
+
+def log_media_storage_diagnostics() -> None:
+    """Log the active media backend + a sample hero-image URL at boot.
+
+    Call this from an AppConfig.ready() so it runs once per worker when the
+    server starts. It lets you confirm — straight from the platform logs
+    (Railway, etc.) — that uploads are actually going where you expect,
+    instead of guessing. It also warns about the two most common
+    misconfigurations:
+
+        1. backend left as 'local' in production  → /media/ 404s, files
+           lost on redeploy.
+        2. a cloud backend with no public domain   → image URLs point at the
+           private S3/R2 API endpoint and won't load in a browser.
+
+    Diagnostics never raise — a failure here must not stop the app booting.
+    """
+    import logging
+
+    from django.conf import settings
+    from django.core.files.storage import default_storage
+
+    log = logging.getLogger("modernmantra.storage")
+
+    backend = os.environ.get("MEDIA_STORAGE_BACKEND", "local").lower()
+    # Read the configured class from STORAGES rather than type(default_storage),
+    # which is a lazy DefaultStorage proxy and hides the real backend.
+    storage_cls = settings.STORAGES.get("default", {}).get("BACKEND", "<unknown>")
+
+    # A representative key, shaped like what package_image_path() produces.
+    sample_key = "packages/sample-trip/hero/example.jpg"
+    try:
+        sample_url = default_storage.url(sample_key)
+    except Exception as exc:  # noqa: BLE001 — diagnostics must never crash boot
+        sample_url = f"<could not build URL: {exc}>"
+
+    bar = "\u2500" * 60
+    log.info(bar)
+    log.info("MEDIA STORAGE  backend=%r  class=%s", backend, storage_cls)
+    log.info("MEDIA STORAGE  sample hero-image URL -> %s", sample_url)
+
+    if backend == "local":
+        if not settings.DEBUG:
+            log.warning(
+                "MEDIA STORAGE  backend is 'local' while DEBUG=False — uploaded "
+                "images are NOT served in production (the /media/ route is "
+                "DEBUG-only) and are wiped on every redeploy. Set "
+                "MEDIA_STORAGE_BACKEND=r2 (plus the R2 credentials) for hosted "
+                "deployments such as Railway."
+            )
+        else:
+            log.info("MEDIA STORAGE  (local filesystem, served because DEBUG=True)")
+    else:
+        custom_domain = os.environ.get("MEDIA_CUSTOM_DOMAIN", "")
+        if custom_domain:
+            log.info("MEDIA STORAGE  public domain = %s", custom_domain)
+        else:
+            log.warning(
+                "MEDIA STORAGE  backend=%r but MEDIA_CUSTOM_DOMAIN is unset. The "
+                "sample URL above points at the private S3/R2 API endpoint, which "
+                "browsers cannot load (401/403). Enable the bucket's public URL "
+                "(e.g. R2's pub-*.r2.dev) or attach a custom domain, then set "
+                "MEDIA_CUSTOM_DOMAIN to that host (no 'https://').",
+                backend,
+            )
+    log.info(bar)

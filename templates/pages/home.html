@@ -383,9 +383,15 @@
       </div>
     </div>
     <div class="testi-dots">
+      {% if approved_reviews %}
+        {% for r in approved_reviews|slice:":6" %}
+      <button class="testi-dot{% if forloop.first %} active{% endif %}" aria-label="Review {{ forloop.counter }}"></button>
+        {% endfor %}
+      {% else %}
       <button class="testi-dot active" aria-label="Review 1"></button>
       <button class="testi-dot" aria-label="Review 2"></button>
       <button class="testi-dot" aria-label="Review 3"></button>
+      {% endif %}
     </div>
   </div>
 </section>
@@ -586,45 +592,9 @@
 
 {% block extra_js %}
 <script src="{% static 'js/main.js' %}"></script>
-<script>
-// ── Dynamic reviews from admin ──
-(function loadAdminReviews(){
-  try{
-    const reviews=JSON.parse(localStorage.getItem('mm_reviews')||'null');
-    if(!reviews||!reviews.length)return;
-    const active=reviews.filter(r=>r.active);
-    if(!active.length)return;
-    function esc(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML;}
-    const grid=document.getElementById('testiGrid');
-    if(!grid)return;
-    const cards=active.slice(0,6).map(r=>{
-      const init=(r.name||'?').trim().split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-      const stars='★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
-      const loc=[r.location,r.trip?r.trip.split(/[–-]/)[0].trim():''].filter(Boolean).join(' · ');
-      return `<div class="testi-card">
-        <div class="stars">${stars}</div>
-        <p class="testi-text">"${esc(r.text)}"</p>
-        <div class="testi-person">
-          <div class="testi-avatar">${esc(init)}</div>
-          <div><div class="testi-name">${esc(r.name)}</div><div class="testi-loc">${esc(loc)}</div></div>
-        </div>
-      </div>`;
-    });
-    grid.innerHTML='<div class="testi-track">'+cards.join('')+'</div>';
-    const dotsWrap=grid.closest('section').querySelector('.testi-dots');
-    if(dotsWrap){
-      dotsWrap.innerHTML=cards.map((_,i)=>`<button class="testi-dot${i===0?' active':''}" aria-label="Review ${i+1}"></button>`).join('');
-      let cur2=0,timer2;
-      const track=grid.querySelector('.testi-track');
-      const cds=Array.from(track.querySelectorAll('.testi-card'));
-      const dts=Array.from(dotsWrap.querySelectorAll('.testi-dot'));
-      function goTo2(n){cur2=(n+cds.length)%cds.length;track.style.transform=`translateX(-${cur2*100}%)`;dts.forEach((d,i)=>d.classList.toggle('active',i===cur2));}
-      dts.forEach((d,i)=>d.addEventListener('click',()=>{clearInterval(timer2);goTo2(i);timer2=setInterval(()=>goTo2(cur2+1),5000);}));
-      timer2=setInterval(()=>goTo2(cur2+1),5000);
-    }
-  }catch(e){}
-})();
-</script>
+<!-- Reviews are now rendered server-side from approved DB reviews
+     (see the testimonials section above), so the old localStorage
+     loader has been removed — DB reviews now show for all visitors. -->
 <script>
 (function(){
   const Qs=[
